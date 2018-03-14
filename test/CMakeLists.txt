@@ -1,3 +1,5 @@
+if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+
 add_executable(test_default
   tests.c
 )
@@ -20,3 +22,5 @@ add_executable(test_strict_links
 )
 target_compile_definitions(test_strict_links PRIVATE JSMN_STRICT=1 JSMN_PARENT_LINKS=1)
 target_link_libraries(test_strict_links jsmn)
+
+endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
