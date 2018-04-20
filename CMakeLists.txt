@@ -29,4 +29,4 @@ add_subdirectory(test)
 add_library(jsmn
   jsmn.c
 )
-target_compile_definitions(jsmn PUBLIC JSMN_PARENT_LINKS)
+target_compile_definitions(jsmn PUBLIC JSMN_PARENT_LINKS JSMN_SHORT_TOKENS)
