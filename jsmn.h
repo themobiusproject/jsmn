@@ -28,8 +28,19 @@ enum jsmnerr {
 	/* Invalid character inside JSON string */
 	JSMN_ERROR_INVAL = -2,
 	/* The string is not a full JSON packet, more bytes expected */
-	JSMN_ERROR_PART = -3
+	JSMN_ERROR_PART = -3,
+	/* Input data too long */
+	JSMN_ERROR_LEN = -4
 };
+
+#ifdef JSMN_SHORT_TOKENS
+typedef unsigned short jsmnint_t;
+typedef unsigned char jsmnenumtype_t;
+#else
+typedef unsigned int jsmnint_t;
+typedef jsmntype_t jsmnenumtype_t;
+#endif
+#define JSMN_NEG ((jsmnint_t)-1)
 
 /**
  * JSON token description.
@@ -38,12 +49,12 @@ enum jsmnerr {
  * end		end position in JSON data string
  */
 typedef struct {
-	jsmntype_t type;
-	int start;
-	int end;
-	int size;
+	jsmnenumtype_t type;
+	jsmnint_t start;
+	jsmnint_t end;
+	jsmnint_t size;
 #ifdef JSMN_PARENT_LINKS
-	int parent;
+	jsmnint_t parent;
 #endif
 } jsmntok_t;
 
@@ -52,7 +63,7 @@ typedef struct {
  * the string being parsed now and current position in that string
  */
 typedef struct {
-	unsigned int pos; /* offset in the JSON string */
+	jsmnint_t pos; /* offset in the JSON string */
 	unsigned int toknext; /* next token to allocate */
 	int toksuper; /* superior token node, e.g parent object or array */
 } jsmn_parser;
