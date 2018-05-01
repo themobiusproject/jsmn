@@ -3,7 +3,7 @@ JSMN
 
 [![Build Status](https://travis-ci.org/zserge/jsmn.svg?branch=master)](https://travis-ci.org/zserge/jsmn)
 
-jsmn (pronounced like 'jasmine') is a minimalistic JSON parser in C.  It can be
+jsmn (pronounced like 'jasmine') is a minimalistic JSON parser in C. It can be
 easily integrated into resource-limited or embedded projects.
 
 You can find more information about JSON format at [json.org][1]
@@ -19,11 +19,11 @@ Philosophy
 Most JSON parsers offer you a bunch of functions to load JSON data, parse it
 and extract any value by its name. jsmn proves that checking the correctness of
 every JSON packet or allocating temporary objects to store parsed JSON fields
-often is an overkill. 
+often is an overkill.
 
 JSON format itself is extremely simple, so why should we complicate it?
 
-jsmn is designed to be	**robust** (it should work fine even with erroneous
+jsmn is designed to be **robust** (it should work fine even with erroneous
 data), **fast** (it should parse data on the fly), **portable** (no superfluous
 dependencies or non-standard C extensions). And of course, **simplicity** is a
 key feature - simple code style, simple algorithm, simple integration into
@@ -46,12 +46,12 @@ Design
 ------
 
 The rudimentary jsmn object is a **token**. Let's consider a JSON string:
-
-	'{ "name" : "Jack", "age" : 27 }'
-
+```json
+{ "name" : "Jack", "age" : 27 }
+```
 It holds the following tokens:
 
-* Object: `{ "name" : "Jack", "age" : 27}` (the whole object)
+* Object: `{ "name" : "Jack", "age" : 27 }` (the whole object)
 * Strings: `"name"`, `"Jack"`, `"age"` (keys and some values)
 * Number: `27`
 
@@ -96,15 +96,15 @@ API
 ---
 
 Token types are described by `jsmntype_t`:
-
-	typedef enum {
-		JSMN_UNDEFINED = 0,
-		JSMN_OBJECT = 1,
-		JSMN_ARRAY = 2,
-		JSMN_STRING = 3,
-		JSMN_PRIMITIVE = 4
-	} jsmntype_t;
-
+```c
+typedef enum {
+	JSMN_UNDEFINED = 0x00,
+	JSMN_OBJECT    = 0x01,
+	JSMN_ARRAY     = 0x02,
+	JSMN_STRING    = 0x04,
+	JSMN_PRIMITIVE = 0x08
+} jsmntype_t;
+```
 **Note:** Unlike JSON data types, primitive tokens are not divided into
 numbers, booleans and null, because one can easily tell the type using the
 first character:
@@ -114,30 +114,36 @@ first character:
 * <code>'-', '0'..'9'</code> - number
 
 Token is an object of `jsmntok_t` type:
-
-	typedef struct {
-		jsmnenumtype_t type; // Token type
-		jsmnint_t start;     // Token start position
-		jsmnint_t end;       // Token end position
-		jsmnint_t size;      // Number of child (nested) tokens
-	} jsmntok_t;
-
-**Note:** string tokens point to the first character after
-the opening quote and the previous symbol before final quote. This was made 
-to simplify string extraction from JSON data.
+```c
+typedef struct {
+	jsmnenumtype_t type; // Token type
+	jsmnint_t start;     // Token start position
+	jsmnint_t end;       // Token end position
+	jsmnint_t size;      // Number of child (nested) tokens
+#ifdef JSMN_PARENT_LINKS
+	jsmnint_t parent;    // Token's parent
+#endif
+#ifdef JSMN_NEXT_SIBLING
+	jsmnint_t next_sibling; // Token's next sibling
+#endif
+} jsmntok_t;
+```
+**Note:** string tokens point to the first character after the opening quote
+and the previous symbol before final quote. This was made to simplify string
+extraction from JSON data.
 
 All job is done by `jsmn_parser` object. You can initialize a new parser using:
+```c
+jsmn_parser parser;
+jsmntok_t tokens[10];
 
-	jsmn_parser parser;
-	jsmntok_t tokens[10];
+jsmn_init(&parser);
 
-	jsmn_init(&parser);
-
-	// js - pointer to JSON string
-	// tokens - an array of tokens available
-	// 10 - number of tokens available
-	jsmn_parse(&parser, js, strlen(js), tokens, 10);
-
+// js - pointer to JSON string
+// tokens - an array of tokens available
+// 10 - number of tokens available
+jsmn_parse(&parser, js, strlen(js), tokens, 10);
+```
 This will create a parser, and then it tries to parse up to 10 JSON tokens from
 the `js` string.
 
