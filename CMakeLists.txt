@@ -26,8 +26,13 @@ endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 add_subdirectory(example)
 add_subdirectory(test)
 
-add_library(jsmn
-  jsmn.c
-  json.c
+add_library(jsmn_obj OBJECT
+	jsmn.c
+	json.c
 )
-target_compile_definitions(jsmn PUBLIC JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT)
+target_compile_definitions(jsmn_obj PRIVATE JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT)
+
+add_library(jsmn
+	$<TARGET_OBJECTS:jsmn_obj>
+)
+target_compile_definitions(jsmn INTERFACE JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT)
