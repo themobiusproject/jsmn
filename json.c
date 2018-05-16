@@ -223,7 +223,11 @@ jsmnint_t jsmn_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, cons
 
 jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t num_keys, ...)
 {
+#ifdef _WIN32
+    void **key = (void **)calloc(sizeof(void **), num_keys);
+#else
     void *key[num_keys];
+#endif
     jsmnint_t i, pos;
 
     // keys may be either const char * or jsmnint_t, at this point we don't care
@@ -255,5 +259,8 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
         if (pos == JSMN_NEG)
             break;
     }
+#ifdef _WIN32
+    free(key);
+#endif
     return pos;
 }
