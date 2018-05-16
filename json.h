@@ -6,7 +6,9 @@
 
 #include "jsmn.h"
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 char *readJSONFile(const char *filename);
 
@@ -27,7 +29,7 @@ jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv);
  * @param s String to complare
  * @return 0 when token string and s are equal, -1 otherwise
  */
-int json_token_streq(const char *json, jsmntok_t *tok, const char *s);
+int json_token_streq(const char *json, const jsmntok_t *tok, const char *s);
 
 /**
 * @brief Parse a json string and return the value of the key requested
@@ -37,13 +39,15 @@ int json_token_streq(const char *json, jsmntok_t *tok, const char *s);
 * @param num_keys number of keys
 * @return jsmnint_t value
 */
-jsmnint_t json_parse(const char *json, jsmntok_t *tokens, uint32_t num_keys, ...);
+jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t num_keys, ...);
 
-jsmnint_t isJSONKey(jsmntok_t *tokens, jsmnint_t t);
-jsmnint_t isJSONArrayMember(jsmntok_t *tokens, jsmnint_t t);
-jsmnint_t getJSONKeyValue(jsmntok_t *tokens, jsmnint_t t);
-jsmnint_t jsmnTokenLen(jsmntok_t *tok);
+jsmnint_t isJSONKey(const jsmntok_t *tokens, const jsmnint_t t);
+jsmnint_t isJSONArrayMember(const jsmntok_t *tokens, const jsmnint_t t);
+jsmnint_t getJSONKeyValue(const jsmntok_t *tokens, const jsmnint_t t);
+jsmnint_t jsmnTokenLen(const jsmntok_t *tok);
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __JSON_H__

@@ -8,7 +8,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-const char *jsmn_strerror(enum jsmnerr errno)
+const char *jsmn_strerror(jsmnenumtype_t errno)
 {
     switch (errno) {
         case JSMN_ERROR_NOMEM:
@@ -97,12 +97,12 @@ jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv)
     return tokens;
 }
 
-jsmnint_t jsmnTokenLen(jsmntok_t *tok)
+jsmnint_t jsmnTokenLen(const jsmntok_t *tok)
 {
     return tok->end - tok->start;
 }
 
-int json_token_streq(const char *json, jsmntok_t *tok, const char *s)
+int json_token_streq(const char *json, const jsmntok_t *tok, const char *s)
 {
     if (tok->type == JSMN_STRING && strlen(s) == tok->end - tok->start &&
             strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
@@ -111,7 +111,7 @@ int json_token_streq(const char *json, jsmntok_t *tok, const char *s)
     return -1;
 }
 
-jsmnint_t isJSONKey(jsmntok_t *tokens, jsmnint_t t)
+jsmnint_t isJSONKey(const jsmntok_t *tokens, const jsmnint_t t)
 {
     if (tokens[t].type != JSMN_STRING)
         return JSMN_NEG; // JSON Key must be of type JSMN_STRING
@@ -121,7 +121,7 @@ jsmnint_t isJSONKey(jsmntok_t *tokens, jsmnint_t t)
     return 0;
 }
 
-jsmnint_t isJSONArrayMember(jsmntok_t *tokens, jsmnint_t t)
+jsmnint_t isJSONArrayMember(const jsmntok_t *tokens, const jsmnint_t t)
 {
     if (tokens[t].parent == JSMN_NEG)
         return JSMN_NEG; // Must have a valid parent
@@ -131,7 +131,7 @@ jsmnint_t isJSONArrayMember(jsmntok_t *tokens, jsmnint_t t)
     return 0;
 }
 
-jsmnint_t getJSONKeyValue(jsmntok_t *tokens, jsmnint_t t)
+jsmnint_t getJSONKeyValue(const jsmntok_t *tokens, const jsmnint_t t)
 {
     jsmnint_t rv;
     if ((rv = isJSONKey(tokens, t)) != 0)
@@ -140,7 +140,7 @@ jsmnint_t getJSONKeyValue(jsmntok_t *tokens, jsmnint_t t)
     return (t + 1);
 }
 
-jsmnint_t json_next_sibling(jsmntok_t *tokens, jsmnint_t t)
+jsmnint_t json_next_sibling(const  jsmntok_t *tokens, const jsmnint_t t)
 {
     // parent must be a JSMN_OBJECT or JSMN_ARRAY
     // parent's size must be > 1;
@@ -183,7 +183,7 @@ jsmnint_t json_next_sibling(jsmntok_t *tokens, jsmnint_t t)
 #endif
 }
 
-jsmnint_t json_parse_object(const char *json, jsmntok_t *tokens, jsmnint_t parent, const char *key)
+jsmnint_t json_parse_object(const char *json, const jsmntok_t *tokens, const jsmnint_t parent, const char *key)
 {
     // first child is the first token after the parent
     jsmnint_t child = parent + 1;
@@ -204,7 +204,7 @@ jsmnint_t json_parse_object(const char *json, jsmntok_t *tokens, jsmnint_t paren
     return JSMN_NEG;
 }
 
-jsmnint_t jsmn_parse_array(jsmntok_t *tokens, jsmnint_t parent, jsmnint_t key)
+jsmnint_t jsmn_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
 {
     // if parent's size is less than or equal to key, key is bad
     if (tokens[parent].size <= key)
@@ -221,7 +221,7 @@ jsmnint_t jsmn_parse_array(jsmntok_t *tokens, jsmnint_t parent, jsmnint_t key)
     return child;
 }
 
-jsmnint_t json_parse(const char *json, jsmntok_t *tokens, uint32_t num_keys, ...)
+jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t num_keys, ...)
 {
     void *key[num_keys];
     jsmnint_t i, pos;

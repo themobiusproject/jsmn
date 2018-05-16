@@ -35,7 +35,7 @@ enum jsmnerr {
 
 #ifdef JSMN_SHORT_TOKENS
 typedef unsigned short jsmnint_t;
-typedef unsigned char jsmnenumtype_t;
+typedef char jsmnenumtype_t;
 #else
 typedef unsigned int jsmnint_t;
 typedef jsmntype_t jsmnenumtype_t;
