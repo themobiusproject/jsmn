@@ -14,7 +14,7 @@ extern "C" {
  * 	o String
  * 	o Other primitive: number, boolean (true/false) or null
  */
-typedef enum {
+typedef enum jsmntype_t {
 	JSMN_UNDEFINED = 0x00,
 	JSMN_OBJECT    = 0x01,
 	JSMN_ARRAY     = 0x02,
@@ -28,9 +28,9 @@ enum jsmnerr {
 	/* Invalid character inside JSON string */
 	JSMN_ERROR_INVAL = -2,
 	/* The string is not a full JSON packet, more bytes expected */
-	JSMN_ERROR_PART = -3,
+	JSMN_ERROR_PART  = -3,
 	/* Input data too long */
-	JSMN_ERROR_LEN = -4
+	JSMN_ERROR_LEN   = -4,
 };
 
 #ifdef JSMN_SHORT_TOKENS
@@ -48,7 +48,7 @@ typedef jsmntype_t jsmnenumtype_t;
  * start	start position in JSON data string
  * end		end position in JSON data string
  */
-typedef struct {
+typedef struct jsmntok_t {
 	jsmnenumtype_t type;
 	jsmnint_t start;
 	jsmnint_t end;
@@ -65,20 +65,29 @@ typedef struct {
  * JSON parser. Contains an array of token blocks available. Also stores
  * the string being parsed now and current position in that string
  */
-typedef struct {
+typedef struct jsmn_parser {
 	jsmnint_t pos; /* offset in the JSON string */
 	jsmnint_t toknext; /* next token to allocate */
 	jsmnint_t toksuper; /* superior token node, e.g parent object or array */
 } jsmn_parser;
 
 /**
- * Create JSON parser over an array of tokens
+ * @brief Create JSON parser over an array of tokens
+ * 
+ * @param[out] parser jsmn parser
  */
 void jsmn_init(jsmn_parser *parser);
 
 /**
- * Run JSON parser. It parses a JSON data string into and array of tokens, each describing
- * a single JSON object.
+ * @brief Run JSON parser. It parses a JSON data string into and array of
+ * tokens, each describing a single JSON object.
+ * 
+ * @param[in,out] parser jsmn parser
+ * @param[in] js JSON data string
+ * @param[in] len JSON data string length
+ * @param[in,out] tokens pointer to memory allocated for tokens or NULL
+ * @param[in] num_tokens number of tokens allocated
+ * @return jsmnint_t number of tokens found or ERRNO
  */
 jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 		jsmntok_t *tokens, unsigned int num_tokens);

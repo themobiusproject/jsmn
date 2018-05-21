@@ -24,7 +24,7 @@ endif(${CMAKE_C_COMPILER_ID} MATCHES "GNU" AND ${CMAKE_CXX_COMPILER_ID} MATCHES 
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 add_subdirectory(example)
-add_subdirectory(test)
+add_subdirectory(tests)
 
 add_library(jsmn_obj OBJECT
 	jsmn.c

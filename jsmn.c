@@ -1,5 +1,11 @@
 #include "jsmn.h"
 
+#ifdef UNIT_TESTING
+#include <stdarg.h>
+#include <setjmp.h>
+#include <cmocka.h>
+#endif
+
 /**
  * Allocates a fresh unused token from the token pull.
  */
@@ -114,6 +120,8 @@ static int jsmn_parse_string(jsmn_parser *parser, const char *js,
 	if (len >= JSMN_NEG)
 		return JSMN_ERROR_LEN;
 
+	char c;
+	int i;
 	jsmntok_t *token;
 
 	jsmnint_t start = parser->pos;
@@ -122,7 +130,7 @@ static int jsmn_parse_string(jsmn_parser *parser, const char *js,
 
 	/* Skip starting quote */
 	for (; parser->pos < len && js[parser->pos] != '\0'; parser->pos++) {
-		char c = js[parser->pos];
+		c = js[parser->pos];
 
 		/* Quote: end of string */
 		if (c == '\"') {
@@ -146,7 +154,6 @@ static int jsmn_parse_string(jsmn_parser *parser, const char *js,
 
 		/* Backslash: Quoted symbol expected */
 		if (c == '\\' && parser->pos + 1 < len) {
-			int i;
 			parser->pos++;
 			switch (js[parser->pos]) {
 				/* Allowed escaped symbols */
