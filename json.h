@@ -15,8 +15,8 @@ char *readJSONFile(const char *filename);
 /**
  * @brief Tokenizes JSON string
  *
- * @param json JSON String
- * @param rv Return Value
+ * @param[in] json JSON String
+ * @param[out] rv Return Value
  * @return Allocated jsmntok_t array pointer
  */
 jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv);
@@ -24,9 +24,9 @@ jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv);
 /**
  * @brief String comparison between token and string
  *
- * @param json JSON String
- * @param tok Token to compare
- * @param s String to complare
+ * @param[in] json JSON String
+ * @param[in] tok Token to compare
+ * @param[in] s String to complare
  * @return 0 when token string and s are equal, -1 otherwise
  */
 int json_token_streq(const char *json, const jsmntok_t *tok, const char *s);
@@ -34,9 +34,9 @@ int json_token_streq(const char *json, const jsmntok_t *tok, const char *s);
 /**
 * @brief Parse a json string and return the value of the key requested
 * 
-* @param json json string
-* @param tokens jsmn tokens
-* @param num_keys number of keys
+* @param[in] json json string
+* @param[in] tokens jsmn tokens
+* @param[in] num_keys number of keys
 * @return jsmnint_t value
 */
 jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t num_keys, ...);

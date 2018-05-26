@@ -19,7 +19,7 @@ typedef enum jsmntype_t {
 	JSMN_OBJECT    = 0x01,
 	JSMN_ARRAY     = 0x02,
 	JSMN_STRING    = 0x04,
-	JSMN_PRIMITIVE = 0x08
+	JSMN_PRIMITIVE = 0x08,
 } jsmntype_t;
 
 enum jsmnerr {

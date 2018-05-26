@@ -33,7 +33,9 @@ char *readJSONFile(const char *filename)
     size_t rv;
 
 #ifndef NDEBUG
+#ifndef NPRINTF
     printf("Opening for read: %s\n", filename);
+#endif
 #endif
     pFile = fopen(filename, "rb");
     if (pFile == NULL) {
@@ -78,15 +80,17 @@ jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv)
 
     *rv = jsmn_parse(&p, json, json_len, NULL, 0);
 
-    if (*rv < 0) {
+    if ((int8_t)*rv < 0) {
 #ifndef NPRINTF
         fprintf(stderr, "jsmn_parse: %s\n", jsmn_strerror(*rv));
 #endif
         return NULL;
     }
 
-#if !defined(NPRINTF) && !defined(NDEBUG)
+#ifndef NDEBUG
+#ifndef NPRINTF
     printf("jsmn_parse: %d tokens found.\n", *rv);
+#endif
 #endif
 
     jsmntok_t *tokens = (jsmntok_t *)calloc(sizeof(jsmntok_t), *rv);
@@ -223,11 +227,7 @@ jsmnint_t jsmn_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, cons
 
 jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t num_keys, ...)
 {
-#ifdef _WIN32
     void **key = (void **)calloc(sizeof(void **), num_keys);
-#else
-    void *key[num_keys];
-#endif
     jsmnint_t i, pos;
 
     // keys may be either const char * or jsmnint_t, at this point we don't care
@@ -259,8 +259,6 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
         if (pos == JSMN_NEG)
             break;
     }
-#ifdef _WIN32
     free(key);
-#endif
     return pos;
 }
