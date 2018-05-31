@@ -40,22 +40,26 @@ static void jsmn_fill_token(jsmntok_t *token, jsmnenumtype_t type,
 
 #ifdef JSMN_NEXT_SIBLING
 /**
- * 
+ * Set previous child's next_sibling to current token
  */
 static void jsmn_next_sibling(jsmn_parser *parser, jsmntok_t *tokens) {
-	//
+	/* Ensure current token has a parent */
 	if (parser->toksuper == JSMN_NEG)
 		return;
 
-	//
+	/* Start with parent's first child */
 	jsmnint_t sibling = parser->toksuper + 1;
-	//
+    
+	/* If the first child is the current token */
+	if (sibling == parser->toknext - 1)
+		return;
+
+	/* Loop until we find previous sibling */
 	while (tokens[sibling].next_sibling != JSMN_NEG)
 		sibling = tokens[sibling].next_sibling;
 
-	//
-	if (sibling != parser->toknext - 1)
-		tokens[sibling].next_sibling = parser->toknext - 1;
+	/* Set previous sibling's next_sibling to current token */
+	tokens[sibling].next_sibling = parser->toknext - 1;
 }
 #endif
 

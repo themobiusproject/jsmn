@@ -23,6 +23,11 @@ endif(${CMAKE_C_COMPILER_ID} MATCHES "GNU" AND ${CMAKE_CXX_COMPILER_ID} MATCHES 
 
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
+set(CMAKE_C_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 add_subdirectory(example)
 add_subdirectory(tests)
 
@@ -30,6 +35,7 @@ add_library(jsmn_obj OBJECT
 	jsmn.c
 	json.c
 )
+set_target_properties(jsmn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_compile_definitions(jsmn_obj PRIVATE JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT)
 
 add_library(jsmn

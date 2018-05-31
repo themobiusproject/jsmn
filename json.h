@@ -10,7 +10,13 @@
 extern "C" {
 #endif
 
-char *readJSONFile(const char *filename);
+/**
+* @brief Return a pointer to jsmn error message
+* 
+* @param[in] errno jsmn error number
+* @return const char* jsmn error message
+*/
+const char *jsmn_strerror(jsmnenumtype_t errno);
 
 /**
  * @brief Tokenizes JSON string
@@ -22,16 +28,6 @@ char *readJSONFile(const char *filename);
 jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv);
 
 /**
- * @brief String comparison between token and string
- *
- * @param[in] json JSON String
- * @param[in] tok Token to compare
- * @param[in] s String to complare
- * @return 0 when token string and s are equal, -1 otherwise
- */
-int json_token_streq(const char *json, const jsmntok_t *tok, const char *s);
-
-/**
 * @brief Parse a json string and return the value of the key requested
 * 
 * @param[in] json json string
@@ -40,11 +36,6 @@ int json_token_streq(const char *json, const jsmntok_t *tok, const char *s);
 * @return jsmnint_t value
 */
 jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t num_keys, ...);
-
-jsmnint_t isJSONKey(const jsmntok_t *tokens, const jsmnint_t t);
-jsmnint_t isJSONArrayMember(const jsmntok_t *tokens, const jsmnint_t t);
-jsmnint_t getJSONKeyValue(const jsmntok_t *tokens, const jsmnint_t t);
-jsmnint_t jsmnTokenLen(const jsmntok_t *tok);
 
 #ifdef __cplusplus
 }

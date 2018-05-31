@@ -3,11 +3,10 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-#include "jsmn.h"
+#include "jsmn.c"
 
 jsmn_parser p;
 jsmntok_t t[128];
@@ -983,6 +982,6 @@ int main(void)
     test_nonstrict();      // test for non-strict mode
     test_unmatched_brackets(); // test for unmatched brackets
 
-    return _cmocka_run_group_tests("tests", tests, total_tests, NULL, NULL);
+    return _cmocka_run_group_tests("jsmn_test", tests, total_tests, NULL, NULL);
 //     return cmocka_run_group_tests(tests, NULL, NULL);
 }

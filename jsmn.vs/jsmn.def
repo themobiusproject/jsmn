@@ -1,0 +1,8 @@
+LIBRARY	jsmn
+EXPORTS
+	jsmn_init
+	jsmn_parse
+
+	jsmn_strerror
+	json_tokenize
+	json_parse
