@@ -17,6 +17,10 @@
 #define EXPORT
 #endif
 
+#ifndef NDEBUG
+#define inline
+#endif
+
 EXPORT
 const char *jsmn_strerror(jsmnenumtype_t errno)
 {
