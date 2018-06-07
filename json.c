@@ -76,7 +76,7 @@ jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv)
  * @param[in] s String to complare
  * @return 0 when token string and s are equal, -1 otherwise
  */
-inline
+static inline
 int json_token_streq(const char *json, const jsmntok_t *tok, const char *s)
 {
     if (tok->type == JSMN_STRING && strlen(s) == tok->end - tok->start &&
@@ -86,7 +86,7 @@ int json_token_streq(const char *json, const jsmntok_t *tok, const char *s)
     return -1;
 }
 
-inline
+static inline
 jsmnint_t isJSONKey(const jsmntok_t *tokens, const jsmnint_t t)
 {
     if (tokens[t].type != JSMN_STRING)
@@ -97,7 +97,7 @@ jsmnint_t isJSONKey(const jsmntok_t *tokens, const jsmnint_t t)
     return 0;
 }
 
-inline
+static inline
 jsmnint_t getJSONKeyValue(const jsmntok_t *tokens, const jsmnint_t t)
 {
     if (isJSONKey(tokens, t) == JSMN_NEG)
@@ -106,7 +106,7 @@ jsmnint_t getJSONKeyValue(const jsmntok_t *tokens, const jsmnint_t t)
     return (t + 1);
 }
 
-inline
+static inline
 jsmnint_t json_next_sibling(const jsmntok_t *tokens, const jsmnint_t t)
 {
     // parent must be a JSMN_OBJECT or JSMN_ARRAY
@@ -150,7 +150,7 @@ jsmnint_t json_next_sibling(const jsmntok_t *tokens, const jsmnint_t t)
 #endif
 }
 
-inline
+static inline
 jsmnint_t json_parse_object(const char *json, const jsmntok_t *tokens, const jsmnint_t parent, const char *key)
 {
     // first child is the first token after the parent
@@ -172,7 +172,7 @@ jsmnint_t json_parse_object(const char *json, const jsmntok_t *tokens, const jsm
     return JSMN_NEG;
 }
 
-inline
+static inline
 jsmnint_t jsmn_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
 {
     // if parent's size is less than or equal to key, key is bad
