@@ -228,7 +228,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				GCC_PREPROCESSOR_DEFINITIONS = "${inherited}";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					JSMN_DEFINES,
+					JSMN_STRICT,
+					JSMN_PARENT_LINKS,
+					JSMN_SHORT_TOKENS,
+					JSMN_NEXT_SIBLING,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -237,7 +244,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				GCC_PREPROCESSOR_DEFINITIONS = "${inherited}";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					JSMN_DEFINES,
+					JSMN_STRICT,
+					JSMN_PARENT_LINKS,
+					JSMN_SHORT_TOKENS,
+					JSMN_NEXT_SIBLING,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
