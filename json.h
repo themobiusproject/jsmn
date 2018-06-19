@@ -4,6 +4,11 @@
 #include <stdarg.h>
 #include <stdint.h>
 
+#define JSMN_STRICT
+#define JSMN_SHORT_TOKENS
+#define JSMN_NEXT_SIBLING
+#define JSMN_PARENT_LINKS
+
 #include "jsmn.h"
 
 #ifdef __cplusplus
