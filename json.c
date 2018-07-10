@@ -60,7 +60,7 @@ jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv)
 #endif
 #endif
 
-    jsmntok_t *tokens = (jsmntok_t *)calloc(sizeof(jsmntok_t), *rv);
+    jsmntok_t *tokens = calloc(*rv, sizeof(jsmntok_t));
 
     jsmn_init(&p);
     *rv = jsmn_parse(&p, json, json_len, tokens, *rv);
