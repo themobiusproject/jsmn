@@ -204,7 +204,7 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
     for (i = 0; i < num_keys; i++) {
         if (tokens[pos].type == JSMN_OBJECT) {
             // if `pos`.type is an object, treat key as a const char *
-            pos = json_parse_object(json, tokens, pos, va_arg(keys, void *));
+            if ((pos = json_parse_object(json, tokens, pos, va_arg(keys, void *))) == JSMN_NEG) break;
             // move position to current key's value (with checks)
             pos = getJSONKeyValue(tokens, pos);
         } else if (tokens[pos].type == JSMN_ARRAY) {
