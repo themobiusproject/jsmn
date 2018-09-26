@@ -19,11 +19,11 @@ extern "C" {
 #endif
 
 /**
-* @brief Return a pointer to jsmn error message
-*
-* @param[in] errno jsmn error number
-* @return const char* jsmn error message
-*/
+ * @brief Return a pointer to jsmn error message
+ *
+ * @param[in] errno jsmn error number
+ * @return const char* jsmn error message
+ */
 const char *jsmn_strerror(jsmnenumtype_t errno);
 
 /**

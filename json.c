@@ -228,6 +228,8 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
 EXPORT
 void explodeJSON(const char *json, size_t len)
 {
+#ifndef NDEBUG
+#ifndef NPRINTF
     jsmnint_t rv, i;
 
     jsmntok_t *tokens = json_tokenize(json, len, &rv);
@@ -292,6 +294,8 @@ void explodeJSON(const char *json, size_t len)
     }
 
     free(tokens);
+#endif // NPRINTF
+#endif // NDEBUG
 }
 
 EXPORT
