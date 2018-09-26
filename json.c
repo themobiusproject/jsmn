@@ -39,7 +39,7 @@ const char *jsmn_strerror(jsmnenumtype_t errno)
 }
 
 EXPORT
-jsmntok_t *json_tokenize(char *json, size_t json_len, jsmnint_t *rv)
+jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv)
 {
     jsmn_parser p;
     jsmn_init(&p);
@@ -223,4 +223,79 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
 
     va_end(keys);
     return pos;
+}
+
+EXPORT
+void explodeJSON(const char *json, size_t len)
+{
+    jsmnint_t rv, i;
+
+    jsmntok_t *tokens = json_tokenize(json, len, &rv);
+
+//     const char *jsmntype[] = { "UNDEFINED", "OBJECT", "ARRAY", "", "STRING", "", "", "", "PRIMITIVE", };
+    const char *jsmntype[] = { "UND", "OBJ", "ARR", "", "STR", "", "", "", "PRI", };
+
+    for (i = 0; i < rv; i++) {
+#ifdef JSMN_PARENT_LINKS
+        if (tokens[i].parent == JSMN_NEG)
+            printf("\n");
+#endif
+        printf("Token %3d :  type: %3s |  start: %4d |  end: %4d |  length: %4d |  size : %2d",
+               i, jsmntype[(uint8_t)tokens[i].type], tokens[i].start, tokens[i].end, tokens[i].end - tokens[i].start, tokens[i].size);
+#ifdef JSMN_PARENT_LINKS
+        printf(" |  parent: %3d", (tokens[i].parent != JSMN_NEG ? tokens[i].parent : -1));
+#endif
+#ifdef JSMN_NEXT_SIBLING
+        printf(" |  sibling: %3d", (tokens[i].next_sibling != JSMN_NEG ? tokens[i].next_sibling : -1));
+#endif
+        printf(" | ");
+
+        if (tokens[i].type == JSMN_OBJECT) {
+            printf("{");
+        }
+        if (tokens[i].type == JSMN_ARRAY) {
+            printf("[");
+        }
+
+        if (tokens[i].type == JSMN_STRING && tokens[i].size == 1) {
+            printf("\"%.*s\" :", tokens[i].end - tokens[i].start, &json[tokens[i].start]);
+        }
+        if (tokens[i].size == 0) {
+            printf("    ");
+            if (tokens[i].type == JSMN_STRING)
+                printf("\"");
+            printf("%.*s", tokens[i].end - tokens[i].start, json + tokens[i].start);
+            if (tokens[i].type == JSMN_STRING)
+                printf("\"");
+            printf(",");
+        }
+        printf("\n");
+
+        if (tokens[i].size != 0)
+            continue;
+
+        if (tokens[i].parent == JSMN_NEG)
+            continue;
+
+        if (tokens[i].next_sibling != JSMN_NEG || tokens[tokens[i].parent].next_sibling != JSMN_NEG)
+            continue;
+
+        if (tokens[i].size == 0 && tokens[i].type & (JSMN_STRING | JSMN_PRIMITIVE) && tokens[tokens[i].parent].next_sibling == JSMN_NEG)
+            printf("          :                                                                                                    | ");
+
+        if (tokens[tokens[i].parent].type == JSMN_ARRAY)
+            printf("]");
+        else if (tokens[tokens[tokens[i].parent].parent].type == JSMN_OBJECT)
+            printf("}");
+
+        printf("\n");
+    }
+
+    free(tokens);
+}
+
+EXPORT
+void explodeJSON_nolen(const char *json)
+{
+    explodeJSON(json, strlen(json));
 }
