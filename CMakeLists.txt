@@ -28,7 +28,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_subdirectory(example)
+# add_subdirectory(example)
 add_subdirectory(tests)
 
 add_library(jsmn_obj OBJECT

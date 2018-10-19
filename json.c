@@ -49,7 +49,7 @@ jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv)
     // enum jsmner has four errors, thus
     if (*rv + 4 < 4) {
 #ifndef NPRINTF
-        fprintf(stderr, "jsmn_parse: %s\n", jsmn_strerror(*rv));
+        fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(*rv));
 #endif
         return NULL;
     }
@@ -173,7 +173,7 @@ jsmnint_t json_parse_object(const char *json, const jsmntok_t *tokens, const jsm
 }
 
 static inline
-jsmnint_t jsmn_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
+jsmnint_t json_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
 {
     // if parent's size is less than or equal to key, key is bad
     if (tokens[parent].size <= key)
@@ -209,7 +209,7 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
             pos = getJSONKeyValue(tokens, pos);
         } else if (tokens[pos].type == JSMN_ARRAY) {
             // if `pos`.type is an array, treat key as a jsmnint_t (by way of uintptr_t)
-            pos = jsmn_parse_array(tokens, pos, (uintptr_t)va_arg(keys, void *));
+            pos = json_parse_array(tokens, pos, (uintptr_t)va_arg(keys, void *));
         } else {
             // `pos` must be either an object or array
             pos = JSMN_NEG;
@@ -217,8 +217,9 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
         }
 
         // if json_parse_{object,array} returns JSMN_NEG, break
-        if (pos == JSMN_NEG)
+        if (pos == JSMN_NEG) {
             break;
+        }
     }
 
     va_end(keys);
@@ -228,11 +229,14 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t n
 EXPORT
 void explodeJSON(const char *json, size_t len)
 {
-#ifndef NDEBUG
-#ifndef NPRINTF
     jsmnint_t rv, i;
 
     jsmntok_t *tokens = json_tokenize(json, len, &rv);
+
+    if (rv + 4 < 4) {
+        printf("jsmn_parse error: %s\n", jsmn_strerror(rv));
+        return;
+    }
 
 //     const char *jsmntype[] = { "UNDEFINED", "OBJECT", "ARRAY", "", "STRING", "", "", "", "PRIMITIVE", };
     const char *jsmntype[] = { "UND", "OBJ", "ARR", "", "STR", "", "", "", "PRI", };
@@ -294,8 +298,6 @@ void explodeJSON(const char *json, size_t len)
     }
 
     free(tokens);
-#endif // NPRINTF
-#endif // NDEBUG
 }
 
 EXPORT

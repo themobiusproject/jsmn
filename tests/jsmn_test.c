@@ -23,13 +23,13 @@ int jsmn_setup(void **state)
 }
 
 /**
-* @brief va_arg token comparison
-*
-* @param[in] s json string
-* @param[in] t pointer to jsmn tokens
-* @param[in] numtok number of tokens
-* @param[in] ap p_ap:...
-*/
+ * @brief va_arg token comparison
+ *
+ * @param[in] s json string
+ * @param[in] t pointer to jsmn tokens
+ * @param[in] numtok number of tokens
+ * @param[in] ap p_ap:...
+ */
 void vtokeq(const char *s, jsmntok_t *t, int numtok, va_list ap)
 {
     if (numtok <= 0)
@@ -87,12 +87,12 @@ void vtokeq(const char *s, jsmntok_t *t, int numtok, va_list ap)
 }
 
 /**
-* @brief ...
-*
-* @param[in] s json string
-* @param[in] tokens pointer to jsmn tokens
-* @param[in] numtok number of tokens
-*/
+ * @brief ...
+ *
+ * @param[in] s json string
+ * @param[in] tokens pointer to jsmn tokens
+ * @param[in] numtok number of tokens
+ */
 void tokeq(const char *s, jsmntok_t *tokens, int numtok, ...)
 {
     va_list args;
