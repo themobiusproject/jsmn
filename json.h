@@ -4,46 +4,46 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-#ifndef JSMN_DEFINES
-#define JSMN_DEFINES
-#define JSMN_STRICT
-#define JSMN_PARENT_LINKS
-#define JSMN_SHORT_TOKENS
-#define JSMN_NEXT_SIBLING
+#ifndef JSMNM_DEFINES
+#define JSMNM_DEFINES
+#define JSMNM_STRICT
+#define JSMNM_PARENT_LINKS
+#define JSMNM_SHORT_TOKENS
+#define JSMNM_NEXT_SIBLING
 #endif
 
-#include "jsmn.h"
+#include "jsmnm.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * @brief Return a pointer to jsmn error message
+ * @brief Return a pointer to jsmnm error message
  *
- * @param[in] errno jsmn error number
- * @return const char* jsmn error message
+ * @param[in] errno jsmnm error number
+ * @return const char* jsmnm error message
  */
-const char *jsmn_strerror(jsmnenumtype_t errno);
+const char *jsmnm_strerror(jsmnmenumtype_t errno);
 
 /**
  * @brief Tokenizes JSON string
  *
  * @param[in] json JSON String
  * @param[out] rv Return Value
- * @return Allocated jsmntok_t array pointer
+ * @return Allocated jsmnmtok_t array pointer
  */
-jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv);
+jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv);
 
 /**
  * @brief Parse a json string and return the value of the key requested
  *
  * @param[in] json json string
- * @param[in] tokens jsmn tokens
+ * @param[in] tokens jsmnm tokens
  * @param[in] num_keys number of keys
- * @return jsmnint_t value
+ * @return jsmnmint_t value
  */
-jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const uint32_t num_keys, ...);
+jsmnmint_t json_parse(const char *json, const jsmnmtok_t *tokens, const uint32_t num_keys, ...);
 
 /**
  * @brief Print an extremely verbose description of JSON string
