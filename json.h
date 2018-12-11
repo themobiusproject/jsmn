@@ -12,6 +12,10 @@
 #define JSMNM_NEXT_SIBLING
 #endif
 
+#ifdef ARDUINO
+#define NDEBUG
+#endif
+
 #include "jsmnm.h"
 
 #ifdef __cplusplus
