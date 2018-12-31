@@ -47,7 +47,7 @@ jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv);
  * @param[in] num_keys number of keys
  * @return jsmnmint_t value
  */
-jsmnmint_t json_parse(const char *json, const jsmnmtok_t *tokens, const uint32_t num_keys, ...);
+jsmnmint_t json_parse(const char *json, const jsmnmtok_t *tokens, const size_t num_keys, ...);
 
 /**
  * @brief Print an extremely verbose description of JSON string

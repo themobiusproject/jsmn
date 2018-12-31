@@ -191,7 +191,7 @@ jsmnmint_t json_parse_array(const jsmnmtok_t *tokens, const jsmnmint_t parent, c
 }
 
 EXPORT
-jsmnmint_t json_parse(const char *json, const jsmnmtok_t *tokens, const uint32_t num_keys, ...)
+jsmnmint_t json_parse(const char *json, const jsmnmtok_t *tokens, const size_t num_keys, ...)
 {
     jsmnmint_t i, pos;
 
@@ -248,7 +248,7 @@ void explodeJSON(const char *json, size_t len)
             printf("\n");
 #endif
         printf("Token %3d :  type: %3s |  start: %4d |  end: %4d |  length: %4d |  size : %2d",
-               i, jsmnmtype[(uint8_t)tokens[i].type], tokens[i].start, tokens[i].end, tokens[i].end - tokens[i].start, tokens[i].size);
+               i, jsmnmtype[(jsmnmenumtype_t)tokens[i].type], tokens[i].start, tokens[i].end, tokens[i].end - tokens[i].start, tokens[i].size);
 #ifdef JSMNM_PARENT_LINKS
         printf(" |  parent: %3d", (tokens[i].parent != JSMN_NEG ? tokens[i].parent : -1));
 #endif
