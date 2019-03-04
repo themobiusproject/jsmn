@@ -3,13 +3,7 @@
 
 #include <stddef.h>
 
-#ifdef ARDUINO
-#define JSMNM_DEFINES
-#define JSMNM_STRICT
-#define JSMNM_PARENT_LINKS
-#define JSMNM_SHORT_TOKENS
-#define JSMNM_NEXT_SIBLING
-#endif
+#include "jsmnm_defines.h"
 
 #ifdef __cplusplus
 extern "C" {
