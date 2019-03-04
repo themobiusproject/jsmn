@@ -28,10 +28,23 @@ const char *jsmnm_strerror(jsmnmenumtype_t errno);
  * @brief Tokenizes JSON string
  *
  * @param[in] json JSON String
+ * @param[in] json_len Length of JSON String
  * @param[out] rv Return Value
  * @return Allocated jsmnmtok_t array pointer
  */
 jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv);
+
+
+/**
+ * @brief Tokenize JSON string
+ *
+ * @param[out] tokens Pointer to preallocated Tokens
+ * @param[in] num_tokens Number of Tokens
+ * @param[in] json JSON String
+ * @param[in] json_len Length of JSON String
+ * @return Return Value
+ */
+jsmnmint_t json_tokenize_noalloc(jsmnmtok_t *tokens, uint32_t num_tokens, const char *json, size_t json_len);
 
 /**
  * @brief Parse a json string and return the value of the key requested

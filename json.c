@@ -1,15 +1,17 @@
 #include "json.h"
 
+#ifdef UNIT_TESTING
+#include <setjmp.h>
+#include <cmocka.h>
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
 
-#ifdef UNIT_TESTING
-#include <setjmp.h>
-#include <cmocka.h>
-#endif
+#include "dbgprintf.h"
 
 #if (defined(__linux__) || defined(__APPLE__) || defined(ARDUINO))
 #define EXPORT __attribute__ ((visibility ("default")))
@@ -48,17 +50,11 @@ jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv)
 
     // enum jsmnmer has four errors, thus
     if (*rv + 4 < 4) {
-#ifndef NPRINTF
-        fprintf(stderr, "jsmnm_parse error: %s\n", jsmnm_strerror(*rv));
-#endif
+        dbgprintf("jsmnm_parse error: %s\n", jsmnm_strerror(*rv));
         return NULL;
     }
 
-#ifndef NDEBUG
-#ifndef NPRINTF
-    printf("jsmnm_parse: %d tokens found.\n", *rv);
-#endif
-#endif
+    dbgprintf("jsmnm_parse: %d tokens found.\n", *rv);
 
     jsmnmtok_t *tokens = calloc(*rv, sizeof(jsmnmtok_t));
 
@@ -66,6 +62,27 @@ jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv)
     *rv = jsmnm_parse(&p, json, json_len, tokens, *rv);
 
     return tokens;
+}
+
+EXPORT
+jsmnmint_t json_tokenize_noalloc(jsmnmtok_t *tokens, uint32_t num_tokens, const char *json, size_t json_len)
+{
+    jsmnm_parser p;
+    jsmnm_init(&p);
+
+    jsmnmint_t rv;
+
+    rv = jsmnm_parse(&p, json, json_len, tokens, num_tokens);
+
+    // enum jsmnmer has four errors, thus
+    if (rv + 4 < 4) {
+        dbgprintf("jsmnm_parse error: %s\n", jsmnm_strerror(rv));
+        return rv;
+    }
+
+    dbgprintf("jsmnm_parse: %d tokens found.\n", rv);
+
+    return rv;
 }
 
 /**

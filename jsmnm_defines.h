@@ -6,4 +6,6 @@
 #define JSMNM_SHORT_TOKENS
 #define JSMNM_NEXT_SIBLING
 
+// #define JSMNM_DEBUG
+
 #endif // JSMNM_DEFINES
