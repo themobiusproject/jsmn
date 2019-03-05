@@ -4,9 +4,9 @@
 #define __DBGPRINTF_H
 
 #if defined(NPRINTF)
-#define dbgprintf(fmt, ...)
+#define dbgprintf(...)
 #elif defined(NDEBUG)
-#define dbgprintf(fmt, ...) \
+#define dbgprintf(...) \
     do { \
         fprintf(stderr, __VA_ARGS__); \
     } while (0)
