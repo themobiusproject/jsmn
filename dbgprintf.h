@@ -12,7 +12,13 @@
 #if defined(__ANDROID__)
 #include <android/log.h>
 #define __dbgprintf(...) __android_log_print(ANDROID_LOG_DEBUG, "LOG_TAG", __VA_ARGS__);
+
+#elif defined(ARDUINO)
+#include <Arduino.h>
+#define __dbgprintf(...) Serial.printf(__VA_ARGS__);
+
 #else
+#include <stdio.h>
 #define __dbgprintf(...) fprintf(stderr, __VA_ARGS__);
 #endif
 
