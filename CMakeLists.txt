@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 cmake_policy(SET CMP0063 NEW)
 
-project(jsmn)
+project(JSMN)
 
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
@@ -28,8 +28,10 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# add_subdirectory(example)
-add_subdirectory(tests)
+if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+#	add_subdirectory(example)
+	add_subdirectory(tests)
+endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 add_library(jsmn_obj OBJECT
 	jsmnm.c
@@ -40,4 +42,7 @@ target_compile_definitions(jsmn_obj PRIVATE JSMNM_DEFINES JSMNM_PARENT_LINKS JSM
 
 add_library(jsmn
 	$<TARGET_OBJECTS:jsmn_obj>
+)
+target_include_directories(jsmn
+	PUBLIC ${PROJECT_SOURCE_DIR}
 )
