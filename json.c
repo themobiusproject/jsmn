@@ -54,7 +54,7 @@ jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv)
         return NULL;
     }
 
-    dbgprintf("jsmnm_parse: %d tokens found.\n", *rv);
+//     dbgprintf("jsmnm_parse: %d tokens found.\n", *rv);
 
     jsmnmtok_t *tokens = calloc(*rv, sizeof(jsmnmtok_t));
 
@@ -80,7 +80,7 @@ jsmnmint_t json_tokenize_noalloc(jsmnmtok_t *tokens, uint32_t num_tokens, const 
         return rv;
     }
 
-    dbgprintf("jsmnm_parse: %d tokens found.\n", rv);
+//     dbgprintf("jsmnm_parse: %d tokens found.\n", rv);
 
     return rv;
 }
