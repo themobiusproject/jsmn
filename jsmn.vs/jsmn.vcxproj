@@ -131,11 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\jsmn.c" />
+    <ClCompile Include="..\jsmnm.c" />
     <ClCompile Include="..\json.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\jsmn.h" />
+    <ClInclude Include="..\jsmnm.h" />
     <ClInclude Include="..\json.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
