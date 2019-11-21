@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\jsmn.c">
+    <ClCompile Include="..\jsmnm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\json.c">
@@ -23,7 +23,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\jsmn.h">
+    <ClInclude Include="..\jsmnm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\json.h">
