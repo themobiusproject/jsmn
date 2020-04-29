@@ -414,15 +414,15 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       }
       if (parser->toksuper != JSMN_NEG) {
         t = &tokens[parser->toksuper];
-//#ifdef JSMN_STRICT
-//        /* In strict mode an object or array can't become a key */
-//        if (t->type == JSMN_OBJECT) {
+#ifdef JSMN_STRICT
+        /* In strict mode an object or array can't become a key */
+        if (t->type == JSMN_OBJECT) {
 #ifdef JSMN_DEBUG
           printf(" -> JSMN_ERROR_INVAL %d\n", __LINE__);
 #endif
-//          return JSMN_ERROR_INVAL;
-//        }
-//#endif
+          return JSMN_ERROR_INVAL;
+        }
+#endif
         t->size++;
 #ifdef JSMN_PARENT_LINKS
         token->parent = parser->toksuper;

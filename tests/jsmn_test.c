@@ -697,29 +697,6 @@ void test_unquoted_keys(void)
 //     return cmocka_run_group_tests_name("test unquoted keys (like in JavaScript)", tests, NULL, NULL);
 }
 
-static void test_input_length_01(void **state)
-{
-    (void)state; // unused
-    const char *js = "{\"a\": 0}garbage";
-    assert_int_equal(jsmn_parse(&p, js, 8, t, 10), 3);
-    tokeq(js, t, 3,
-          JSMN_OBJECT, -1, -1, 1,
-          JSMN_STRING, "a", 1,
-          JSMN_PRIMITIVE, "0");
-}
-
-void test_input_length(void)
-{
-    const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(test_input_length_01, jsmn_setup),
-    };
-
-    memcpy(cur_test, tests, sizeof(tests));
-    cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test strings that are not null-terminated", tests, NULL, NULL);
-}
-
 static void test_issue_22(void **state)
 {
     (void)state; // unused
@@ -754,6 +731,29 @@ void test_issues(void)
     cur_test += sizeof(tests);
     total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test issues", tests, NULL, NULL);
+}
+
+static void test_input_length_01(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\": 0}garbage";
+    assert_int_equal(jsmn_parse(&p, js, 8, t, 10), 3);
+    tokeq(js, t, 3,
+          JSMN_OBJECT, -1, -1, 1,
+          JSMN_STRING, "a", 1,
+          JSMN_PRIMITIVE, "0");
+}
+
+void test_input_length(void)
+{
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test_setup(test_input_length_01, jsmn_setup),
+    };
+
+    memcpy(cur_test, tests, sizeof(tests));
+    cur_test += sizeof(tests);
+    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+//     return cmocka_run_group_tests_name("test strings that are not null-terminated", tests, NULL, NULL);
 }
 
 static void test_count_01(void **state)
@@ -942,8 +942,8 @@ static void test_unmatched_brackets_05(void **state)
 static void test_unmatched_brackets_06(void **state)
 {
     (void)state; // unused
-    const char *js = "{{\"key 1\": 1234}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_PART);
+    const char *js = "{\"key 1\":{\"key 2\": 1234}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_PART);
 }
 
 void test_unmatched_brackets(void)
@@ -961,6 +961,65 @@ void test_unmatched_brackets(void)
     cur_test += sizeof(tests);
     total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test for unmatched brackets", tests, NULL, NULL);
+}
+
+static void test_object_key_01(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"key\": 1}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
+    tokeq(js, t, 3,
+        JSMN_OBJECT, 0, 10, 1,
+        JSMN_STRING, "key", 1,
+        JSMN_PRIMITIVE, "1");
+}
+
+#ifdef JSMN_STRICT
+static void test_object_key_02(void **state)
+{
+    (void)state; // unused
+    const char *js = "{true: 1}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_key_03(void **state)
+{
+    (void)state; // unused
+    const char *js = "{1: 1}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_key_04(void **state)
+{
+    (void)state; // unused
+    const char *js = "{{\"key\": 1}: 2}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_key_05(void **state)
+{
+    (void)state; // unused
+    const char *js = "{[1,2]: 2}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+#endif
+
+void test_object_key(void)
+{
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test_setup(test_object_key_01, jsmn_setup),
+#ifdef JSMN_STRICT
+        cmocka_unit_test_setup(test_object_key_02, jsmn_setup),
+        cmocka_unit_test_setup(test_object_key_03, jsmn_setup),
+        cmocka_unit_test_setup(test_object_key_04, jsmn_setup),
+        cmocka_unit_test_setup(test_object_key_05, jsmn_setup),
+#endif
+    };
+
+    memcpy(cur_test, tests, sizeof(tests));
+    cur_test += sizeof(tests);
+    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+//     return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 
 int main(void)
@@ -981,6 +1040,7 @@ int main(void)
     test_count();          // test tokens count estimation
     test_nonstrict();      // test for non-strict mode
     test_unmatched_brackets(); // test for unmatched brackets
+    test_object_key();     // test for key type
 
     return _cmocka_run_group_tests("jsmn_test", tests, total_tests, NULL, NULL);
 //     return cmocka_run_group_tests(tests, NULL, NULL);
