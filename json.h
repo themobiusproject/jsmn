@@ -4,25 +4,25 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-#include "jsmnm_defines.h"
+#include "jsmn_defines.h"
 
 #ifdef ARDUINO
 #define NDEBUG
 #endif
 
-#include "jsmnm.h"
+#include "jsmn.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * @brief Return a pointer to jsmnm error message
+ * @brief Return a pointer to jsmn error message
  *
- * @param[in] errno jsmnm error number
- * @return const char* jsmnm error message
+ * @param[in] errno jsmn error number
+ * @return const char* jsmn error message
  */
-const char *jsmnm_strerror(jsmnmenumtype_t errno);
+const char *jsmn_strerror(jsmnenumtype_t errno);
 
 /**
  * @brief Tokenizes JSON string
@@ -30,9 +30,9 @@ const char *jsmnm_strerror(jsmnmenumtype_t errno);
  * @param[in] json JSON String
  * @param[in] json_len Length of JSON String
  * @param[out] rv Return Value
- * @return Allocated jsmnmtok_t array pointer
+ * @return Allocated jsmntok_t array pointer
  */
-jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv);
+jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv);
 
 
 /**
@@ -44,17 +44,17 @@ jsmnmtok_t *json_tokenize(const char *json, size_t json_len, jsmnmint_t *rv);
  * @param[in] json_len Length of JSON String
  * @return Return Value
  */
-jsmnmint_t json_tokenize_noalloc(jsmnmtok_t *tokens, uint32_t num_tokens, const char *json, size_t json_len);
+jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, uint32_t num_tokens, const char *json, size_t json_len);
 
 /**
  * @brief Parse a json string and return the value of the key requested
  *
  * @param[in] json json string
- * @param[in] tokens jsmnm tokens
+ * @param[in] tokens jsmn tokens
  * @param[in] num_keys number of keys
- * @return jsmnmint_t value
+ * @return jsmnint_t value
  */
-jsmnmint_t json_parse(const char *json, const jsmnmtok_t *tokens, const size_t num_keys, ...);
+jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const size_t num_keys, ...);
 
 /**
  * @brief Print an extremely verbose description of JSON string
