@@ -32,7 +32,7 @@ const char *jsmn_strerror(jsmnenumtype_t errno);
  * @param[out] rv Return Value
  * @return Allocated jsmntok_t array pointer
  */
-jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv);
+jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv);
 
 
 /**
@@ -44,7 +44,7 @@ jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv);
  * @param[in] json_len Length of JSON String
  * @return Return Value
  */
-jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, uint32_t num_tokens, const char *json, size_t json_len);
+jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, const char *json, const size_t json_len);
 
 /**
  * @brief Parse a json string and return the value of the key requested

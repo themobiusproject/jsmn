@@ -41,7 +41,7 @@ const char *jsmn_strerror(jsmnenumtype_t errno)
 }
 
 EXPORT
-jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv)
+jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
 {
     jsmn_parser p;
     jsmn_init(&p);
@@ -65,7 +65,7 @@ jsmntok_t *json_tokenize(const char *json, size_t json_len, jsmnint_t *rv)
 }
 
 EXPORT
-jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, uint32_t num_tokens, const char *json, size_t json_len)
+jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, const char *json, const size_t json_len)
 {
     jsmn_parser p;
     jsmn_init(&p);
@@ -244,7 +244,7 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const size_t num
 }
 
 EXPORT
-void explodeJSON(const char *json, size_t len)
+void explodeJSON(const char *json, const size_t len)
 {
 #ifndef NPRINTF
     jsmnint_t rv, i;
