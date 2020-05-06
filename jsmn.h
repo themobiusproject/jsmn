@@ -365,7 +365,7 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
         t = &tokens[parser->toksuper];
 #ifdef JSMN_STRICT
         /* In strict mode an object or array can't become a key */
-        if (t->type == JSMN_OBJECT) {
+        if (t->type & JSMN_OBJECT) {
           return JSMN_ERROR_INVAL;
         }
 #endif
@@ -394,7 +394,7 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       token = &tokens[parser->toknext - 1];
       for (;;) {
         if (token->start != JSMN_NEG && token->end == JSMN_NEG) {
-          if (token->type != type) {
+          if (!(token->type & type)) {
             return JSMN_ERROR_INVAL;
           }
           token->end = parser->pos + 1;
@@ -402,7 +402,7 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
           break;
         }
         if (token->parent == JSMN_NEG) {
-          if (token->type != type || parser->toksuper == JSMN_NEG) {
+          if (!(token->type & type) || parser->toksuper == JSMN_NEG) {
             return JSMN_ERROR_INVAL;
           }
           break;
@@ -413,7 +413,7 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       for (i = parser->toknext - 1; i >= 0; i--) {
         token = &tokens[i];
         if (token->start != JSMN_NEG && token->end == JSMN_NEG) {
-          if (token->type != type) {
+          if (!(token->type & type)) {
             return JSMN_ERROR_INVAL;
           }
           parser->toksuper = JSMN_NEG;
@@ -454,13 +454,12 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       break;
     case ',':
       if (tokens != NULL && parser->toksuper != JSMN_NEG &&
-          tokens[parser->toksuper].type != JSMN_ARRAY &&
-          tokens[parser->toksuper].type != JSMN_OBJECT) {
+          !(tokens[parser->toksuper].type & (JSMN_OBJECT | JSMN_ARRAY))) {
 #ifdef JSMN_PARENT_LINKS
         parser->toksuper = tokens[parser->toksuper].parent;
 #else
         for (i = parser->toknext - 1; i >= 0; i--) {
-          if (tokens[i].type == JSMN_ARRAY || tokens[i].type == JSMN_OBJECT) {
+          if (tokens[i].type & JSMN_ARRAY || tokens[i].type & JSMN_OBJECT) {
             if (tokens[i].start != JSMN_NEG && tokens[i].end == JSMN_NEG) {
               parser->toksuper = i;
               break;
@@ -489,8 +488,8 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       /* And they must not be keys of the object */
       if (tokens != NULL && parser->toksuper != JSMN_NEG) {
         t = &tokens[parser->toksuper];
-        if (t->type == JSMN_OBJECT ||
-            (t->type == JSMN_STRING && t->size != 0)) {
+        if (t->type & JSMN_OBJECT ||
+            (t->type & JSMN_STRING && t->size != 0)) {
           return JSMN_ERROR_INVAL;
         }
       }

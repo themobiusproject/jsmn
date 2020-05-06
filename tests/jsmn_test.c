@@ -30,13 +30,14 @@ int jsmn_setup(void **state)
  * @param[in] numtok number of tokens
  * @param[in] ap p_ap:...
  */
-void vtokeq(const char *s, jsmntok_t *t, int numtok, va_list ap)
+void vtokeq(const char *s, jsmntok_t *t, size_t numtok, va_list ap)
 {
     if (numtok <= 0)
         return;
 
-    int i, start, end, size = -1;
-    int type;
+    size_t i;
+    jsmnint_t start, end, size = JSMN_NEG;
+    jsmnenumtype_t type;
     char *value = NULL;
 
     for (i = 0; i < numtok; i++) {
@@ -45,11 +46,11 @@ void vtokeq(const char *s, jsmntok_t *t, int numtok, va_list ap)
             case JSMN_STRING:
                 value = va_arg(ap, char *);
                 size = va_arg(ap, int);
-                start = end = -1;
+                start = end = JSMN_NEG;
                 break;
             case JSMN_PRIMITIVE:
                 value = va_arg(ap, char *);
-                start = end = size = -1;
+                start = end = size = JSMN_NEG;
                 break;
             default:
                 value = NULL;
@@ -58,28 +59,28 @@ void vtokeq(const char *s, jsmntok_t *t, int numtok, va_list ap)
                 size = va_arg(ap, int);
                 break;
         }
-        if (t[i].type != type) {
-            fail_msg("token %d type is %d, not %d", i, t[i].type, type);
+        if (!(t[i].type & type)) {
+            fail_msg("token %zu type is %d, not %d", i, t[i].type, type);
         }
 
-        if (start != -1 && end != -1) {
+        if (start != JSMN_NEG && end != JSMN_NEG) {
             if (t[i].start != start) {
-                fail_msg("token %d start is %d, not %d", i, t[i].start, start);
+                fail_msg("token %zu start is %d, not %d", i, t[i].start, start);
             }
             if (t[i].end != end) {
-                fail_msg("token %d end is %d, not %d", i, t[i].end, end);
+                fail_msg("token %zu end is %d, not %d", i, t[i].end, end);
             }
         }
 
-        if (size != -1 && t[i].size != size) {
-            fail_msg("token %d size is %d, not %d", i, t[i].size, size);
+        if (size != JSMN_NEG && t[i].size != size) {
+            fail_msg("token %zu size is %d, not %d", i, t[i].size, size);
         }
 
         if (s != NULL && value != NULL) {
             const char *p = s + t[i].start;
             if (strlen(value) != t[i].end - t[i].start ||
                     strncmp(p, value, t[i].end - t[i].start) != 0) {
-                fail_msg("token %d value is %.*s, not %s",
+                fail_msg("token %zu value is %.*s, not %s",
                          i, t[i].end - t[i].start, s + t[i].start, value);
             }
         }
