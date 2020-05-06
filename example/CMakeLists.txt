@@ -10,4 +10,9 @@ add_executable(jsondump
 )
 target_link_libraries(jsondump jsmn)
 
+add_executable(explode
+  explode.c
+)
+target_link_libraries(explode jsmn)
+
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})

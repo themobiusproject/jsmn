@@ -3,6 +3,10 @@ cmake_policy(SET CMP0063 NEW)
 
 project(JSMN)
 
+set(JSMN_VERSION_MAJOR 1)
+set(JSMN_VERSION_MINOR 1)
+set(JSMN_VERSION_PATCH 0)
+
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 set(CMAKE_C_FLAGS   "${CMAKE_C99_STANDARD_COMPILE_OPTION}")
@@ -29,7 +33,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
-#	add_subdirectory(example)
+	add_subdirectory(example)
 	add_subdirectory(tests)
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
@@ -37,11 +41,17 @@ add_library(jsmn_obj OBJECT
 	json.c
 )
 set_target_properties(jsmn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_compile_definitions(jsmn_obj PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT)
+# target_compile_definitions(jsmn_obj PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT)
 
 add_library(jsmn
 	$<TARGET_OBJECTS:jsmn_obj>
 )
 target_include_directories(jsmn
 	PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+set_target_properties(jsmn
+                      PROPERTIES
+                      VERSION ${JSMN_VERSION_MAJOR}.${JSMN_VERSION_MINOR}.${JSMN_VERSION_PATCH}
+                      SOVERSION ${JSMN_VERSION_MAJOR}.${JSMN_VERSION_MINOR}.${JSMN_VERSION_PATCH}
 )
