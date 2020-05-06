@@ -57,6 +57,9 @@ typedef enum {
   JSMN_ARRAY     = 0x02,
   JSMN_STRING    = 0x04,
   JSMN_PRIMITIVE = 0x08,
+
+  JSMN_KEY       = 0x10,
+  JSMN_VALUE     = 0x20,
 } jsmntype_t;
 
 enum jsmnerr {
@@ -282,6 +285,14 @@ static int jsmn_parse_string(jsmn_parser *parser, const char *js,
         return JSMN_ERROR_NOMEM;
       }
       jsmn_fill_token(token, JSMN_STRING, start + 1, parser->pos);
+#ifdef JSMN_STRICT
+      if (parser->toksuper != JSMN_NEG &&
+          tokens[parser->toksuper].type & JSMN_OBJECT) {
+        token->type |= JSMN_KEY;
+      } else {
+        token->type |= JSMN_VALUE;
+      }
+#endif
 #ifdef JSMN_PARENT_LINKS
       token->parent = parser->toksuper;
 #endif
@@ -378,6 +389,12 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
 #endif
       }
       token->type = (c == '{' ? JSMN_OBJECT : JSMN_ARRAY);
+#ifdef JSMN_STRICT
+      if (parser->toksuper != JSMN_NEG &&
+          tokens[parser->toksuper].type & JSMN_KEY) {
+        token->type |= JSMN_VALUE;
+      }
+#endif
       token->start = parser->pos;
       parser->toksuper = parser->toknext - 1;
       break;

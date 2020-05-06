@@ -8,6 +8,4 @@
 
 // #define JSMN_STATIC
 
-// #define JSMN_DEBUG
-
 #endif // JSMN_DEFINES

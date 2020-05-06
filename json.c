@@ -106,12 +106,19 @@ int json_token_streq(const char *json, const jsmntok_t *tok, const char *s)
 static inline
 jsmnint_t isJSONKey(const jsmntok_t *tokens, const jsmnint_t t)
 {
+#if defined(JSMN_STRICT)
+    if (tokens[t].type & JSMN_KEY)
+        return 0;
+
+    return JSMN_NEG;
+#else
     if (!(tokens[t].type & JSMN_STRING))
         return JSMN_NEG; // JSON Key must be of type JSMN_STRING
     if (tokens[t].size != 1)
         return JSMN_NEG; // JSON Key can only have 1 child
 
     return 0;
+#endif
 }
 
 static inline
@@ -269,6 +276,15 @@ void explodeJSON(const char *json, const size_t len)
 #ifdef JSMN_NEXT_SIBLING
         printf(" |  sibling: %3d", (tokens[i].next_sibling != JSMN_NEG ? tokens[i].next_sibling : -1));
 #endif
+#ifdef JSMN_STRICT
+        if (tokens[i].type & JSMN_KEY) {
+            printf(" | Key");
+        } else if (tokens[i].type & JSMN_VALUE) {
+            printf(" | Val");
+        } else {
+            printf(" |    ");
+        }
+#endif
         printf(" | ");
 
         if (tokens[i].type & JSMN_OBJECT) {
@@ -288,6 +304,7 @@ void explodeJSON(const char *json, const size_t len)
             printf("%.*s", tokens[i].end - tokens[i].start, json + tokens[i].start);
             if (tokens[i].type & JSMN_STRING)
                 printf("\"");
+// TODO Only print comma if (parent is JSMN_ARRAY && next_sibling != JSMN_NEG) || (grandparent is JSMN_OBJECT && parent next_sibling != JSMN_NEG)
             printf(",");
         }
         printf("\n");
@@ -308,6 +325,9 @@ void explodeJSON(const char *json, const size_t len)
 #endif
 #ifdef JSMN_NEXT_SIBLING
             printf(" |              ");
+#endif
+#ifdef JSMN_STRICT
+            printf(" |    ");
 #endif
             printf(" | ");
 
