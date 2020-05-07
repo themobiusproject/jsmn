@@ -323,7 +323,7 @@ void test_object(void)
 //   return cmocka_run_group_tests_name("test for JSON objects", tests, NULL, NULL);
 }
 
-/* FIXME test_array 1,2,5 */
+/* FIXME test_array 1,2 */
 static void test_array_01(void **state)
 {
     (void)state; // unused
@@ -360,7 +360,6 @@ static void test_array_04(void **state)
 static void test_array_05(void **state)
 {
     (void)state; // unused
-    skip();
     const char *js = "[\"a\": 1]";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
 }

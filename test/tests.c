@@ -53,8 +53,7 @@ int test_array(void) {
   /*check(parse("[1,,3]", JSMN_ERROR_INVAL, 3)*/
   check(parse("[10]", 2, 2, JSMN_ARRAY, -1, -1, 1, JSMN_PRIMITIVE, "10"));
   check(parse("{\"a\": 1]", JSMN_ERROR_INVAL, 3));
-  /* FIXME */
-  /*check(parse("[\"a\": 1]", JSMN_ERROR_INVAL, 3));*/
+  check(parse("[\"a\": 1]", JSMN_ERROR_INVAL, 3));
   return 0;
 }
 

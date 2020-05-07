@@ -457,7 +457,7 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
         return r;
       }
       count++;
-      if (parser->toksuper != JSMN_NEG && tokens != NULL) {
+      if (tokens != NULL && parser->toksuper != JSMN_NEG) {
         tokens[parser->toksuper].size++;
       }
       break;
@@ -467,6 +467,10 @@ JSMN_API jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
     case ' ':
       break;
     case ':':
+      if (tokens != NULL && parser->toksuper != JSMN_NEG &&
+          !(tokens[parser->toksuper].type & JSMN_OBJECT)) {
+        return JSMN_ERROR_INVAL;
+      }
       parser->toksuper = parser->toknext - 1;
       break;
     case ',':
