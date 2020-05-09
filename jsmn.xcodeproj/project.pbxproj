@@ -7,15 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9529CB0C217A4F2A00E1C918 /* jsmnm.c in Sources */ = {isa = PBXBuildFile; fileRef = 9529CB0A217A4F2A00E1C918 /* jsmnm.c */; };
-		9529CB0D217A4F2A00E1C918 /* jsmnm.h in Headers */ = {isa = PBXBuildFile; fileRef = 9529CB0B217A4F2A00E1C918 /* jsmnm.h */; };
+		957EB5312467080B0077E79A /* jsmn.h in Headers */ = {isa = PBXBuildFile; fileRef = 957EB5302467080B0077E79A /* jsmn.h */; };
 		95CB431620A2A5ED00C36DB4 /* json.c in Sources */ = {isa = PBXBuildFile; fileRef = 95CB431420A2A5ED00C36DB4 /* json.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9529CB0A217A4F2A00E1C918 /* jsmnm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmnm.c; sourceTree = "<group>"; };
-		9529CB0B217A4F2A00E1C918 /* jsmnm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmnm.h; sourceTree = "<group>"; };
 		95346C05205C728B006A0917 /* libjsmn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libjsmn.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		957EB5302467080B0077E79A /* jsmn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn.h; sourceTree = "<group>"; };
 		95CB431320A2A5ED00C36DB4 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
 		95CB431420A2A5ED00C36DB4 /* json.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -34,8 +32,7 @@
 		95346BFC205C728B006A0917 = {
 			isa = PBXGroup;
 			children = (
-				9529CB0A217A4F2A00E1C918 /* jsmnm.c */,
-				9529CB0B217A4F2A00E1C918 /* jsmnm.h */,
+				957EB5302467080B0077E79A /* jsmn.h */,
 				95CB431420A2A5ED00C36DB4 /* json.c */,
 				95CB431320A2A5ED00C36DB4 /* json.h */,
 				95346C06205C728B006A0917 /* Products */,
@@ -57,7 +54,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9529CB0D217A4F2A00E1C918 /* jsmnm.h in Headers */,
+				957EB5312467080B0077E79A /* jsmn.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,7 +116,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				95CB431620A2A5ED00C36DB4 /* json.c in Sources */,
-				9529CB0C217A4F2A00E1C918 /* jsmnm.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
