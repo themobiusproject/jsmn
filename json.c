@@ -26,7 +26,7 @@
 EXPORT
 const char *jsmn_strerror(jsmnenumtype_t errno)
 {
-    switch (errno) {
+    switch ((char)errno) {
         case JSMN_ERROR_NOMEM:
             return "Not enough tokens were provided.";
         case JSMN_ERROR_INVAL:
