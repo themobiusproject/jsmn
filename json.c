@@ -11,8 +11,6 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-#include "dbgprintf.h"
-
 #if (defined(__linux__) || defined(__APPLE__) || defined(ARDUINO))
 #define EXPORT __attribute__ ((visibility ("default")))
 #else
@@ -24,9 +22,11 @@
 #endif
 
 EXPORT
-const char *jsmn_strerror(jsmnenumtype_t errno)
+const char *jsmn_strerror(enum jsmnerr errno)
 {
-    switch ((char)errno) {
+    switch (errno) {
+        case JSMN_SUCCESS:
+            return "Success, should not be printing error.";
         case JSMN_ERROR_NOMEM:
             return "Not enough tokens were provided.";
         case JSMN_ERROR_INVAL:
@@ -50,11 +50,11 @@ jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
 
     // enum jsmner has four errors, thus
     if (*rv + 4 < 4) {
-        dbgprintf("jsmn_parse error: %s\n", jsmn_strerror(*rv));
+        fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(*rv));
         return NULL;
     }
 
-//     dbgprintf("jsmn_parse: %d tokens found.\n", *rv);
+//  fprintf(stderr, "jsmn_parse: %d tokens found.\n", *rv);
 
     jsmntok_t *tokens = calloc(*rv, sizeof(jsmntok_t));
 
@@ -76,11 +76,11 @@ jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, co
 
     // enum jsmner has four errors, thus
     if (rv + 4 < 4) {
-        dbgprintf("jsmn_parse error: %s\n", jsmn_strerror(rv));
+        fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(rv));
         return rv;
     }
 
-//     dbgprintf("jsmn_parse: %d tokens found.\n", rv);
+//  fprintf(stderr, "jsmn_parse: %d tokens found.\n", rv);
 
     return rv;
 }
@@ -263,13 +263,13 @@ void explodeJSON(const char *json, const size_t len)
         return;
     }
 
-//     const char *jsmntype[] = { "UNDEFINED", "OBJECT", "ARRAY", "", "STRING", "", "", "", "PRIMITIVE", };
-    const char *jsmntype[] = { "UND", "OBJ", "ARR", "", "STR", "", "", "", "PRI", };
+    const char *jsmntype[] = { "", "OBJ", "ARR", "", "STR", "", "", "", "PRI",
+                               "", "KEY", "VAL", "", "CLS", "", "", "", "DLM", };
 
     printf("\n");
     for (i = 0; i < rv; i++) {
         printf("Token %3d :  type: %3s |  start: %4d |  end: %4d |  length: %4d |  size : %2d",
-               i, jsmntype[(jsmnenumtype_t)tokens[i].type & 0x0F], tokens[i].start, tokens[i].end, tokens[i].end - tokens[i].start, tokens[i].size);
+               i, jsmntype[tokens[i].type & 0x0F], tokens[i].start, tokens[i].end, tokens[i].end - tokens[i].start, tokens[i].size);
 #ifdef JSMN_PARENT_LINKS
         printf(" |  parent: %3d", (tokens[i].parent != JSMN_NEG ? tokens[i].parent : -1));
 #endif
@@ -277,10 +277,8 @@ void explodeJSON(const char *json, const size_t len)
         printf(" |  sibling: %3d", (tokens[i].next_sibling != JSMN_NEG ? tokens[i].next_sibling : -1));
 #endif
 #ifdef JSMN_STRICT
-        if (tokens[i].type & JSMN_KEY) {
-            printf(" | Key");
-        } else if (tokens[i].type & JSMN_VALUE) {
-            printf(" | Val");
+        if (tokens[i].type & (JSMN_KEY | JSMN_VALUE)) {
+            printf(" | %3s", jsmntype[tokens[i].type & 0x30]);
         } else {
             printf(" |    ");
         }

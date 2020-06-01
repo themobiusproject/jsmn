@@ -22,7 +22,7 @@ extern "C" {
  * @param[in] errno jsmn error number
  * @return const char* jsmn error message
  */
-const char *jsmn_strerror(jsmnenumtype_t errno);
+const char *jsmn_strerror(enum jsmnerr errno);
 
 /**
  * @brief Tokenizes JSON string

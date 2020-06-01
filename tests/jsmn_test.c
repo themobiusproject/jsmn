@@ -37,7 +37,7 @@ void vtokeq(const char *s, jsmntok_t *t, size_t numtok, va_list ap)
 
     size_t i;
     jsmnint_t start, end, size = JSMN_NEG;
-    jsmnenumtype_t type;
+    jsmntype_t type;
     char *value = NULL;
 
     for (i = 0; i < numtok; i++) {
@@ -244,11 +244,9 @@ static void test_object_10(void **state)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
-/* FIXME test_object 11-16 */
 static void test_object_11(void **state)
 {
     (void)state; // unused
-    skip();
     const char *js = "{\"a\"}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -256,7 +254,6 @@ static void test_object_11(void **state)
 static void test_object_12(void **state)
 {
     (void)state; // unused
-    skip();
     const char *js = "{\"a\": 1, \"b\"}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -264,7 +261,6 @@ static void test_object_12(void **state)
 static void test_object_13(void **state)
 {
     (void)state; // unused
-    skip();
     const char *js = "{\"a\",\"b\":1}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -272,7 +268,6 @@ static void test_object_13(void **state)
 static void test_object_14(void **state)
 {
     (void)state; // unused
-    skip();
     const char *js = "{\"a\":1,}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -280,7 +275,6 @@ static void test_object_14(void **state)
 static void test_object_15(void **state)
 {
     (void)state; // unused
-    skip();
     const char *js = "{\"a\":\"b\":\"c\"}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -288,7 +282,6 @@ static void test_object_15(void **state)
 static void test_object_16(void **state)
 {
     (void)state; // unused
-    skip();
     const char *js = "{,}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }

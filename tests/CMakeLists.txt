@@ -1,10 +1,9 @@
 find_package(CMocka)
 
-if(DEFINED CMOCKA_LIBRARY)
-
 enable_testing()
 
 include_directories(${PROJECT_SOURCE_DIR})
+include_directories(/usr/local/include)
 
 set_source_files_properties(
     jsmn_test.c
@@ -95,5 +94,3 @@ add_executable(jsmn_test_sibling_short_strict_links
 target_compile_definitions(jsmn_test_sibling_short_strict_links PRIVATE JSMN_DEFINES JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT JSMN_PARENT_LINKS)
 target_link_libraries(jsmn_test_sibling_short_strict_links ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_sibling_short_strict_links COMMAND jsmn_test_sibling_short_strict_links)
-
-endif(DEFINED CMOCKA_LIBRARY)

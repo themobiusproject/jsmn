@@ -9,13 +9,30 @@
 /* Begin PBXBuildFile section */
 		957EB5312467080B0077E79A /* jsmn.h in Headers */ = {isa = PBXBuildFile; fileRef = 957EB5302467080B0077E79A /* jsmn.h */; };
 		95CB431620A2A5ED00C36DB4 /* json.c in Sources */ = {isa = PBXBuildFile; fileRef = 95CB431420A2A5ED00C36DB4 /* json.c */; };
+		95EF323F2485EFA400AEDB36 /* jsmn_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 95EF322F2485ADDF00AEDB36 /* jsmn_test.c */; };
+		95EF32402485EFAA00AEDB36 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		95EF32362485EE2000AEDB36 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		95346C05205C728B006A0917 /* libjsmn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libjsmn.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		957EB5302467080B0077E79A /* jsmn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn.h; sourceTree = "<group>"; };
 		95CB431320A2A5ED00C36DB4 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
 		95CB431420A2A5ED00C36DB4 /* json.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json.c; sourceTree = "<group>"; };
+		95EF322F2485ADDF00AEDB36 /* jsmn_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmn_test.c; sourceTree = "<group>"; };
+		95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libcmocka.0.7.0.dylib; sourceTree = "<group>"; };
+		95EF32382485EE2000AEDB36 /* jsmn_test_strict */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_strict; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,16 +43,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		95EF32352485EE2000AEDB36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95EF32402485EFAA00AEDB36 /* libcmocka.0.7.0.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		95346BFC205C728B006A0917 = {
 			isa = PBXGroup;
 			children = (
+				95EF322E2485ADCC00AEDB36 /* tests */,
 				957EB5302467080B0077E79A /* jsmn.h */,
 				95CB431420A2A5ED00C36DB4 /* json.c */,
 				95CB431320A2A5ED00C36DB4 /* json.h */,
 				95346C06205C728B006A0917 /* Products */,
+				95EF32312485AE1F00AEDB36 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -43,9 +70,27 @@
 			isa = PBXGroup;
 			children = (
 				95346C05205C728B006A0917 /* libjsmn.a */,
+				95EF32382485EE2000AEDB36 /* jsmn_test_strict */,
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		95EF322E2485ADCC00AEDB36 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				95EF322F2485ADDF00AEDB36 /* jsmn_test.c */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		95EF32312485AE1F00AEDB36 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */,
+			);
+			name = Frameworks;
+			path = /usr/local/lib;
+			sourceTree = "<absolute>";
 		};
 /* End PBXGroup section */
 
@@ -78,6 +123,23 @@
 			productReference = 95346C05205C728B006A0917 /* libjsmn.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		95EF32372485EE2000AEDB36 /* jsmn_test_strict */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95EF323E2485EE2000AEDB36 /* Build configuration list for PBXNativeTarget "jsmn_test_strict" */;
+			buildPhases = (
+				95EF32342485EE2000AEDB36 /* Sources */,
+				95EF32352485EE2000AEDB36 /* Frameworks */,
+				95EF32362485EE2000AEDB36 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = jsmn_test_strict;
+			productName = jsmn_test_strict;
+			productReference = 95EF32382485EE2000AEDB36 /* jsmn_test_strict */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -91,6 +153,10 @@
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
+					95EF32372485EE2000AEDB36 = {
+						CreatedOnToolsVersion = 11.5;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 95346C00205C728B006A0917 /* Build configuration list for PBXProject "jsmn" */;
@@ -99,6 +165,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 95346BFC205C728B006A0917;
 			productRefGroup = 95346C06205C728B006A0917 /* Products */;
@@ -106,6 +173,7 @@
 			projectRoot = "";
 			targets = (
 				95346C04205C728B006A0917 /* jsmn */,
+				95EF32372485EE2000AEDB36 /* jsmn_test_strict */,
 			);
 		};
 /* End PBXProject section */
@@ -116,6 +184,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				95CB431620A2A5ED00C36DB4 /* json.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95EF32342485EE2000AEDB36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95EF323F2485EFA400AEDB36 /* jsmn_test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +243,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -217,6 +295,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
@@ -238,6 +318,43 @@
 			};
 			name = Release;
 		};
+		95EF323C2485EE2000AEDB36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					JSMN_DEFINES,
+					JSMN_STRICT,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		95EF323D2485EE2000AEDB36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					JSMN_DEFINES,
+					JSMN_STRICT,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -255,6 +372,15 @@
 			buildConfigurations = (
 				95346C11205C728B006A0917 /* Debug */,
 				95346C12205C728B006A0917 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95EF323E2485EE2000AEDB36 /* Build configuration list for PBXNativeTarget "jsmn_test_strict" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95EF323C2485EE2000AEDB36 /* Debug */,
+				95EF323D2485EE2000AEDB36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
