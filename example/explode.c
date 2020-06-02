@@ -16,7 +16,7 @@ int main(void)
     size = ftell(fp);
     rewind(fp);
 
-    JSON_STRING = malloc(sizeof(char) * size);
+    JSON_STRING = calloc(size, sizeof(char));
     fread(JSON_STRING, sizeof(char), size, fp);
 
     fclose(fp);
@@ -24,12 +24,6 @@ int main(void)
     explodeJSON(JSON_STRING, size);
 
     free(JSON_STRING);
-
-    explodeJSON("{\"a\"}",             sizeof("{\"a\"}"));
-    explodeJSON("{\"a\": 1, \"b\"}",   sizeof("{\"a\": 1, \"b\"}"));
-    explodeJSON("{\"a\",\"b\":1}",     sizeof("{\"a\",\"b\":1}"));
-    explodeJSON("{\"a\":1,}",          sizeof("{\"a\":1,}"));
-    explodeJSON("{\"a\":\"b\":\"c\"}", sizeof("{\"a\":\"b\":\"c\"}"));
 
     return EXIT_SUCCESS;
 }

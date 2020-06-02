@@ -32,7 +32,7 @@ int jsmn_setup(void **state)
  */
 void vtokeq(const char *s, jsmntok_t *t, size_t numtok, va_list ap)
 {
-    if (numtok <= 0)
+    if (numtok == 0)
         return;
 
     size_t i;
@@ -320,7 +320,9 @@ void test_object(void)
 static void test_array_01(void **state)
 {
     (void)state; // unused
+#ifndef JSMN_STRICT
     skip();
+#endif
     const char *js = "[10}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -328,7 +330,9 @@ static void test_array_01(void **state)
 static void test_array_02(void **state)
 {
     (void)state; // unused
+#ifndef JSMN_STRICT
     skip();
+#endif
     const char *js = "[1,,3]";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
 }

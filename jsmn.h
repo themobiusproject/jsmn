@@ -54,14 +54,26 @@ typedef enum {
   JSMN_STRING    = 0x04,    //!< String
   JSMN_PRIMITIVE = 0x08,    //!< Other primitive: number, boolean (true/false) or null
 
-#ifdef JSMN_STRICT
-  JSMN_ANY_TYPE  = (JSMN_OBJECT | JSMN_ARRAY | JSMN_STRING | JSMN_PRIMITIVE),
-
   JSMN_KEY       = 0x10,    //!< is a key
   JSMN_VALUE     = 0x20,    //!< is a value
 
+#if defined(JSMN_STRICT)
   JSMN_CLOSE     = 0x40,    //!< Close OBJECT '}' or ARRAY ']'
   JSMN_DELIMITER = 0x80,    //!< Colon ':' after KEY, Comma ',' after VALUE
+#endif
+
+  // Combined elements for valid enum tests
+  JSMN_ANY_TYPE  = JSMN_OBJECT | JSMN_ARRAY | JSMN_STRING | JSMN_PRIMITIVE,
+
+  JSMN_OBJ_VAL   = JSMN_OBJECT | JSMN_VALUE,
+  JSMN_ARR_VAL   = JSMN_ARRAY  | JSMN_VALUE,
+  JSMN_STR_KEY   = JSMN_STRING | JSMN_KEY,
+  JSMN_STR_VAL   = JSMN_STRING | JSMN_VALUE,
+  JSMN_PRI_VAL   = JSMN_PRIMITIVE | JSMN_VALUE,
+#if !defined(JSMN_STRICT)
+  JSMN_OBJ_KEY   = JSMN_OBJECT | JSMN_KEY,
+  JSMN_ARR_KEY   = JSMN_ARRAY  | JSMN_KEY,
+  JSMN_PRI_KEY   = JSMN_PRIMITIVE | JSMN_KEY,
 #endif
 } jsmntype_t;
 

@@ -26,7 +26,7 @@ const char *jsmn_strerror(enum jsmnerr errno)
 {
     switch (errno) {
         case JSMN_SUCCESS:
-            return "Success, should not be printing error.";
+            return "*** Success, should not be printing an error. ***";
         case JSMN_ERROR_NOMEM:
             return "Not enough tokens were provided.";
         case JSMN_ERROR_INVAL:
@@ -48,7 +48,7 @@ jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
 
     *rv = jsmn_parse(&p, json, json_len, NULL, 0);
 
-    // enum jsmner has four errors, thus
+    // enum jsmnerr has four errors, thus
     if (*rv + 4 < 4) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(*rv));
         return NULL;
@@ -74,7 +74,7 @@ jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, co
 
     rv = jsmn_parse(&p, json, json_len, tokens, num_tokens);
 
-    // enum jsmner has four errors, thus
+    // enum jsmnerr has four errors, thus
     if (rv + 4 < 4) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(rv));
         return rv;
@@ -263,8 +263,8 @@ void explodeJSON(const char *json, const size_t len)
         return;
     }
 
-    const char *jsmntype[] = { "", "OBJ", "ARR", "", "STR", "", "", "", "PRI",
-                               "", "KEY", "VAL", "", "CLS", "", "", "", "DLM", };
+    const char *jsmntype[] = { "", "OBJ", "ARR", "", "STR", "", "", "", "PRI", };
+    const char *jsmnextr[] = { "", "KEY", "VAL", "", "CLS", "", "", "", "DLM", };
 
     printf("\n");
     for (i = 0; i < rv; i++) {
@@ -278,7 +278,7 @@ void explodeJSON(const char *json, const size_t len)
 #endif
 #ifdef JSMN_STRICT
         if (tokens[i].type & (JSMN_KEY | JSMN_VALUE)) {
-            printf(" | %3s", jsmntype[tokens[i].type & 0x30]);
+            printf(" | %3s", jsmnextr[(tokens[i].type & 0x30) >> 4]);
         } else {
             printf(" |    ");
         }
