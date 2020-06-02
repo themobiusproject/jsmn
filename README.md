@@ -64,8 +64,7 @@ token. jsmn supports the following token types:
 
 * Object - a container of key-value pairs, e.g.:
 	`{ "foo":"bar", "x":0.3 }`
-* Array - a sequence of values, e.g.:
-	`[ 1, 2, 3 ]`
+* Array - a sequence of values, e.g.: `[ 1, 2, 3 ]`
 * String - a quoted sequence of chars, e.g.: `"foo"`
 * Primitive - a number, a boolean (`true`, `false`) or `null`
 
@@ -81,12 +80,12 @@ Usage
 
 Download `jsmn.h`, include it, done.
 
-```
+```c
 #include "jsmn.h"
 
 ...
 jsmn_parser p;
-jsmntok_t t[128]; /* We expect no more than 128 JSON tokens */
+jsmntok_t t[128]; // We expect no more than 128 JSON tokens
 
 jsmn_init(&p);
 r = jsmn_parse(&p, s, strlen(s), t, 128);
@@ -95,14 +94,15 @@ r = jsmn_parse(&p, s, strlen(s), t, 128);
 Since jsmn is a single-header, header-only library, for more complex use cases
 you might need to define additional macros. `#define JSMN_STATIC` hides all
 jsmn API symbols by making them static. Also, if you want to include `jsmn.h`
-from multiple C files, to avoid duplication of symbols you may define  `JSMN_HEADER` macro.
+from multiple C files, to avoid duplication of symbols you may define
+`JSMN_HEADER` macro.
 
-```
-/* In every .c file that uses jsmn include only declarations: */
+```c
+// In every .c file that uses jsmn include only declarations:
 #define JSMN_HEADER
 #include "jsmn.h"
 
-/* Additionally, create one jsmn.c file for jsmn implementation: */
+// Additionally, create one jsmn.c file for jsmn implementation:
 #include "jsmn.h"
 ```
 
@@ -113,40 +113,37 @@ Token types are described by `jsmntype_t`:
 ```c
 typedef enum {
 	JSMN_UNDEFINED = 0x00,
-	JSMN_OBJECT    = 0x01,
-	JSMN_ARRAY     = 0x02,
-	JSMN_STRING    = 0x04,
-	JSMN_PRIMITIVE = 0x08
+	JSMN_OBJECT    = 0x01,    //!< Object
+	JSMN_ARRAY     = 0x02,    //!< Array
+	JSMN_STRING    = 0x04,    //!< String
+	JSMN_PRIMITIVE = 0x08,    //!< Other primitive: number, boolean (true/false) or null
+	...
 } jsmntype_t;
 ```
 **Note:** Unlike JSON data types, primitive tokens are not divided into
 numbers, booleans and null, because one can easily tell the type using the
 first character:
 
-* <code>'t', 'f'</code> - boolean 
+* <code>'t', 'f'</code> - boolean
 * <code>'n'</code> - null
 * <code>'-', '0'..'9'</code> - number
 
 Token is an object of `jsmntok_t` type:
 ```c
 typedef struct {
-	jsmnenumtype_t type; // Token type
-	jsmnint_t start;     // Token start position
-	jsmnint_t end;       // Token end position
-	jsmnint_t size;      // Number of child (nested) tokens
-#ifdef JSMN_PARENT_LINKS
-	jsmnint_t parent;    // Token's parent
-#endif
-#ifdef JSMN_NEXT_SIBLING
-	jsmnint_t next_sibling; // Token's next sibling
-#endif
+	jsmntype_t type;          //!< type (object, array, string etc.)
+	jsmnint_t start;          //!< start position in JSON data string
+	jsmnint_t end;            //!< end position in JSON data string
+	jsmnint_t size;           //!< number of children
+	...
 } jsmntok_t;
 ```
 **Note:** string tokens point to the first character after the opening quote
 and the previous symbol before final quote. This was made to simplify string
 extraction from JSON data.
 
-All job is done by `jsmn_parser` object. You can initialize a new parser using:
+All jobs are done by the `jsmn_parser` object. You can initialize a new parser
+using:
 ```c
 jsmn_parser parser;
 jsmntok_t tokens[10];
@@ -163,6 +160,7 @@ the `js` string.
 
 A non-negative return value of `jsmn_parse` is the number of tokens actually
 used by the parser.
+
 Passing NULL instead of the tokens array would not store parsing results, but
 instead the function will return the number of tokens needed to parse the given
 string. This can be useful if you don't know yet how many tokens to allocate.
@@ -194,7 +192,7 @@ Other info
 ----------
 
 This software is distributed under [MIT license](https://www.opensource.org/licenses/mit-license.php),
- so feel free to integrate it in your commercial products.
+so feel free to integrate it in your commercial products.
 
 [1]: https://www.json.org/
 [2]: https://zserge.com/jsmn.html
