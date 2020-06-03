@@ -143,7 +143,7 @@ void test_empty(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test for empty JSON objects/arrays", tests, NULL, NULL);
 }
 
@@ -314,7 +314,7 @@ void test_object(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //   return cmocka_run_group_tests_name("test for JSON objects", tests, NULL, NULL);
 }
 
@@ -354,16 +354,22 @@ static void test_array_05(void **state)
 {
     (void)state; // unused
     const char *js = "[\"a\": 1]";
+#ifndef JSMN_PERMISSIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
+    tokeq(js, t, 3,
+          JSMN_ARRAY, -1, -1, 1,
+          JSMN_STRING, "a", 1,
+          JSMN_PRIMITIVE, "1");
+#endif
 }
 
 void test_array(void)
 {
     const struct CMUnitTest tests[] = {
-#ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_array_01, jsmn_setup),
         cmocka_unit_test_setup(test_array_02, jsmn_setup),
-#endif
         cmocka_unit_test_setup(test_array_03, jsmn_setup),
         cmocka_unit_test_setup(test_array_04, jsmn_setup),
         cmocka_unit_test_setup(test_array_05, jsmn_setup),
@@ -371,7 +377,7 @@ void test_array(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test for JSON arrays", tests, NULL, NULL);
 }
 
@@ -442,7 +448,7 @@ void test_primitive(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test primitive JSON data types", tests, NULL, NULL);
 }
 
@@ -562,7 +568,7 @@ void test_string(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test string JSON data types", tests, NULL, NULL);
 }
 
@@ -593,7 +599,7 @@ void test_partial_string(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test partial JSON string parsing", tests, NULL, NULL);
 }
 
@@ -629,7 +635,7 @@ void test_partial_array(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test partial array reading", tests, NULL, NULL);
 }
 
@@ -662,14 +668,14 @@ void test_array_nomem(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test array reading with a smaller number of tokens", tests, NULL, NULL);
 }
 
+#ifdef JSMN_PERMISSIVE
 static void test_unquoted_keys_01(void **state)
 {
     (void)state; // unused
-#ifdef JSMN_PERMISSIVE
     const char *js = "key1: \"value\"\nkey2 : 123";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), 4);
     tokeq(js, t, 4,
@@ -677,18 +683,20 @@ static void test_unquoted_keys_01(void **state)
           JSMN_STRING, "value", 0,
           JSMN_PRIMITIVE, "key2",
           JSMN_PRIMITIVE, "123");
-#endif
 }
+#endif
 
 void test_unquoted_keys(void)
 {
     const struct CMUnitTest tests[] = {
+#ifdef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_unquoted_keys_01, jsmn_setup),
+#endif
     };
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test unquoted keys (like in JavaScript)", tests, NULL, NULL);
 }
 
@@ -724,7 +732,7 @@ void test_issues(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test issues", tests, NULL, NULL);
 }
 
@@ -747,7 +755,7 @@ void test_input_length(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test strings that are not null-terminated", tests, NULL, NULL);
 }
 
@@ -838,7 +846,7 @@ void test_count(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test tokens count estimation", tests, NULL, NULL);
 }
 
@@ -891,7 +899,7 @@ void test_nonstrict(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 
@@ -954,7 +962,7 @@ void test_unmatched_brackets(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test for unmatched brackets", tests, NULL, NULL);
 }
 
@@ -1013,7 +1021,7 @@ void test_object_key(void)
 
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
-    total_tests += sizeof(tests)/sizeof(struct CMUnitTest);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
 //     return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 

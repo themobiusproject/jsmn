@@ -235,7 +235,6 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const size_t num
 EXPORT
 void explodeJSON(const char *json, const size_t len)
 {
-#ifndef NPRINTF
     jsmnint_t rv, i;
 
     jsmntok_t *tokens = json_tokenize(json, len, &rv);
@@ -274,8 +273,9 @@ void explodeJSON(const char *json, const size_t len)
             printf("[");
         }
 
-        if (jsmn_is_type(token, JSMN_STRING) && token->size == 1) {
-            printf("\"%.*s\" :", token->end - token->start, &json[token->start]);
+        if (jsmn_is_type(token, JSMN_KEY) && token->size == 1) {
+            char *c = jsmn_is_type(token, JSMN_STRING) ? "\"" : "";
+            printf("%s%.*s%s :", c, token->end - token->start, &json[token->start], c);
         }
         if (token->size == 0) {
             printf("    ");
@@ -318,7 +318,6 @@ void explodeJSON(const char *json, const size_t len)
     }
 
     free(tokens);
-#endif // NPRINTF
 }
 
 EXPORT
