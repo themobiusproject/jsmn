@@ -17,7 +17,7 @@ int main(void)
     rewind(fp);
 
     JSON_STRING = calloc(size, sizeof(char));
-    fread(JSON_STRING, sizeof(char), size, fp);
+    (void)fread(JSON_STRING, sizeof(char), size, fp);
 
     fclose(fp);
 
