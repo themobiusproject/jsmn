@@ -6,10 +6,6 @@
 
 #include "jsmn_defines.h"
 
-#ifdef ARDUINO
-#define NDEBUG
-#endif
-
 #include "jsmn.h"
 
 #ifdef __cplusplus

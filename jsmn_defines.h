@@ -1,7 +1,6 @@
 #ifndef JSMN_DEFINES
 #define JSMN_DEFINES
 
-#define JSMN_STRICT
 #define JSMN_PARENT_LINKS
 #define JSMN_SHORT_TOKENS
 #define JSMN_NEXT_SIBLING

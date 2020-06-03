@@ -41,7 +41,7 @@ add_library(jsmn_obj OBJECT
 	json.c
 )
 set_target_properties(jsmn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# target_compile_definitions(jsmn_obj PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_STRICT)
+# target_compile_definitions(jsmn_obj PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
 
 add_library(jsmn
 	$<TARGET_OBJECTS:jsmn_obj>

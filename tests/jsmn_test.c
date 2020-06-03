@@ -210,7 +210,7 @@ static void test_object_05(void **state)
           JSMN_STRING, "c", 0);
 }
 
-#ifdef JSMN_STRICT
+#ifndef JSMN_PERMISSIVE
 static void test_object_06(void **state)
 {
     (void)state; // unused
@@ -297,7 +297,7 @@ void test_object(void)
         cmocka_unit_test_setup(test_object_03, jsmn_setup),
         cmocka_unit_test_setup(test_object_04, jsmn_setup),
         cmocka_unit_test_setup(test_object_05, jsmn_setup),
-#ifdef JSMN_STRICT
+#ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_object_06, jsmn_setup),
         cmocka_unit_test_setup(test_object_07, jsmn_setup),
         cmocka_unit_test_setup(test_object_08, jsmn_setup),
@@ -322,9 +322,6 @@ void test_object(void)
 static void test_array_01(void **state)
 {
     (void)state; // unused
-#ifndef JSMN_STRICT
-    skip();
-#endif
     const char *js = "[10}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -332,9 +329,6 @@ static void test_array_01(void **state)
 static void test_array_02(void **state)
 {
     (void)state; // unused
-#ifndef JSMN_STRICT
-    skip();
-#endif
     const char *js = "[1,,3]";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
 }
@@ -366,8 +360,10 @@ static void test_array_05(void **state)
 void test_array(void)
 {
     const struct CMUnitTest tests[] = {
+#ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_array_01, jsmn_setup),
         cmocka_unit_test_setup(test_array_02, jsmn_setup),
+#endif
         cmocka_unit_test_setup(test_array_03, jsmn_setup),
         cmocka_unit_test_setup(test_array_04, jsmn_setup),
         cmocka_unit_test_setup(test_array_05, jsmn_setup),
@@ -601,7 +597,7 @@ void test_partial_string(void)
 //     return cmocka_run_group_tests_name("test partial JSON string parsing", tests, NULL, NULL);
 }
 
-#ifdef JSMN_STRICT
+#ifndef JSMN_PERMISSIVE
 static void test_partial_array_01(void **state)
 {
     (void)state; // unused
@@ -626,7 +622,7 @@ static void test_partial_array_01(void **state)
 void test_partial_array(void)
 {
     const struct CMUnitTest tests[] = {
-#ifdef JSMN_STRICT
+#ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_partial_array_01, jsmn_setup),
 #endif
     };
@@ -673,7 +669,7 @@ void test_array_nomem(void)
 static void test_unquoted_keys_01(void **state)
 {
     (void)state; // unused
-#ifndef JSMN_STRICT
+#ifdef JSMN_PERMISSIVE
     const char *js = "key1: \"value\"\nkey2 : 123";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), 4);
     tokeq(js, t, 4,
@@ -846,7 +842,7 @@ void test_count(void)
 //     return cmocka_run_group_tests_name("test tokens count estimation", tests, NULL, NULL);
 }
 
-#ifndef JSMN_STRICT
+#ifdef JSMN_PERMISSIVE
 static void test_nonstrict_01(void **state)
 {
     (void)state; // unused
@@ -886,7 +882,7 @@ static void test_nonstrict_03(void **state)
 void test_nonstrict(void)
 {
     const struct CMUnitTest tests[] = {
-#ifndef JSMN_STRICT
+#ifdef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_nonstrict_01, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_02, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_03, jsmn_setup),
@@ -973,7 +969,7 @@ static void test_object_key_01(void **state)
         JSMN_PRIMITIVE, "1");
 }
 
-#ifdef JSMN_STRICT
+#ifndef JSMN_PERMISSIVE
 static void test_object_key_02(void **state)
 {
     (void)state; // unused
@@ -1007,7 +1003,7 @@ void test_object_key(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_object_key_01, jsmn_setup),
-#ifdef JSMN_STRICT
+#ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_object_key_02, jsmn_setup),
         cmocka_unit_test_setup(test_object_key_03, jsmn_setup),
         cmocka_unit_test_setup(test_object_key_04, jsmn_setup),
