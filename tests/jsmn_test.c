@@ -613,8 +613,7 @@ static void test_partial_array_01(void **state)
     for (i = 1; i < strlen(js); i++) {
         assert_int_equal(jsmn_parse(&p, js, i, t, 6), (jsmnint_t)JSMN_ERROR_PART);
     }
-
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), 6);
+    assert_int_equal(jsmn_parse(&p, js, i, t, 6), 6);
     tokeq(js, t, 6,
           JSMN_ARRAY, -1, -1, 3,
           JSMN_PRIMITIVE, "1",
