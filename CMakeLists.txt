@@ -35,6 +35,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 	add_subdirectory(example)
 	add_subdirectory(tests)
+	add_subdirectory(test)
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 add_library(jsmn_obj OBJECT

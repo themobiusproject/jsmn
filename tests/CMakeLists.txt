@@ -1,5 +1,9 @@
 find_package(CMocka)
 
+add_executable(print_jsmn_test_functions
+  print_jsmn_test_functions.c
+)
+
 enable_testing()
 
 include_directories(${PROJECT_SOURCE_DIR})
