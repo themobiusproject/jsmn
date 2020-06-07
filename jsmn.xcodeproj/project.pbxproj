@@ -472,12 +472,12 @@
 			targets = (
 				95346C04205C728B006A0917 /* jsmn */,
 				95EF32372485EE2000AEDB36 /* jsmn_test_default */,
-				95409C3F2487F7A9004D7E04 /* jsmn_test_permissive */,
 				95409C4C24880CB4004D7E04 /* jsmn_test_default_links */,
-				95409C5724880CC9004D7E04 /* jsmn_test_permissive_links */,
 				95409C6224880CD9004D7E04 /* jsmn_test_default_short */,
-				95409C6D24880CEE004D7E04 /* jsmn_test_permissive_short */,
 				95409C7824880D13004D7E04 /* jsmn_test_default_short_links */,
+				95409C3F2487F7A9004D7E04 /* jsmn_test_permissive */,
+				95409C5724880CC9004D7E04 /* jsmn_test_permissive_links */,
+				95409C6D24880CEE004D7E04 /* jsmn_test_permissive_short */,
 				95409C8324880DC4004D7E04 /* jsmn_test_permissive_short_links */,
 			);
 		};
