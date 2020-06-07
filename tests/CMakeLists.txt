@@ -18,26 +18,12 @@ target_compile_definitions(jsmn_test_default PRIVATE JSMN_DEFINES)
 target_link_libraries(jsmn_test_default ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default COMMAND jsmn_test_default)
 
-add_executable(jsmn_test_permissive
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive PRIVATE JSMN_DEFINES JSMN_PERMISSIVE)
-target_link_libraries(jsmn_test_permissive ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive COMMAND jsmn_test_permissive)
-
 add_executable(jsmn_test_default_links
   jsmn_test.c
 )
 target_compile_definitions(jsmn_test_default_links PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS)
 target_link_libraries(jsmn_test_default_links ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default_links COMMAND jsmn_test_default_links)
-
-add_executable(jsmn_test_permissive_links
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_permissive_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_links COMMAND jsmn_test_permissive_links)
 
 add_executable(jsmn_test_default_short
   jsmn_test.c
@@ -46,26 +32,12 @@ target_compile_definitions(jsmn_test_default_short PRIVATE JSMN_DEFINES JSMN_SHO
 target_link_libraries(jsmn_test_default_short ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default_short COMMAND jsmn_test_default_short)
 
-add_executable(jsmn_test_permissive_short
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS)
-target_link_libraries(jsmn_test_permissive_short ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_short COMMAND jsmn_test_permissive_short)
-
 add_executable(jsmn_test_default_short_links
   jsmn_test.c
 )
 target_compile_definitions(jsmn_test_default_short_links PRIVATE JSMN_DEFINES JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
 target_link_libraries(jsmn_test_default_short_links ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default_short_links COMMAND jsmn_test_default_short_links)
-
-add_executable(jsmn_test_permissive_short_links
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_short_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_permissive_short_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_short_links COMMAND jsmn_test_permissive_short_links)
 
 add_executable(jsmn_test_default_sibling_short
   jsmn_test.c
@@ -74,19 +46,47 @@ target_compile_definitions(jsmn_test_default_sibling_short PRIVATE JSMN_DEFINES 
 target_link_libraries(jsmn_test_default_sibling_short ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default_sibling_short COMMAND jsmn_test_default_sibling_short)
 
-add_executable(jsmn_test_permissive_sibling_short
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_sibling_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
-target_link_libraries(jsmn_test_permissive_sibling_short ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_sibling_short COMMAND jsmn_test_permissive_sibling_short)
-
 add_executable(jsmn_test_default_sibling_short_links
   jsmn_test.c
 )
 target_compile_definitions(jsmn_test_default_sibling_short_links PRIVATE JSMN_DEFINES JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
 target_link_libraries(jsmn_test_default_sibling_short_links ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default_sibling_short_links COMMAND jsmn_test_default_sibling_short_links)
+
+add_executable(jsmn_test_permissive
+  jsmn_test.c
+)
+target_compile_definitions(jsmn_test_permissive PRIVATE JSMN_DEFINES JSMN_PERMISSIVE)
+target_link_libraries(jsmn_test_permissive ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_permissive COMMAND jsmn_test_permissive)
+
+add_executable(jsmn_test_permissive_links
+  jsmn_test.c
+)
+target_compile_definitions(jsmn_test_permissive_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_PARENT_LINKS)
+target_link_libraries(jsmn_test_permissive_links ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_permissive_links COMMAND jsmn_test_permissive_links)
+
+add_executable(jsmn_test_permissive_short
+  jsmn_test.c
+)
+target_compile_definitions(jsmn_test_permissive_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS)
+target_link_libraries(jsmn_test_permissive_short ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_permissive_short COMMAND jsmn_test_permissive_short)
+
+add_executable(jsmn_test_permissive_short_links
+  jsmn_test.c
+)
+target_compile_definitions(jsmn_test_permissive_short_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
+target_link_libraries(jsmn_test_permissive_short_links ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_permissive_short_links COMMAND jsmn_test_permissive_short_links)
+
+add_executable(jsmn_test_permissive_sibling_short
+  jsmn_test.c
+)
+target_compile_definitions(jsmn_test_permissive_sibling_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
+target_link_libraries(jsmn_test_permissive_sibling_short ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_permissive_sibling_short COMMAND jsmn_test_permissive_sibling_short)
 
 add_executable(jsmn_test_permissive_sibling_short_links
   jsmn_test.c

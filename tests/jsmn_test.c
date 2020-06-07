@@ -24,6 +24,9 @@ int jsmn_setup(void **state)
     return 0;
 }
 
+//typedef int jsmnint_t;
+//#define JSMN_NEG ((jsmnint_t)-1)
+
 /**
  * @brief va_arg token comparison
  *
@@ -32,7 +35,7 @@ int jsmn_setup(void **state)
  * @param[in] numtok number of tokens
  * @param[in] ap p_ap:...
  */
-void vtokeq(const char *s, jsmntok_t *t, size_t numtok, va_list ap)
+void vtokeq(const char *s, const jsmntok_t *t, const size_t numtok, va_list ap)
 {
     if (numtok == 0)
         return;
@@ -45,21 +48,24 @@ void vtokeq(const char *s, jsmntok_t *t, size_t numtok, va_list ap)
     for (i = 0; i < numtok; i++) {
         type = va_arg(ap, int);
         switch (type) {
-            case JSMN_STRING:
+            case JSMN_STRING: {
                 value = va_arg(ap, char *);
                 size = va_arg(ap, int);
                 start = end = JSMN_NEG;
                 break;
-            case JSMN_PRIMITIVE:
+            }
+            case JSMN_PRIMITIVE: {
                 value = va_arg(ap, char *);
                 start = end = size = JSMN_NEG;
                 break;
-            default:
+            }
+            default: {
                 value = NULL;
                 start = va_arg(ap, int);
                 end = va_arg(ap, int);
                 size = va_arg(ap, int);
                 break;
+            }
         }
         if (!(t[i].type & type)) {
             fail_msg("token %zu type is %d, not %d", i, t[i].type, type);
@@ -96,7 +102,7 @@ void vtokeq(const char *s, jsmntok_t *t, size_t numtok, va_list ap)
  * @param[in] tokens pointer to jsmn tokens
  * @param[in] numtok number of tokens
  */
-void tokeq(const char *s, jsmntok_t *tokens, int numtok, ...)
+void tokeq(const char *s, const jsmntok_t *tokens, const int numtok, ...)
 {
     va_list args;
     va_start(args, numtok);
@@ -229,21 +235,21 @@ static void test_object_08(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": {2}}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
 static void test_object_09(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": {2: 3}}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
 static void test_object_10(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": {\"a\": 2 3}}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
 static void test_object_11(void **state)
@@ -287,6 +293,63 @@ static void test_object_16(void **state)
     const char *js = "{,}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }
+
+
+static void test_object_17(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\":}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_18(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\" \"b\"}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_19(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\" ::::: \"b\"}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_20(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\": [1 \"b\"]}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_21(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\"\"\"}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_22(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\":1\"\"}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_23(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\":1\"b\":1}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_object_24(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\":\"b\", \"c\":\"d\", {\"e\": \"f\"}}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), (jsmnint_t)JSMN_ERROR_INVAL);
+}
 #endif
 
 void test_object(void)
@@ -309,6 +372,15 @@ void test_object(void)
         cmocka_unit_test_setup(test_object_14, jsmn_setup),
         cmocka_unit_test_setup(test_object_15, jsmn_setup),
         cmocka_unit_test_setup(test_object_16, jsmn_setup),
+
+        cmocka_unit_test_setup(test_object_17, jsmn_setup),
+        cmocka_unit_test_setup(test_object_18, jsmn_setup),
+        cmocka_unit_test_setup(test_object_19, jsmn_setup),
+        cmocka_unit_test_setup(test_object_20, jsmn_setup),
+        cmocka_unit_test_setup(test_object_21, jsmn_setup),
+        cmocka_unit_test_setup(test_object_22, jsmn_setup),
+        cmocka_unit_test_setup(test_object_23, jsmn_setup),
+        cmocka_unit_test_setup(test_object_24, jsmn_setup),
 #endif
     };
 
@@ -547,7 +619,7 @@ static void test_string_09(void **state)
 static void test_string_10(void **state)
 {
     (void)state; // unused
-    const char *js = "{{\"a\":[\"\\u028\"]}";
+    const char *js = "{\"a\":[\"\\u028\"]}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
@@ -711,6 +783,7 @@ static void test_issue_22(void **state)
         "\"imageheight\":64, \"imagewidth\":160, \"margin\":0, \"name\":\"Tiles\", "
         "\"properties\":{}, \"spacing\":0, \"tileheight\":32, \"tilewidth\":32 }], "
         "\"tilewidth\":32, \"version\":1, \"width\":10 }";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 61);
     assert_in_range(jsmn_parse(&p, js, strlen(js), t, 128), 0, 128);
 }
 
@@ -828,6 +901,21 @@ static void test_count_10(void **state)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 7);
 }
 
+
+static void test_count_11(void **state)
+{
+    (void)state; // unused
+    const char *js = "[}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_count_12(void **state)
+{
+    (void)state; // unused
+    const char *js = "{]";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
 void test_count(void)
 {
     const struct CMUnitTest tests[] = {
@@ -841,6 +929,9 @@ void test_count(void)
         cmocka_unit_test_setup(test_count_08, jsmn_setup),
         cmocka_unit_test_setup(test_count_09, jsmn_setup),
         cmocka_unit_test_setup(test_count_10, jsmn_setup),
+
+        cmocka_unit_test_setup(test_count_11, jsmn_setup),
+        cmocka_unit_test_setup(test_count_12, jsmn_setup),
     };
 
     memcpy(cur_test, tests, sizeof(tests));

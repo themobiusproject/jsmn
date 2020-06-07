@@ -33,15 +33,24 @@ int test_object(void) {
 #ifndef JSMN_PERMISSIVE
   check(parse("{\"a\"\n0}", JSMN_ERROR_INVAL, 3));
   check(parse("{\"a\", 0}", JSMN_ERROR_INVAL, 3));
-  check(parse("{\"a\": {2}}", JSMN_ERROR_INVAL, 3));
-  check(parse("{\"a\": {2: 3}}", JSMN_ERROR_INVAL, 3));
-  check(parse("{\"a\": {\"a\": 2 3}}", JSMN_ERROR_INVAL, 5));
+  check(parse("{\"a\": {2}}", JSMN_ERROR_INVAL, 4));
+  check(parse("{\"a\": {2: 3}}", JSMN_ERROR_INVAL, 5));
+  check(parse("{\"a\": {\"a\": 2 3}}", JSMN_ERROR_INVAL, 6));
   check(parse("{\"a\"}", JSMN_ERROR_INVAL, 2));
   check(parse("{\"a\": 1, \"b\"}", JSMN_ERROR_INVAL, 4));
   check(parse("{\"a\",\"b\":1}", JSMN_ERROR_INVAL, 4));
   check(parse("{\"a\":1,}", JSMN_ERROR_INVAL, 4));
   check(parse("{\"a\":\"b\":\"c\"}", JSMN_ERROR_INVAL, 4));
   check(parse("{,}", JSMN_ERROR_INVAL, 4));
+
+  check(parse("{\"a\":}", JSMN_ERROR_INVAL, 2));
+  check(parse("{\"a\" \"b\"}", JSMN_ERROR_INVAL, 3));
+  check(parse("{\"a\" ::::: \"b\"}", JSMN_ERROR_INVAL, 3));
+  check(parse("{\"a\": [1 \"b\"]}", JSMN_ERROR_INVAL, 5));
+  check(parse("{\"a\"\"\"}", JSMN_ERROR_INVAL, 3));
+  check(parse("{\"a\":1\"\"}", JSMN_ERROR_INVAL, 4));
+  check(parse("{\"a\":1\"b\":1}", JSMN_ERROR_INVAL, 5));
+  check(parse("{\"a\":\"b\", \"c\":\"d\", {\"e\": \"f\"}}", JSMN_ERROR_INVAL, 8));
 #endif
   return 0;
 }
@@ -93,7 +102,7 @@ int test_string(void) {
 
   check(parse("{\"a\":\"str\\uFFGFstr\"}", JSMN_ERROR_INVAL, 3));
   check(parse("{\"a\":\"str\\u@FfF\"}", JSMN_ERROR_INVAL, 3));
-  check(parse("{{\"a\":[\"\\u028\"]}", JSMN_ERROR_INVAL, 4));
+  check(parse("{\"a\":[\"\\u028\"]}", JSMN_ERROR_INVAL, 4));
   return 0;
 }
 
@@ -277,6 +286,14 @@ int test_count(void) {
   js = "[1, 2, [3, \"a\"], null]";
   jsmn_init(&p);
   check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 7);
+
+  js = "[}";
+  jsmn_init(&p);
+  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == (jsmnint_t)JSMN_ERROR_INVAL);
+
+  js = "{]";
+  jsmn_init(&p);
+  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == (jsmnint_t)JSMN_ERROR_INVAL);
 
   return 0;
 }
