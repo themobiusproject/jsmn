@@ -3474,7 +3474,7 @@ void test_empty(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test for empty JSON objects/arrays", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test for empty JSON objects/arrays", tests, NULL, NULL);
 }
 
 static void test_object_01(void **state)
@@ -3774,7 +3774,7 @@ void test_array(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test for JSON arrays", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test for JSON arrays", tests, NULL, NULL);
 }
 
 static void test_primitive_01(void **state)
@@ -3845,7 +3845,7 @@ void test_primitive(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test primitive JSON data types", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test primitive JSON data types", tests, NULL, NULL);
 }
 
 static void test_string_01(void **state)
@@ -3965,7 +3965,7 @@ void test_string(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test string JSON data types", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test string JSON data types", tests, NULL, NULL);
 }
 
 static void test_partial_string_01(void **state)
@@ -3996,7 +3996,7 @@ void test_partial_string(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test partial JSON string parsing", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test partial JSON string parsing", tests, NULL, NULL);
 }
 
 #ifndef JSMN_PERMISSIVE
@@ -4031,7 +4031,7 @@ void test_partial_array(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test partial array reading", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test partial array reading", tests, NULL, NULL);
 }
 
 static void test_array_nomem_01(void **state)
@@ -4064,7 +4064,7 @@ void test_array_nomem(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test array reading with a smaller number of tokens", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test array reading with a smaller number of tokens", tests, NULL, NULL);
 }
 
 #ifdef JSMN_PERMISSIVE
@@ -4092,7 +4092,7 @@ void test_unquoted_keys(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test unquoted keys (like in JavaScript)", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test unquoted keys (like in JavaScript)", tests, NULL, NULL);
 }
 
 static void test_issue_22(void **state)
@@ -4132,7 +4132,7 @@ void test_issues(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test issues", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test issues", tests, NULL, NULL);
 }
 
 static void test_input_length_01(void **state)
@@ -4155,7 +4155,7 @@ void test_input_length(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test strings that are not null-terminated", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test strings that are not null-terminated", tests, NULL, NULL);
 }
 
 static void test_count_01(void **state)
@@ -4264,7 +4264,7 @@ void test_count(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test tokens count estimation", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test tokens count estimation", tests, NULL, NULL);
 }
 
 #ifdef JSMN_PERMISSIVE
@@ -4317,7 +4317,7 @@ void test_nonstrict(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 
 static void test_unmatched_brackets_01(void **state)
@@ -4380,7 +4380,7 @@ void test_unmatched_brackets(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test for unmatched brackets", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test for unmatched brackets", tests, NULL, NULL);
 }
 
 static void test_object_key_01(void **state)
@@ -4439,7 +4439,7 @@ void test_object_key(void)
     memcpy(cur_test, tests, sizeof(tests));
     cur_test += sizeof(tests);
     total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
-//     return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
+//  return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 
 int main(void)
@@ -4467,5 +4467,5 @@ int main(void)
     test_jsontestsuite_y();
 
     return _cmocka_run_group_tests("jsmn_test", tests, total_tests, NULL, NULL);
-//     return cmocka_run_group_tests(tests, NULL, NULL);
+//  return cmocka_run_group_tests(tests, NULL, NULL);
 }

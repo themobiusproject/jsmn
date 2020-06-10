@@ -275,740 +275,559 @@ int test_jsmn_test_suite_i_(void) {
 int test_jsmn_test_suite_n_(void) {
 #ifndef JSMN_PERMISSIVE
   /* n_array_1_true_without_comma.json */
-  check(parse("[1 true]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1 true]", JSMN_ERROR_INVAL));
 
   /* n_array_a_invalid_utf8.json */
-  check(parse("[aÂ]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[aÂ]", JSMN_ERROR_INVAL));
 
   /* n_array_colon_instead_of_comma.json */
-  check(parse("[\"\": 1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\": 1]", JSMN_ERROR_INVAL));
 
   /* n_array_comma_after_close.json */
-  check(parse("[\"\"],",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\"],", JSMN_ERROR_INVAL));
 
   /* n_array_comma_and_number.json */
-  check(parse("[,1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[,1]", JSMN_ERROR_INVAL));
 
   /* n_array_double_comma.json */
-  check(parse("[1,,2]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1,,2]", JSMN_ERROR_INVAL));
 
   /* n_array_double_extra_comma.json */
-  check(parse("[\"x\",,]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"x\",,]", JSMN_ERROR_INVAL));
 
   /* n_array_extra_close.json */
-  check(parse("[\"x\"]]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"x\"]]", JSMN_ERROR_INVAL));
 
   /* n_array_extra_comma.json */
-  check(parse("[\"\",]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\",]", JSMN_ERROR_INVAL));
 
   /* n_array_incomplete_invalid_value.json */
-  check(parse("[x",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[x", JSMN_ERROR_INVAL));
 
   /* n_array_incomplete.json */
-  check(parse("[\"x\"",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"x\"", JSMN_ERROR_PART));
 
   /* n_array_inner_array_no_comma.json */
-  check(parse("[3[4]]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[3[4]]", JSMN_ERROR_INVAL));
 
   /* n_array_invalid_utf8.json */
-  check(parse("[ˇ]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[ˇ]", JSMN_ERROR_INVAL));
 
   /* n_array_items_separated_by_semicolon.json */
-  check(parse("[1:2]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1:2]", JSMN_ERROR_INVAL));
 
   /* n_array_just_comma.json */
-  check(parse("[,]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[,]", JSMN_ERROR_INVAL));
 
   /* n_array_just_minus.json */
-  check(parse("[-]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-]", JSMN_ERROR_INVAL));
 
   /* n_array_missing_value.json */
-  check(parse("[   , \"\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[   , \"\"]", JSMN_ERROR_INVAL));
 
   /* n_array_newlines_unclosed.json */
-  check(parse("[\"a\",\n4\n,1,",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"a\",\n4\n,1,", JSMN_ERROR_PART));
 
   /* n_array_number_and_comma.json */
-  check(parse("[1,]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1,]", JSMN_ERROR_INVAL));
 
   /* n_array_number_and_several_commas.json */
-  check(parse("[1,,]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1,,]", JSMN_ERROR_INVAL));
 
   /* n_array_spaces_vertical_tab_formfeed.json */
-  check(parse("[\"a\"\f]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"a\"\f]", JSMN_ERROR_INVAL));
 
   /* n_array_star_inside.json */
-  check(parse("[*]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[*]", JSMN_ERROR_INVAL));
 
   /* n_array_unclosed.json */
-  check(parse("[\"\"",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"\"", JSMN_ERROR_PART));
 
   /* n_array_unclosed_trailing_comma.json */
-  check(parse("[1,",
-              JSMN_ERROR_PART, 0));
+  check(query("[1,", JSMN_ERROR_PART));
 
   /* n_array_unclosed_with_new_lines.json */
-  check(parse("[1,\n1\n,1",
-              JSMN_ERROR_PART, 0));
+  check(query("[1,\n1\n,1", JSMN_ERROR_PART));
 
   /* n_array_unclosed_with_object_inside.json */
-  check(parse("[{}",
-              JSMN_ERROR_PART, 0));
+  check(query("[{}", JSMN_ERROR_PART));
 
   /* n_incomplete_false.json */
-  check(parse("[fals]",
-              JSMN_ERROR_PART, 0));
+  check(query("[fals]", JSMN_ERROR_PART));
 
   /* n_incomplete_null.json */
-  check(parse("[nul]",
-              JSMN_ERROR_PART, 0));
+  check(query("[nul]", JSMN_ERROR_PART));
 
   /* n_incomplete_true.json */
-  check(parse("[tru]",
-              JSMN_ERROR_PART, 0));
+  check(query("[tru]", JSMN_ERROR_PART));
 
   /* n_multidigit_number_then_00.json has a null byte in it. */
 
   /* n_number_0.1.2.json */
-  check(parse("[0.1.2]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0.1.2]", JSMN_ERROR_INVAL));
 
   /* n_number_-01.json */
-  check(parse("[-01]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-01]", JSMN_ERROR_INVAL));
 
   /* n_number_0.3e+.json */
-  check(parse("[0.3e+]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0.3e+]", JSMN_ERROR_INVAL));
 
   /* n_number_0.3e.json */
-  check(parse("[0.3e]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0.3e]", JSMN_ERROR_INVAL));
 
   /* n_number_0_capital_E+.json */
-  check(parse("[0E+]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0E+]", JSMN_ERROR_INVAL));
 
   /* n_number_0_capital_E.json */
-  check(parse("[0E]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0E]", JSMN_ERROR_INVAL));
 
   /* n_number_0.e1.json */
-  check(parse("[0.e1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0.e1]", JSMN_ERROR_INVAL));
 
   /* n_number_0e+.json */
-  check(parse("[0e+]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0e+]", JSMN_ERROR_INVAL));
 
   /* n_number_0e.json */
-  check(parse("[0e]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0e]", JSMN_ERROR_INVAL));
 
   /* n_number_1_000.json */
-  check(parse("[1 000.0]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1 000.0]", JSMN_ERROR_INVAL));
 
   /* n_number_1.0e+.json */
-  check(parse("[1.0e+]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1.0e+]", JSMN_ERROR_INVAL));
 
   /* n_number_1.0e-.json */
-  check(parse("[1.0e-]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1.0e-]", JSMN_ERROR_INVAL));
 
   /* n_number_1.0e.json */
-  check(parse("[1.0e]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1.0e]", JSMN_ERROR_INVAL));
 
   /* n_number_-1.0..json */
-  check(parse("[-1.0.]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-1.0.]", JSMN_ERROR_INVAL));
 
   /* n_number_1eE2.json */
-  check(parse("[1eE2]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1eE2]", JSMN_ERROR_INVAL));
 
   /* n_number_+1.json */
-  check(parse("[+1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[+1]", JSMN_ERROR_INVAL));
 
   /* n_number_.-1.json */
-  check(parse("[.-1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[.-1]", JSMN_ERROR_INVAL));
 
   /* n_number_2.e+3.json */
-  check(parse("[2.e+3]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[2.e+3]", JSMN_ERROR_INVAL));
 
   /* n_number_2.e-3.json */
-  check(parse("[2.e-3]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[2.e-3]", JSMN_ERROR_INVAL));
 
   /* n_number_2.e3.json */
-  check(parse("[2.e3]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[2.e3]", JSMN_ERROR_INVAL));
 
   /* n_number_.2e-3.json */
-  check(parse("[.2e-3]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[.2e-3]", JSMN_ERROR_INVAL));
 
   /* n_number_-2..json */
-  check(parse("[-2.]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-2.]", JSMN_ERROR_INVAL));
 
   /* n_number_9.e+.json */
-  check(parse("[9.e+]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[9.e+]", JSMN_ERROR_INVAL));
 
   /* n_number_expression.json */
-  check(parse("[1+2]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1+2]", JSMN_ERROR_INVAL));
 
   /* n_number_hex_1_digit.json */
-  check(parse("[0x1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0x1]", JSMN_ERROR_INVAL));
 
   /* n_number_hex_2_digits.json */
-  check(parse("[0x42]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0x42]", JSMN_ERROR_INVAL));
 
   /* n_number_infinity.json */
-  check(parse("[Infinity]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[Infinity]", JSMN_ERROR_INVAL));
 
   /* n_number_+Inf.json */
-  check(parse("[+Inf]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[+Inf]", JSMN_ERROR_INVAL));
 
   /* n_number_Inf.json */
-  check(parse("[Inf]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[Inf]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid+-.json */
-  check(parse("[0e+-1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0e+-1]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid-negative-real.json */
-  check(parse("[-123.123foo]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-123.123foo]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid-utf-8-in-bigger-int.json */
-  check(parse("[123Â]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[123Â]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid-utf-8-in-exponent.json */
-  check(parse("[1e1Â]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1e1Â]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid-utf-8-in-int.json */
-  check(parse("[0Â]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[0Â]", JSMN_ERROR_INVAL));
 
   /* n_number_++.json */
-  check(parse("[++1234]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[++1234]", JSMN_ERROR_INVAL));
 
   /* n_number_minus_infinity.json */
-  check(parse("[-Infinity]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-Infinity]", JSMN_ERROR_INVAL));
 
   /* n_number_minus_sign_with_trailing_garbage.json */
-  check(parse("[-foo]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-foo]", JSMN_ERROR_INVAL));
 
   /* n_number_minus_space_1.json */
-  check(parse("[- 1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[- 1]", JSMN_ERROR_INVAL));
 
   /* n_number_-NaN.json */
-  check(parse("[-NaN]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-NaN]", JSMN_ERROR_INVAL));
 
   /* n_number_NaN.json */
-  check(parse("[NaN]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[NaN]", JSMN_ERROR_INVAL));
 
   /* n_number_neg_int_starting_with_zero.json */
-  check(parse("[-012]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-012]", JSMN_ERROR_INVAL));
 
   /* n_number_neg_real_without_int_part.json */
-  check(parse("[-.123]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-.123]", JSMN_ERROR_INVAL));
 
   /* n_number_neg_with_garbage_at_end.json */
-  check(parse("[-1x]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[-1x]", JSMN_ERROR_INVAL));
 
   /* n_number_real_garbage_after_e.json */
-  check(parse("[1ea]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1ea]", JSMN_ERROR_INVAL));
 
   /* n_number_real_with_invalid_utf8_after_e.json */
-  check(parse("[1eÂ]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1eÂ]", JSMN_ERROR_INVAL));
 
   /* n_number_real_without_fractional_part.json */
-  check(parse("[1.]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1.]", JSMN_ERROR_INVAL));
 
   /* n_number_starting_with_dot.json */
-  check(parse("[.123]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[.123]", JSMN_ERROR_INVAL));
 
   /* n_number_U+FF11_fullwidth_digit_one.json */
-  check(parse("[Ôºë]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[Ôºë]", JSMN_ERROR_INVAL));
 
   /* n_number_with_alpha_char.json */
-  check(parse("[1.8011670033376514H-308]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1.8011670033376514H-308]", JSMN_ERROR_INVAL));
 
   /* n_number_with_alpha.json */
-  check(parse("[1.2a-3]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1.2a-3]", JSMN_ERROR_INVAL));
 
   /* n_number_with_leading_zero.json */
-  check(parse("[012]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[012]", JSMN_ERROR_INVAL));
 
   /* n_object_bad_value.json */
-  check(parse("[\"x\", truth]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"x\", truth]", JSMN_ERROR_INVAL));
 
   /* n_object_bracket_key.json */
-  check(parse("{[: \"x\"}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{[: \"x\"}", JSMN_ERROR_INVAL));
 
   /* n_object_comma_instead_of_colon.json */
-  check(parse("{\"x\", null}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"x\", null}", JSMN_ERROR_INVAL));
 
   /* n_object_double_colon.json */
-  check(parse("{\"x\"::\"b\"}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"x\"::\"b\"}", JSMN_ERROR_INVAL));
 
   /* n_object_emoji.json */
-  check(parse("{üá®üá≠}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{üá®üá≠}", JSMN_ERROR_INVAL));
 
   /* n_object_garbage_at_end.json */
-  check(parse("{\"a\":\"a\" 123}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"a\" 123}", JSMN_ERROR_INVAL));
 
   /* n_object_key_with_single_quotes.json */
-  check(parse("{key: 'value'}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{key: 'value'}", JSMN_ERROR_INVAL));
 
   /* n_object_lone_continuation_byte_in_key_and_trailing_comma.json */
-  check(parse("{\"π\":\"0\",}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"π\":\"0\",}", JSMN_ERROR_INVAL));
 
   /* n_object_missing_colon.json */
-  check(parse("{\"a\" b}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\" b}", JSMN_ERROR_INVAL));
 
   /* n_object_missing_key.json */
-  check(parse("{:\"b\"}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{:\"b\"}", JSMN_ERROR_INVAL));
 
   /* n_object_missing_semicolon.json */
-  check(parse("{\"a\" \"b\"}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\" \"b\"}", JSMN_ERROR_INVAL));
 
   /* n_object_missing_value.json */
-  check(parse("{\"a\":",
-              JSMN_ERROR_PART, 0));
+  check(query("{\"a\":", JSMN_ERROR_PART));
 
   /* n_object_no-colon.json */
-  check(parse("{\"a\"",
-              JSMN_ERROR_PART, 0));
+  check(query("{\"a\"", JSMN_ERROR_PART));
 
   /* n_object_non_string_key_but_huge_number_instead.json */
-  check(parse("{9999E9999:1}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{9999E9999:1}", JSMN_ERROR_INVAL));
 
   /* n_object_non_string_key.json */
-  check(parse("{1:1}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{1:1}", JSMN_ERROR_INVAL));
 
   /* n_object_repeated_null_null.json */
-  check(parse("{null:null,null:null}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{null:null,null:null}", JSMN_ERROR_INVAL));
 
   /* n_object_several_trailing_commas.json */
-  check(parse("{\"id\":0,,,,,}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"id\":0,,,,,}", JSMN_ERROR_INVAL));
 
   /* n_object_single_quote.json */
-  check(parse("{'a':0}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{'a':0}", JSMN_ERROR_INVAL));
 
   /* n_object_trailing_comma.json */
-  check(parse("{\"id\":0,}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"id\":0,}", JSMN_ERROR_INVAL));
 
   /* n_object_trailing_comment.json */
-  check(parse("{\"a\":\"b\"}/**/",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"b\"}/**/", JSMN_ERROR_INVAL));
 
   /* n_object_trailing_comment_open.json */
-  check(parse("{\"a\":\"b\"}/**//",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"b\"}/**//", JSMN_ERROR_INVAL));
 
   /* n_object_trailing_comment_slash_open_incomplete.json */
-  check(parse("{\"a\":\"b\"}/",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"b\"}/", JSMN_ERROR_INVAL));
 
   /* n_object_trailing_comment_slash_open.json */
-  check(parse("{\"a\":\"b\"}//",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"b\"}//", JSMN_ERROR_INVAL));
 
   /* n_object_two_commas_in_a_row.json */
-  check(parse("{\"a\":\"b\",,\"c\":\"d\"}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"b\",,\"c\":\"d\"}", JSMN_ERROR_INVAL));
 
   /* n_object_unquoted_key.json */
-  check(parse("{a: \"b\"}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{a: \"b\"}", JSMN_ERROR_INVAL));
 
   /* n_object_unterminated-value.json */
-  check(parse("{\"a\":\"a",
-              JSMN_ERROR_PART, 0));
+  check(query("{\"a\":\"a", JSMN_ERROR_PART));
 
   /* n_object_with_single_string.json */
-  check(parse("{ \"foo\" : \"bar\", \"a\" }",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{ \"foo\" : \"bar\", \"a\" }", JSMN_ERROR_INVAL));
 
   /* n_object_with_trailing_garbage.json */
-  check(parse("{\"a\":\"b\"}#",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"b\"}#", JSMN_ERROR_INVAL));
 
   /* n_single_space.json */
-  check(parse(" ",
-              JSMN_ERROR_INVAL, 0));
+  check(query(" ", JSMN_ERROR_INVAL));
 
   /* n_string_1_surrogate_then_escape.json */
-  check(parse("[\"\\uD800\\\"]",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"\\uD800\\\"]", JSMN_ERROR_PART));
 
   /* n_string_1_surrogate_then_escape_u1.json */
-  check(parse("[\"\\uD800\\u1\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\uD800\\u1\"]", JSMN_ERROR_INVAL));
 
   /* n_string_1_surrogate_then_escape_u1x.json */
-  check(parse("[\"\\uD800\\u1x\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\uD800\\u1x\"]", JSMN_ERROR_INVAL));
 
   /* n_string_1_surrogate_then_escape_u.json */
-  check(parse("[\"\\uD800\\u\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\uD800\\u\"]", JSMN_ERROR_INVAL));
 
   /* n_string_accentuated_char_no_quotes.json */
-  check(parse("[√©]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[√©]", JSMN_ERROR_INVAL));
 
   /* n_string_backslash_00.json has a null byte in it. */
 
   /* n_string_escaped_backslash_bad.json */
-  check(parse("[\"\\\\\\\"]",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"\\\\\\\"]", JSMN_ERROR_PART));
 
   /* n_string_escaped_ctrl_char_tab.json has a null byte in it. */
 
   /* n_string_escaped_emoji.json */
-  check(parse("[\"\\üåÄ\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\üåÄ\"]", JSMN_ERROR_INVAL));
 
   /* n_string_escape_x.json */
-  check(parse("[\"\\x00\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\x00\"]", JSMN_ERROR_INVAL));
 
   /* n_string_incomplete_escaped_character.json */
-  check(parse("[\"\\u00A\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\u00A\"]", JSMN_ERROR_INVAL));
 
   /* n_string_incomplete_escape.json */
-  check(parse("[\"\\\"]",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"\\\"]", JSMN_ERROR_PART));
 
   /* n_string_incomplete_surrogate_escape_invalid.json */
-  check(parse("[\"\\uD800\\uD800\\x\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\uD800\\uD800\\x\"]", JSMN_ERROR_INVAL));
 
   /* n_string_incomplete_surrogate.json */
-  check(parse("[\"\\uD834\\uDd\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\uD834\\uDd\"]", JSMN_ERROR_INVAL));
 
   /* n_string_invalid_backslash_esc.json */
-  check(parse("[\"\\a\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\a\"]", JSMN_ERROR_INVAL));
 
   /* n_string_invalid_unicode_escape.json */
-  check(parse("[\"\\uqqqq\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\uqqqq\"]", JSMN_ERROR_INVAL));
 
   /* n_string_invalid_utf8_after_escape.json */
-  check(parse("[\"\\Â\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\Â\"]", JSMN_ERROR_INVAL));
 
   /* n_string_invalid-utf-8-in-escape.json */
-  check(parse("[\"\\uÂ\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\uÂ\"]", JSMN_ERROR_INVAL));
 
   /* n_string_leading_uescaped_thinspace.json */
-  check(parse("[\\u0020\"asd\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\\u0020\"asd\"]", JSMN_ERROR_INVAL));
 
   /* n_string_no_quotes_with_bad_escape.json */
-  check(parse("[\\n]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\\n]", JSMN_ERROR_INVAL));
 
   /* n_string_single_doublequote.json */
-  check(parse("\"",
-              JSMN_ERROR_PART, 0));
+  check(query("\"", JSMN_ERROR_PART));
 
   /* n_string_single_quote.json */
-  check(parse("['single quote']",
-              JSMN_ERROR_INVAL, 0));
+  check(query("['single quote']", JSMN_ERROR_INVAL));
 
   /* n_string_single_string_no_double_quotes.json */
-  check(parse("abc",
-              JSMN_ERROR_INVAL, 0));
+  check(query("abc", JSMN_ERROR_INVAL));
 
   /* n_string_start_escape_unclosed.json */
-  check(parse("[\"\\",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"\\", JSMN_ERROR_PART));
 
   /* n_string_unescaped_crtl_char.json has a null byte in it. */
 
   /* n_string_unescaped_newline.json */
-  check(parse("[\"new\nline\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"new\nline\"]", JSMN_ERROR_INVAL));
 
   /* n_string_unescaped_tab.json */
-  check(parse("[\"\t\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\t\"]", JSMN_ERROR_INVAL));
 
   /* n_string_unicode_CapitalU.json */
-  check(parse("\"\\UA66D\"",
-              JSMN_ERROR_INVAL, 0));
+  check(query("\"\\UA66D\"", JSMN_ERROR_INVAL));
 
   /* n_string_with_trailing_garbage.json */
-  check(parse("\"\"x",
-              JSMN_ERROR_INVAL, 0));
+  check(query("\"\"x", JSMN_ERROR_INVAL));
 
   /* n_structure_angle_bracket_..json */
-  check(parse("<.>",
-              JSMN_ERROR_INVAL, 0));
+  check(query("<.>", JSMN_ERROR_INVAL));
 
   /* n_structure_angle_bracket_null.json */
-  check(parse("[<null>]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[<null>]", JSMN_ERROR_INVAL));
 
   /* n_structure_array_trailing_garbage.json */
-  check(parse("[1]x",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1]x", JSMN_ERROR_INVAL));
 
   /* n_structure_array_with_extra_array_close.json */
-  check(parse("[1]]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[1]]", JSMN_ERROR_INVAL));
 
   /* n_structure_array_with_unclosed_string.json */
-  check(parse("[\"asd]",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"asd]", JSMN_ERROR_PART));
 
   /* n_structure_ascii-unicode-identifier.json */
-  check(parse("a√•",
-              JSMN_ERROR_INVAL, 0));
+  check(query("a√•", JSMN_ERROR_INVAL));
 
   /* n_structure_capitalized_True.json */
-  check(parse("[True]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[True]", JSMN_ERROR_INVAL));
 
   /* n_structure_close_unopened_array.json */
-  check(parse("1]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("1]", JSMN_ERROR_INVAL));
 
   /* n_structure_comma_instead_of_closing_brace.json */
-  check(parse("{\"x\": true,",
-              JSMN_ERROR_PART, 0));
+  check(query("{\"x\": true,", JSMN_ERROR_PART));
 
   /* n_structure_double_array.json */
-  check(parse("[][]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[][]", JSMN_ERROR_INVAL));
 
   /* n_structure_end_array.json */
-  check(parse("]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("]", JSMN_ERROR_INVAL));
 
   /* n_structure_incomplete_UTF8_BOM.json */
-  check(parse("Ôª{}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("Ôª{}", JSMN_ERROR_INVAL));
 
   /* n_structure_lone-invalid-utf-8.json */
-  check(parse("Â",
-              JSMN_ERROR_INVAL, 0));
+  check(query("Â", JSMN_ERROR_INVAL));
 
   /* n_structure_lone-open-bracket.json */
-  check(parse("[",
-              JSMN_ERROR_PART, 0));
+  check(query("[", JSMN_ERROR_PART));
 
   /* n_structure_no_data.json */
-  check(parse("",
-              JSMN_ERROR_INVAL, 0));
+  check(query("", JSMN_ERROR_INVAL));
 
   /* n_structure_null-byte-outside-string.json has a null byte in it. */
 
   /* n_structure_number_with_trailing_garbage.json */
-  check(parse("2@",
-              JSMN_ERROR_INVAL, 0));
+  check(query("2@", JSMN_ERROR_INVAL));
 
   /* n_structure_object_followed_by_closing_object.json */
-  check(parse("{}}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{}}", JSMN_ERROR_INVAL));
 
   /* n_structure_object_unclosed_no_value.json */
-  check(parse("{\"\":",
-              JSMN_ERROR_PART, 0));
+  check(query("{\"\":", JSMN_ERROR_PART));
 
   /* n_structure_object_with_comment.json */
-  check(parse("{\"a\":/*comment*/\"b\"}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":/*comment*/\"b\"}", JSMN_ERROR_INVAL));
 
   /* n_structure_object_with_trailing_garbage.json */
-  check(parse("{\"a\": true} \"x\"",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\": true} \"x\"", JSMN_ERROR_INVAL));
 
   /* n_structure_open_array_apostrophe.json */
-  check(parse("['",
-              JSMN_ERROR_INVAL, 0));
+  check(query("['", JSMN_ERROR_INVAL));
 
   /* n_structure_open_array_comma.json */
-  check(parse("[,",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[,", JSMN_ERROR_INVAL));
 
   /* n_structure_open_array_object.json is too big. */
 
   /* n_structure_open_array_open_object.json */
-  check(parse("[{",
-              JSMN_ERROR_PART, 0));
+  check(query("[{", JSMN_ERROR_PART));
 
   /* n_structure_open_array_open_string.json */
-  check(parse("[\"a",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"a", JSMN_ERROR_PART));
 
   /* n_structure_open_array_string.json */
-  check(parse("[\"a\"",
-              JSMN_ERROR_PART, 0));
+  check(query("[\"a\"", JSMN_ERROR_PART));
 
   /* n_structure_open_object_close_array.json */
-  check(parse("{]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{]", JSMN_ERROR_INVAL));
 
   /* n_structure_open_object_comma.json */
-  check(parse("{,",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{,", JSMN_ERROR_INVAL));
 
   /* n_structure_open_object.json */
-  check(parse("{",
-              JSMN_ERROR_PART, 0));
+  check(query("{", JSMN_ERROR_PART));
 
   /* n_structure_open_object_open_array.json */
-  check(parse("{[",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{[", JSMN_ERROR_INVAL));
 
   /* n_structure_open_object_open_string.json */
-  check(parse("{\"a",
-              JSMN_ERROR_PART, 0));
+  check(query("{\"a", JSMN_ERROR_PART));
 
   /* n_structure_open_object_string_with_apostrophes.json */
-  check(parse("{'a'",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{'a'", JSMN_ERROR_INVAL));
 
   /* n_structure_open_open.json */
-  check(parse("[\"\\{[\"\\{[\"\\{[\"\\{",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\"\\{[\"\\{[\"\\{[\"\\{", JSMN_ERROR_INVAL));
 
   /* n_structure_single_eacute.json */
-  check(parse("È",
-              JSMN_ERROR_INVAL, 0));
+  check(query("È", JSMN_ERROR_INVAL));
 
   /* n_structure_single_star.json */
-  check(parse("*",
-              JSMN_ERROR_INVAL, 0));
+  check(query("*", JSMN_ERROR_INVAL));
 
   /* n_structure_trailing_#.json */
-  check(parse("{\"a\":\"b\"}#{}",
-              JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"b\"}#{}", JSMN_ERROR_INVAL));
 
   /* n_structure_U+2060_word_joined.json */
-  check(parse("[‚Å†]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[‚Å†]", JSMN_ERROR_INVAL));
 
   /* n_structure_uescaped_LF_before_string.json */
-  check(parse("[\\u000A\"\"]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\\u000A\"\"]", JSMN_ERROR_INVAL));
 
   /* n_structure_unclosed_array.json */
-  check(parse("[1",
-              JSMN_ERROR_PART, 0));
+  check(query("[1", JSMN_ERROR_PART));
 
   /* n_structure_unclosed_array_partial_null.json */
-  check(parse("[ false, nul",
-              JSMN_ERROR_PART, 0));
+  check(query("[ false, nul", JSMN_ERROR_PART));
 
   /* n_structure_unclosed_array_unfinished_false.json */
-  check(parse("[ true, fals",
-              JSMN_ERROR_PART, 0));
+  check(query("[ true, fals", JSMN_ERROR_PART));
 
   /* n_structure_unclosed_array_unfinished_true.json */
-  check(parse("[ false, tru",
-              JSMN_ERROR_PART, 0));
+  check(query("[ false, tru", JSMN_ERROR_PART));
 
   /* n_structure_unclosed_object.json */
-  check(parse("{\"asd\":\"asd\"",
-              JSMN_ERROR_PART, 0));
+  check(query("{\"asd\":\"asd\"", JSMN_ERROR_PART));
 
   /* n_structure_unicode-identifier.json */
-  check(parse("√•",
-              JSMN_ERROR_INVAL, 0));
+  check(query("√•", JSMN_ERROR_INVAL));
 
   /* n_structure_UTF8_BOM_no_data.json */
-  check(parse("Ôªø",
-              JSMN_ERROR_INVAL, 0));
+  check(query("Ôªø", JSMN_ERROR_INVAL));
 
   /* n_structure_whitespace_formfeed.json */
-  check(parse("[\f]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[\f]", JSMN_ERROR_INVAL));
 
   /* n_structure_whitespace_U+2060_word_joiner.json */
-  check(parse("[‚Å†]",
-              JSMN_ERROR_INVAL, 0));
+  check(query("[‚Å†]", JSMN_ERROR_INVAL));
 
 #endif /* JSMN_PERMISSIVE */
   return 0;
@@ -1534,37 +1353,37 @@ int test_object(void) {
               JSMN_STRING, "c", 0));
 
 #ifndef JSMN_PERMISSIVE
-  check(parse("{\"a\"\n0}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\", 0}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\": {2}}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\": {2: 3}}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\": {\"a\": 2 3}}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\": 1, \"b\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\",\"b\":1}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\":1,}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\":\"b\":\"c\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{,}", JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\"\n0}", JSMN_ERROR_INVAL));
+  check(query("{\"a\", 0}", JSMN_ERROR_INVAL));
+  check(query("{\"a\": {2}}", JSMN_ERROR_INVAL));
+  check(query("{\"a\": {2: 3}}", JSMN_ERROR_INVAL));
+  check(query("{\"a\": {\"a\": 2 3}}", JSMN_ERROR_INVAL));
+  check(query("{\"a\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\": 1, \"b\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\",\"b\":1}", JSMN_ERROR_INVAL));
+  check(query("{\"a\":1,}", JSMN_ERROR_INVAL));
+  check(query("{\"a\":\"b\":\"c\"}", JSMN_ERROR_INVAL));
+  check(query("{,}", JSMN_ERROR_INVAL));
 
-  check(parse("{\"a\":}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\" \"b\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\" ::::: \"b\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\": [1 \"b\"]}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\"\"\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\":1\"\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\":1\"b\":1}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\":\"b\", \"c\":\"d\", {\"e\": \"f\"}}", JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":}", JSMN_ERROR_INVAL));
+  check(query("{\"a\" \"b\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\" ::::: \"b\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\": [1 \"b\"]}", JSMN_ERROR_INVAL));
+  check(query("{\"a\"\"\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\":1\"\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\":1\"b\":1}", JSMN_ERROR_INVAL));
+  check(query("{\"a\":\"b\", \"c\":\"d\", {\"e\": \"f\"}}", JSMN_ERROR_INVAL));
 #endif
   return 0;
 }
 
 int test_array(void) {
-  check(parse("[10}", JSMN_ERROR_INVAL, 0));
-  check(parse("[1,,3]", JSMN_ERROR_INVAL, 0));
+  check(query("[10}", JSMN_ERROR_INVAL));
+  check(query("[1,,3]", JSMN_ERROR_INVAL));
   check(parse("[10]", 2, 2, JSMN_ARRAY, -1, -1, 1, JSMN_PRIMITIVE, "10"));
-  check(parse("{\"a\": 1]", JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\": 1]", JSMN_ERROR_INVAL));
 #ifndef JSMN_PERMISSIVE
-  check(parse("[\"a\": 1]", JSMN_ERROR_INVAL, 0));
+  check(query("[\"a\": 1]", JSMN_ERROR_INVAL));
 #else
   check(parse("[\"a\": 1]", 3, 3, JSMN_ARRAY, -1, -1, 1, JSMN_STRING, "a", 1, JSMN_PRIMITIVE, "1"));
 #endif
@@ -1603,9 +1422,9 @@ int test_string(void) {
               JSMN_STRING, "a", 1, JSMN_ARRAY, -1, -1, 1, JSMN_STRING,
               "\\u0280", 0));
 
-  check(parse("{\"a\":\"str\\uFFGFstr\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\":\"str\\u@FfF\"}", JSMN_ERROR_INVAL, 0));
-  check(parse("{\"a\":[\"\\u028\"]}", JSMN_ERROR_INVAL, 0));
+  check(query("{\"a\":\"str\\uFFGFstr\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\":\"str\\u@FfF\"}", JSMN_ERROR_INVAL));
+  check(query("{\"a\":[\"\\u028\"]}", JSMN_ERROR_INVAL));
   return 0;
 }
 
@@ -1625,7 +1444,7 @@ int test_partial_string(void) {
                   JSMN_STRING, "va\\\\ue", 0, JSMN_STRING, "y", 1, JSMN_STRING,
                   "value y", 0));
     } else {
-      check(r == JSMN_ERROR_PART);
+      check(r == (jsmnint_t)JSMN_ERROR_PART);
     }
   }
   return 0;
@@ -1648,7 +1467,7 @@ int test_partial_array(void) {
                   JSMN_PRIMITIVE, "true", JSMN_ARRAY, -1, -1, 2, JSMN_PRIMITIVE,
                   "123", JSMN_STRING, "hello", 0));
     } else {
-      check(r == JSMN_ERROR_PART);
+      check(r == (jsmnint_t)JSMN_ERROR_PART);
     }
   }
 #endif
@@ -1669,7 +1488,7 @@ int test_array_nomem(void) {
     memset(toksmall, 0, sizeof(toksmall));
     memset(toklarge, 0, sizeof(toklarge));
     r = jsmn_parse(&p, js, strlen(js), toksmall, i);
-    check(r == JSMN_ERROR_NOMEM);
+    check(r == (jsmnint_t)JSMN_ERROR_NOMEM);
 
     memcpy(toklarge, toksmall, sizeof(toksmall));
 
@@ -1712,17 +1531,17 @@ int test_issue_22(void) {
       "\"properties\":{}, \"spacing\":0, \"tileheight\":32, \"tilewidth\":32 "
       "}], "
       "\"tilewidth\":32, \"version\":1, \"width\":10 }";
-  check(parse(js, 61, 0));
+  check(query(js, 61));
   return 0;
 }
 
 int test_issue_27(void) {
   const char *js =
       "{ \"name\" : \"Jack\", \"age\" : 27 } { \"name\" : \"Anna\", ";
-#if !defined(JSMN_PERMISSIVE) && !defined(JSMN_MULTIPLE_JSON)
-  check(parse(js, JSMN_ERROR_INVAL, 0));
+#ifndef JSMN_MULTIPLE_JSON
+  check(query(js, JSMN_ERROR_INVAL));
 #else
-  check(parse(js, JSMN_ERROR_PART, 0));
+  check(query(js, JSMN_ERROR_PART));
 #endif
   return 0;
 }
@@ -1744,57 +1563,18 @@ int test_input_length(void) {
 }
 
 int test_count(void) {
-  jsmn_parser p;
-  const char *js;
-
-  js = "{}";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 1);
-
-  js = "[]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 1);
-
-  js = "[[]]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 2);
-
-  js = "[[], []]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 3);
-
-  js = "[[], []]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 3);
-
-  js = "[[], [[]], [[], []]]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 7);
-
-  js = "[\"a\", [[], []]]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 5);
-
-  js = "[[], \"[], [[]]\", [[]]]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 5);
-
-  js = "[1, 2, 3]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 4);
-
-  js = "[1, 2, [3, \"a\"], null]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == 7);
-
-  js = "[}";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == JSMN_ERROR_INVAL);
-
-  js = "{]";
-  jsmn_init(&p);
-  check(jsmn_parse(&p, js, strlen(js), NULL, 0) == JSMN_ERROR_INVAL);
-
+  check(query("{}", 1));
+  check(query("[]", 1));
+  check(query("[[]]", 2));
+  check(query("[[], []]", 3));
+  check(query("[[], []]", 3));
+  check(query("[[], [[]], [[], []]]", 7));
+  check(query("[\"a\", [[], []]]", 5));
+  check(query("[[], \"[], [[]]\", [[]]]", 5));
+  check(query("[1, 2, 3]", 4));
+  check(query("[1, 2, [3, \"a\"], null]", 7));
+  check(query("[}", JSMN_ERROR_INVAL));
+  check(query("{]", JSMN_ERROR_INVAL));
   return 0;
 }
 
@@ -1817,38 +1597,28 @@ int test_nonstrict(void) {
 }
 
 int test_unmatched_brackets(void) {
-  const char *js;
-  js = "\"key 1\": 1234}";
-  check(parse(js, JSMN_ERROR_INVAL, 0));
-  js = "{\"key 1\": 1234";
-  check(parse(js, JSMN_ERROR_PART, 0));
-  js = "{\"key 1\": 1234}}";
-  check(parse(js, JSMN_ERROR_INVAL, 0));
-  js = "\"key 1\"}: 1234";
-  check(parse(js, JSMN_ERROR_INVAL, 0));
-  js = "{\"key {1\": 1234}";
-  check(parse(js, 3, 3, JSMN_OBJECT, 0, 16, 1, JSMN_STRING, "key {1", 1,
+  check(query("\"key 1\": 1234}", JSMN_ERROR_INVAL));
+  check(query("{\"key 1\": 1234", JSMN_ERROR_PART));
+  check(query("{\"key 1\": 1234}}", JSMN_ERROR_INVAL));
+  check(query("\"key 1\"}: 1234", JSMN_ERROR_INVAL));
+  check(parse("{\"key {1\": 1234}", 3, 3,
+              JSMN_OBJECT, 0, 16, 1,
+              JSMN_STRING, "key {1", 1,
               JSMN_PRIMITIVE, "1234"));
-  js = "{\"key 1\":{\"key 2\": 1234}";
-  check(parse(js, JSMN_ERROR_PART, 0));
+  check(query("{\"key 1\":{\"key 2\": 1234}", JSMN_ERROR_PART));
   return 0;
 }
 
 int test_object_key(void) {
-  const char *js;
-
-  js = "{\"key\": 1}";
-  check(parse(js, 3, 3, JSMN_OBJECT, 0, 10, 1, JSMN_STRING, "key", 1,
+  check(parse("{\"key\": 1}", 3, 3,
+              JSMN_OBJECT, 0, 10, 1,
+              JSMN_STRING, "key", 1,
               JSMN_PRIMITIVE, "1"));
 #ifndef JSMN_PERMISSIVE
-  js = "{true: 1}";
-  check(parse(js, JSMN_ERROR_INVAL, 0));
-  js = "{1: 1}";
-  check(parse(js, JSMN_ERROR_INVAL, 0));
-  js = "{{\"key\": 1}: 2}";
-  check(parse(js, JSMN_ERROR_INVAL, 0));
-  js = "{[1,2]: 2}";
-  check(parse(js, JSMN_ERROR_INVAL, 0));
+  check(query("{true: 1}", JSMN_ERROR_INVAL));
+  check(query("{1: 1}", JSMN_ERROR_INVAL));
+  check(query("{{\"key\": 1}: 2}", JSMN_ERROR_INVAL));
+  check(query("{[1,2]: 2}", JSMN_ERROR_INVAL));
 #endif
   return 0;
 }

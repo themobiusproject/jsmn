@@ -1430,7 +1430,7 @@ int test_string(void) {
 
 int test_partial_string(void) {
   jsmnint_t r;
-  size_t i;
+  unsigned long i;
   jsmn_parser p;
   jsmntok_t tok[5];
   const char *js = "{\"x\": \"va\\\\ue\", \"y\": \"value y\"}";
@@ -1475,7 +1475,7 @@ int test_partial_array(void) {
 }
 
 int test_array_nomem(void) {
-  jsmnint_t i;
+  int i;
   jsmnint_t r;
   jsmn_parser p;
   jsmntok_t toksmall[10], toklarge[10];
@@ -1538,7 +1538,7 @@ int test_issue_22(void) {
 int test_issue_27(void) {
   const char *js =
       "{ \"name\" : \"Jack\", \"age\" : 27 } { \"name\" : \"Anna\", ";
-#if !defined(JSMN_PERMISSIVE) && !defined(JSMN_MULTIPLE_JSON)
+#ifndef JSMN_MULTIPLE_JSON
   check(query(js, JSMN_ERROR_INVAL));
 #else
   check(query(js, JSMN_ERROR_PART));
@@ -1563,44 +1563,18 @@ int test_input_length(void) {
 }
 
 int test_count(void) {
-  const char *js;
-
-  js = "{}";
-  check(query(js, 1));
-
-  js = "[]";
-  check(query(js, 1));
-
-  js = "[[]]";
-  check(query(js, 2));
-
-  js = "[[], []]";
-  check(query(js, 3));
-
-  js = "[[], []]";
-  check(query(js, 3));
-
-  js = "[[], [[]], [[], []]]";
-  check(query(js, 7));
-
-  js = "[\"a\", [[], []]]";
-  check(query(js, 5));
-
-  js = "[[], \"[], [[]]\", [[]]]";
-  check(query(js, 5));
-
-  js = "[1, 2, 3]";
-  check(query(js, 4));
-
-  js = "[1, 2, [3, \"a\"], null]";
-  check(query(js, 7));
-
-  js = "[}";
-  check(query(js, JSMN_ERROR_INVAL));
-
-  js = "{]";
-  check(query(js, JSMN_ERROR_INVAL));
-
+  check(query("{}", 1));
+  check(query("[]", 1));
+  check(query("[[]]", 2));
+  check(query("[[], []]", 3));
+  check(query("[[], []]", 3));
+  check(query("[[], [[]], [[], []]]", 7));
+  check(query("[\"a\", [[], []]]", 5));
+  check(query("[[], \"[], [[]]\", [[]]]", 5));
+  check(query("[1, 2, 3]", 4));
+  check(query("[1, 2, [3, \"a\"], null]", 7));
+  check(query("[}", JSMN_ERROR_INVAL));
+  check(query("{]", JSMN_ERROR_INVAL));
   return 0;
 }
 
@@ -1623,38 +1597,28 @@ int test_nonstrict(void) {
 }
 
 int test_unmatched_brackets(void) {
-  const char *js;
-  js = "\"key 1\": 1234}";
-  check(query(js, JSMN_ERROR_INVAL));
-  js = "{\"key 1\": 1234";
-  check(query(js, JSMN_ERROR_PART));
-  js = "{\"key 1\": 1234}}";
-  check(query(js, JSMN_ERROR_INVAL));
-  js = "\"key 1\"}: 1234";
-  check(query(js, JSMN_ERROR_INVAL));
-  js = "{\"key {1\": 1234}";
-  check(parse(js, 3, 3, JSMN_OBJECT, 0, 16, 1, JSMN_STRING, "key {1", 1,
+  check(query("\"key 1\": 1234}", JSMN_ERROR_INVAL));
+  check(query("{\"key 1\": 1234", JSMN_ERROR_PART));
+  check(query("{\"key 1\": 1234}}", JSMN_ERROR_INVAL));
+  check(query("\"key 1\"}: 1234", JSMN_ERROR_INVAL));
+  check(parse("{\"key {1\": 1234}", 3, 3,
+              JSMN_OBJECT, 0, 16, 1,
+              JSMN_STRING, "key {1", 1,
               JSMN_PRIMITIVE, "1234"));
-  js = "{\"key 1\":{\"key 2\": 1234}";
-  check(query(js, JSMN_ERROR_PART));
+  check(query("{\"key 1\":{\"key 2\": 1234}", JSMN_ERROR_PART));
   return 0;
 }
 
 int test_object_key(void) {
-  const char *js;
-
-  js = "{\"key\": 1}";
-  check(parse(js, 3, 3, JSMN_OBJECT, 0, 10, 1, JSMN_STRING, "key", 1,
+  check(parse("{\"key\": 1}", 3, 3,
+              JSMN_OBJECT, 0, 10, 1,
+              JSMN_STRING, "key", 1,
               JSMN_PRIMITIVE, "1"));
 #ifndef JSMN_PERMISSIVE
-  js = "{true: 1}";
-  check(query(js, JSMN_ERROR_INVAL));
-  js = "{1: 1}";
-  check(query(js, JSMN_ERROR_INVAL));
-  js = "{{\"key\": 1}: 2}";
-  check(query(js, JSMN_ERROR_INVAL));
-  js = "{[1,2]: 2}";
-  check(query(js, JSMN_ERROR_INVAL));
+  check(query("{true: 1}", JSMN_ERROR_INVAL));
+  check(query("{1: 1}", JSMN_ERROR_INVAL));
+  check(query("{{\"key\": 1}: 2}", JSMN_ERROR_INVAL));
+  check(query("{[1,2]: 2}", JSMN_ERROR_INVAL));
 #endif
   return 0;
 }
