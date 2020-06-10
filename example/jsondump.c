@@ -40,13 +40,13 @@ static int dump(const char *js, jsmntok_t *t, size_t count, int indent) {
   } else if (t->type == JSMN_OBJECT) {
     printf("\n");
     j = 0;
-    for (i = 0; i < t->size; i++) {
+    for (i = 0; i < t->children; i++) {
       for (k = 0; k < indent; k++) {
         printf("  ");
       }
       key = t + 1 + j;
       j += dump(js, key, count - j, indent + 1);
-      if (key->size > 0) {
+      if (key->children > 0) {
         printf(": ");
         j += dump(js, t + 1 + j, count - j, indent + 1);
       }
@@ -56,7 +56,7 @@ static int dump(const char *js, jsmntok_t *t, size_t count, int indent) {
   } else if (t->type == JSMN_ARRAY) {
     j = 0;
     printf("\n");
-    for (i = 0; i < t->size; i++) {
+    for (i = 0; i < t->children; i++) {
       for (k = 0; k < indent - 1; k++) {
         printf("  ");
       }

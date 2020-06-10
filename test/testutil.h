@@ -7,25 +7,25 @@ static int vtokeq(const char *s, const jsmntok_t *t, const size_t numtok,
                   va_list ap) {
   if (numtok > 0) {
     size_t i;
-    jsmnint_t start, end, size;
+    jsmnint_t start, end, children;
     jsmntype_t type;
     char *value;
 
-    size = JSMN_NEG;
+    children = JSMN_NEG;
     value = NULL;
     for (i = 0; i < numtok; i++) {
       type = va_arg(ap, jsmntype_t);
       if (type == JSMN_STRING) {
         value = va_arg(ap, char *);
-        size = va_arg(ap, int);
+        children = va_arg(ap, int);
         start = end = JSMN_NEG;
       } else if (type == JSMN_PRIMITIVE) {
         value = va_arg(ap, char *);
-        start = end = size = JSMN_NEG;
+        start = end = children = JSMN_NEG;
       } else {
         start = va_arg(ap, int);
         end = va_arg(ap, int);
-        size = va_arg(ap, int);
+        children = va_arg(ap, int);
         value = NULL;
       }
       if (!(t[i].type & type)) {
@@ -42,8 +42,8 @@ static int vtokeq(const char *s, const jsmntok_t *t, const size_t numtok,
           return 0;
         }
       }
-      if (size != JSMN_NEG && t[i].size != size) {
-        printf("token %lu size is %d, not %d\n", i, t[i].size, size);
+      if (children != JSMN_NEG && t[i].children != children) {
+        printf("token %lu children is %d, not %d\n", i, t[i].children, children);
         return 0;
       }
 
