@@ -3,8 +3,8 @@ cmake_policy(SET CMP0063 NEW)
 
 project(JSMN)
 
-set(JSMN_VERSION_MAJOR 1)
-set(JSMN_VERSION_MINOR 1)
+set(JSMN_VERSION_MAJOR 2)
+set(JSMN_VERSION_MINOR 0)
 set(JSMN_VERSION_PATCH 0)
 
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
@@ -34,8 +34,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 	add_subdirectory(example)
-	add_subdirectory(tests)
 	add_subdirectory(test)
+	add_subdirectory(tests)
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 add_library(jsmn_obj OBJECT

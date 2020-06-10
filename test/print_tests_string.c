@@ -3,15 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef JSMN_DEFINES
-#define JSMN_DEFINES
-
-//#define JSMN_PARENT_LINKS
-//#define JSMN_SHORT_TOKENS
-//#define JSMN_NEXT_SIBLING
-
-#endif // JSMN_DEFINES
-
 #include "../jsmn.h"
 
 const char *jsmn_strerror(enum jsmnerr errno)

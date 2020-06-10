@@ -3,11 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef JSMN_DEFINES
-#define JSMN_DEFINES
-
-#endif // JSMN_DEFINES
-
 #include "../jsmn.h"
 
 const char *jsmn_strerror(enum jsmnerr errno)

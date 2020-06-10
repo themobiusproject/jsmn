@@ -6,6 +6,11 @@ add_executable(print_jsmn_test_functions
 
 enable_testing()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-invalid-source-encoding")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-invalid-source-encoding")
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(/usr/local/include)
 
@@ -15,86 +20,32 @@ set_source_files_properties(
     PROPERTIES
         COMPILE_DEFINITIONS UNIT_TESTING)
 
+
 add_executable(jsmn_test_default
   jsmn_test.c
 )
-target_compile_definitions(jsmn_test_default PRIVATE JSMN_DEFINES)
+target_compile_definitions(jsmn_test_default PRIVATE)
 target_link_libraries(jsmn_test_default ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default COMMAND jsmn_test_default)
 
-add_executable(jsmn_test_default_links
+add_executable(jsmn_test_default_low_memory
   jsmn_test.c
 )
-target_compile_definitions(jsmn_test_default_links PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_default_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_default_links COMMAND jsmn_test_default_links)
+target_compile_definitions(jsmn_test_default_low_memory PRIVATE JSMN_LOW_MEMORY)
+target_link_libraries(jsmn_test_default_low_memory ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_default_low_memory COMMAND jsmn_test_default_low_memory)
 
-add_executable(jsmn_test_default_short
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_default_short PRIVATE JSMN_DEFINES JSMN_SHORT_TOKENS)
-target_link_libraries(jsmn_test_default_short ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_default_short COMMAND jsmn_test_default_short)
-
-add_executable(jsmn_test_default_short_links
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_default_short_links PRIVATE JSMN_DEFINES JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_default_short_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_default_short_links COMMAND jsmn_test_default_short_links)
-
-add_executable(jsmn_test_default_sibling_short
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_default_sibling_short PRIVATE JSMN_DEFINES JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
-target_link_libraries(jsmn_test_default_sibling_short ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_default_sibling_short COMMAND jsmn_test_default_sibling_short)
-
-add_executable(jsmn_test_default_sibling_short_links
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_default_sibling_short_links PRIVATE JSMN_DEFINES JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_default_sibling_short_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_default_sibling_short_links COMMAND jsmn_test_default_sibling_short_links)
 
 add_executable(jsmn_test_permissive
   jsmn_test.c
 )
-target_compile_definitions(jsmn_test_permissive PRIVATE JSMN_DEFINES JSMN_PERMISSIVE)
+target_compile_definitions(jsmn_test_permissive PRIVATE JSMN_PERMISSIVE)
 target_link_libraries(jsmn_test_permissive ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_permissive COMMAND jsmn_test_permissive)
 
-add_executable(jsmn_test_permissive_links
+add_executable(jsmn_test_permissive_low_memory
   jsmn_test.c
 )
-target_compile_definitions(jsmn_test_permissive_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_permissive_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_links COMMAND jsmn_test_permissive_links)
-
-add_executable(jsmn_test_permissive_short
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS)
-target_link_libraries(jsmn_test_permissive_short ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_short COMMAND jsmn_test_permissive_short)
-
-add_executable(jsmn_test_permissive_short_links
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_short_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_permissive_short_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_short_links COMMAND jsmn_test_permissive_short_links)
-
-add_executable(jsmn_test_permissive_sibling_short
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_sibling_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
-target_link_libraries(jsmn_test_permissive_sibling_short ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_sibling_short COMMAND jsmn_test_permissive_sibling_short)
-
-add_executable(jsmn_test_permissive_sibling_short_links
-  jsmn_test.c
-)
-target_compile_definitions(jsmn_test_permissive_sibling_short_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-target_link_libraries(jsmn_test_permissive_sibling_short_links ${CMOCKA_LIBRARY})
-add_test(NAME jsmn_test_permissive_sibling_short_links COMMAND jsmn_test_permissive_sibling_short_links)
+target_compile_definitions(jsmn_test_permissive_low_memory PRIVATE JSMN_PERMISSIVE JSMN_LOW_MEMORY)
+target_link_libraries(jsmn_test_permissive_low_memory ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_permissive_low_memory COMMAND jsmn_test_permissive_low_memory)

@@ -30,35 +30,25 @@
 #include <cmocka.h>
 #endif
 
+#define JSMN_VERSION_MAJOR 2
+#define JSMN_VERSION_MINOR 0
+#define JSMN_VERSION_PATCH 0
+
 #include <stddef.h>
 
 #include "jsmn_defines.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifndef JSMN_API
-# ifdef JSMN_STATIC
-#  define JSMN_API static
-# else
-#  define JSMN_API extern
-# endif
-#endif
-
 #ifdef JSMN_SHORT_TOKENS
 typedef unsigned short jsmnint_t;
-#  define packed __attribute__((packed))
 #else
 typedef unsigned int jsmnint_t;
-#  define packed
 #endif
 #define JSMN_NEG ((jsmnint_t)-1)
 
 /**
  * JSON type identifier. Basic types are:
  */
-typedef enum packed {
+typedef enum {
   JSMN_UNDEFINED    = 0x0000,
   JSMN_OBJECT       = 0x0001,   //!< Object
   JSMN_ARRAY        = 0x0002,   //!< Array
@@ -202,6 +192,11 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
                      const size_t num_tokens);
 
 #ifndef JSMN_HEADER
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Allocates a fresh unused token from the token pool.
  */
@@ -964,10 +959,10 @@ void jsmn_init(jsmn_parser *parser) {
   parser->expected = JSMN_ROOT_INIT;
 }
 
-#endif /* JSMN_HEADER */
-
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* JSMN_HEADER */
 
 #endif /* JSMN_H */

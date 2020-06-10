@@ -6,76 +6,34 @@ add_executable(print_tests_string
 
 enable_testing()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-invalid-source-encoding")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-invalid-source-encoding")
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+
 add_executable(test_default
   tests.c
 )
-target_compile_definitions(test_default PRIVATE JSMN_DEFINES)
+target_compile_definitions(test_default PRIVATE)
 add_test(NAME test_default COMMAND test_default)
 
-add_executable(test_default_links
+add_executable(test_default_low_memory
   tests.c
 )
-target_compile_definitions(test_default_links PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS)
-add_test(NAME test_default_links COMMAND test_default_links)
+target_compile_definitions(test_default_low_memory PRIVATE JSMN_LOW_MEMORY)
+add_test(NAME test_default_low_memory COMMAND test_default_low_memory)
 
-add_executable(test_default_short
-  tests.c
-)
-target_compile_definitions(test_default_short PRIVATE JSMN_DEFINES JSMN_SHORT_TOKENS)
-add_test(NAME test_default_short COMMAND test_default_short)
-
-add_executable(test_default_short_links
-  tests.c
-)
-target_compile_definitions(test_default_short_links PRIVATE JSMN_DEFINES JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-add_test(NAME test_default_short_links COMMAND test_default_short_links)
-
-add_executable(test_default_sibling_short
-  tests.c
-)
-target_compile_definitions(test_default_sibling_short PRIVATE JSMN_DEFINES JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
-add_test(NAME test_default_sibling_short COMMAND test_default_sibling_short)
-
-add_executable(test_default_sibling_short_links
-  tests.c
-)
-target_compile_definitions(test_default_sibling_short_links PRIVATE JSMN_DEFINES JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-add_test(NAME test_default_sibling_short_links COMMAND test_default_sibling_short_links)
 
 add_executable(test_permissive
   tests.c
 )
-target_compile_definitions(test_permissive PRIVATE JSMN_DEFINES JSMN_PERMISSIVE)
+target_compile_definitions(test_permissive PRIVATE JSMN_PERMISSIVE)
 add_test(NAME test_permissive COMMAND test_permissive)
 
-add_executable(test_permissive_links
+add_executable(test_permissive_low_memory
   tests.c
 )
-target_compile_definitions(test_permissive_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_PARENT_LINKS)
-add_test(NAME test_permissive_links COMMAND test_permissive_links)
-
-add_executable(test_permissive_short
-  tests.c
-)
-target_compile_definitions(test_permissive_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS)
-add_test(NAME test_permissive_short COMMAND test_permissive_short)
-
-add_executable(test_permissive_short_links
-  tests.c
-)
-target_compile_definitions(test_permissive_short_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-add_test(NAME test_permissive_short_links COMMAND test_permissive_short_links)
-
-add_executable(test_permissive_sibling_short
-  tests.c
-)
-target_compile_definitions(test_permissive_sibling_short PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
-add_test(NAME test_permissive_sibling_short COMMAND test_permissive_sibling_short)
-
-add_executable(test_permissive_sibling_short_links
-  tests.c
-)
-target_compile_definitions(test_permissive_sibling_short_links PRIVATE JSMN_DEFINES JSMN_PERMISSIVE JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS JSMN_PARENT_LINKS)
-add_test(NAME test_permissive_sibling_short_links COMMAND test_permissive_sibling_short_links)
+target_compile_definitions(test_permissive_low_memory PRIVATE JSMN_PERMISSIVE JSMN_LOW_MEMORY)
+add_test(NAME test_permissive_low_memory COMMAND test_permissive_low_memory)
 
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
