@@ -50,13 +50,13 @@ typedef unsigned int jsmnint_t;
  */
 typedef enum {
   JSMN_UNDEFINED    = 0x0000,
-  JSMN_OBJECT       = 0x0001,   //!< Object
-  JSMN_ARRAY        = 0x0002,   //!< Array
-  JSMN_STRING       = 0x0004,   //!< String
-  JSMN_PRIMITIVE    = 0x0008,   //!< Other primitive: number, boolean (true/false) or null
+  JSMN_OBJECT       = 0x0001,   /*!< Object */
+  JSMN_ARRAY        = 0x0002,   /*!< Array */
+  JSMN_STRING       = 0x0004,   /*!< String */
+  JSMN_PRIMITIVE    = 0x0008,   /*!< Other primitive: number, boolean (true/false) or null */
 
-  JSMN_KEY          = 0x0010,   //!< is a key
-  JSMN_VALUE        = 0x0020,   //!< is a value
+  JSMN_KEY          = 0x0010,   /*!< is a key */
+  JSMN_VALUE        = 0x0020,   /*!< is a value */
 
   /* Complex elements */
   JSMN_CONTAINER    = JSMN_OBJECT | JSMN_ARRAY,
@@ -74,20 +74,20 @@ typedef enum {
 #endif
 
   /* Primitive extension */
-  JSMN_PRI_LITERAL  = 0x0040,   //!< true, false, null
-  JSMN_PRI_INTEGER  = 0x0080,   //!< 0, 1 - 9
-  JSMN_PRI_SIGN     = 0x0100,   //!< minus sign, '-' or plus sign, '+'
-  JSMN_PRI_DECIMAL  = 0x0200,   //!< deminal point '.'
-  JSMN_PRI_EXPONENT = 0x0400,   //!< exponent, 'e' or 'E'
+  JSMN_PRI_LITERAL  = 0x0040,   /*!< true, false, null */
+  JSMN_PRI_INTEGER  = 0x0080,   /*!< 0, 1 - 9 */
+  JSMN_PRI_SIGN     = 0x0100,   /*!< minus sign, '-' or plus sign, '+' */
+  JSMN_PRI_DECIMAL  = 0x0200,   /*!< deminal point '.' */
+  JSMN_PRI_EXPONENT = 0x0400,   /*!< exponent, 'e' or 'E' */
 
   JSMN_PRI_MINUS    = JSMN_PRI_SIGN,
 
   /* Parsing validation, expectations, and state information */
-  JSMN_CLOSE        = 0x0800,   //!< Close OBJECT '}' or ARRAY ']'
-  JSMN_DELIMITER    = 0x1000,   //!< Colon ':' after KEY, Comma ',' after VALUE
-  JSMN_PREV_KEY     = 0x2000,   //!< Previous token is an KEY
-  JSMN_PREV_VAL     = 0x4000,   //!< Previous token is a VALUE
-  JSMN_INSD_OBJ     = 0x8000,   //!< Inside an OBJECT
+  JSMN_CLOSE        = 0x0800,   /*!< Close OBJECT '}' or ARRAY ']' */
+  JSMN_DELIMITER    = 0x1000,   /*!< Colon ':' after KEY, Comma ',' after VALUE */
+  JSMN_PREV_KEY     = 0x2000,   /*!< Previous token is an KEY */
+  JSMN_PREV_VAL     = 0x4000,   /*!< Previous token is a VALUE */
+  JSMN_INSD_OBJ     = 0x8000,   /*!< Inside an OBJECT */
 
   JSMN_COLON        = JSMN_DELIMITER | JSMN_PREV_KEY,
   JSMN_COMMA        = JSMN_DELIMITER | JSMN_PREV_VAL,
@@ -128,25 +128,25 @@ typedef enum {
 
 enum jsmnerr {
   JSMN_SUCCESS     =  0,
-  JSMN_ERROR_NOMEM = -1,        //!< Not enough tokens were provided
-  JSMN_ERROR_INVAL = -2,        //!< Invalid character inside JSON string
-  JSMN_ERROR_PART  = -3,        //!< The string is not a full JSON packet, more bytes expected
-  JSMN_ERROR_LEN   = -4,        //!< Input data too long
+  JSMN_ERROR_NOMEM = -1,        /*!< Not enough tokens were provided */
+  JSMN_ERROR_INVAL = -2,        /*!< Invalid character inside JSON string */
+  JSMN_ERROR_PART  = -3,        /*!< The string is not a full JSON packet, more bytes expected */
+  JSMN_ERROR_LEN   = -4,        /*!< Input data too long */
 };
 
 /**
  * JSON token description.
  */
 typedef struct jsmntok_t {
-  jsmntype_t type;              //!< type (object, array, string etc.)
-  jsmnint_t start;              //!< start position in JSON data string
-  jsmnint_t end;                //!< end position in JSON data string
-  jsmnint_t size;               //!< number of children
+  jsmntype_t type;              /*!< type (object, array, string etc.) */
+  jsmnint_t start;              /*!< start position in JSON data string */
+  jsmnint_t end;                /*!< end position in JSON data string */
+  jsmnint_t size;               /*!< number of children */
 #ifdef JSMN_PARENT_LINKS
-  jsmnint_t parent;             //!< parent id
+  jsmnint_t parent;             /*!< parent id */
 #endif
 #ifdef JSMN_NEXT_SIBLING
-  jsmnint_t next_sibling;       //!< next sibling id
+  jsmnint_t next_sibling;       /*!< next sibling id */
 #endif
 } jsmntok_t;
 
@@ -157,12 +157,12 @@ typedef struct jsmntok_t {
  * the string being parsed now and current position in that string.
  */
 typedef struct jsmn_parser {
-  jsmnint_t pos;            //!< offset in the JSON string
-  jsmnint_t toknext;        //!< next token to allocate
-                            //!< when tokens == NULL, keeps track of container types to a depth of (sizeof(jsmnint_t) * 8)
-  jsmnint_t toksuper;       //!< superior token node, e.g. parent object or array
-                            //!< when tokens == NULL, toksuper represents container depth
-  jsmntype_t expected;      //!< Expected jsmn type(s)
+  jsmnint_t pos;            /*!< offset in the JSON string */
+  jsmnint_t toknext;        /*!< next token to allocate */
+                            /*!< when tokens == NULL, keeps track of container types to a depth of (sizeof(jsmnint_t) * 8) */
+  jsmnint_t toksuper;       /*!< superior token node, e.g. parent object or array */
+                            /*!< when tokens == NULL, toksuper represents container depth */
+  jsmntype_t expected;      /*!< Expected jsmn type(s) */
 } jsmn_parser;
 
 /**
