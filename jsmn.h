@@ -141,7 +141,10 @@ typedef struct jsmntok_t {
   jsmntype_t type;              //!< type (object, array, string etc.)
   jsmnint_t start;              //!< start position in JSON data string
   jsmnint_t end;                //!< end position in JSON data string
+  union {
   jsmnint_t children;           //!< number of children
+  jsmnint_t size __attribute__((deprecated("Use children instead; more descriptive.")));
+  };
 #ifdef JSMN_PARENT_LINKS
   jsmnint_t parent;             //!< parent id
 #endif
