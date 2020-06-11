@@ -131,17 +131,17 @@ jsmnint_t json_next_sibling(const jsmntok_t *tokens, const jsmnint_t t)
     if (tokens[tokens[t].parent].size == 1)
         return JSMN_NEG;
 
-    jsmnint_t i, child_num = 1;
+    jsmnint_t i, child = 1;
 
     // Figure out what child number token is
     for (i = tokens[t].parent + 1; i < t; i++) {
         if (tokens[i].parent == tokens[t].parent) {
-            child_num++;
+            child++;
         }
     }
 
     // If child number is the same as parent's children, then token is the last child
-    if (child_num == tokens[tokens[t].parent].children)
+    if (child == tokens[tokens[t].parent].size)
         return JSMN_NEG;
 
     i = t + 1;
