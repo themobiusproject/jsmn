@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "95409C4C24880CB4004D7E04"
-               BuildableName = "jsmn_test_default_links"
-               BlueprintName = "jsmn_test_default_links"
+               BuildableName = "jsmn_test_default_low_memory"
+               BlueprintName = "jsmn_test_default_low_memory"
                ReferencedContainer = "container:jsmn.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "95409C4C24880CB4004D7E04"
-            BuildableName = "jsmn_test_default_links"
-            BlueprintName = "jsmn_test_default_links"
+            BuildableName = "jsmn_test_default_low_memory"
+            BlueprintName = "jsmn_test_default_low_memory"
             ReferencedContainer = "container:jsmn.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "95409C4C24880CB4004D7E04"
-            BuildableName = "jsmn_test_default_links"
-            BlueprintName = "jsmn_test_default_links"
+            BuildableName = "jsmn_test_default_low_memory"
+            BlueprintName = "jsmn_test_default_low_memory"
             ReferencedContainer = "container:jsmn.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
