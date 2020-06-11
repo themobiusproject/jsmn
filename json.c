@@ -113,46 +113,16 @@ jsmnint_t getJSONKeyValue(const jsmntok_t *tokens, const jsmnint_t t)
 }
 
 static inline
-jsmnint_t json_next_sibling(const jsmntok_t *tokens, const jsmnint_t t)
+jsmnint_t json_next_sibling(const jsmntok_t *tokens, jsmnint_t t)
 {
-    // parent must be a JSMN_OBJECT or JSMN_ARRAY
-    // parent's children must be > 1;
-    // assume only one json string in string
-    // from current token to end, look for another token with the same parent
-
 #if defined(JSMN_NEXT_SIBLING)
     return tokens[t].next_sibling;
-#elif defined(JSMN_PARENT_LINKS)
-    // If token's parent isn't an OBJECT or ARRAY, return -1
-    if (!(tokens[tokens[t].parent].type & (JSMN_OBJECT | JSMN_ARRAY)))
-        return JSMN_NEG;
-
-    // If token's parent only has one child, return -1
-    if (tokens[tokens[t].parent].size == 1)
-        return JSMN_NEG;
-
-    jsmnint_t i, child = 1;
-
-    // Figure out what child number token is
-    for (i = tokens[t].parent + 1; i < t; i++) {
-        if (tokens[i].parent == tokens[t].parent) {
-            child++;
-        }
-    }
-
-    // If child number is the same as parent's children, then token is the last child
-    if (child == tokens[tokens[t].parent].size)
-        return JSMN_NEG;
-
-    i = t + 1;
-    while (tokens[i].parent != tokens[t].parent) {
-        i++;
-    }
-
-    return i;
 #else
-    // Figure it out yourself
-    return JSMN_NEG;
+    jsmnint_t remaining;
+    for (remaining = 1; remaining != JSMN_NEG; remaining--, t++) {
+        remaining += tokens[t]->size;
+    }
+    return t;
 #endif
 }
 
