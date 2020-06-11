@@ -41,7 +41,7 @@ void vtokeq(const char *s, const jsmntok_t *t, const size_t numtok, va_list ap)
         return;
 
     size_t i;
-    jsmnint_t start, end, children = JSMN_NEG;
+    jsmnint_t start, end, size = JSMN_NEG;
     jsmntype_t type;
     char *value = NULL;
 
@@ -50,20 +50,20 @@ void vtokeq(const char *s, const jsmntok_t *t, const size_t numtok, va_list ap)
         switch (type) {
             case JSMN_STRING: {
                 value = va_arg(ap, char *);
-                children = va_arg(ap, int);
+                size = va_arg(ap, int);
                 start = end = JSMN_NEG;
                 break;
             }
             case JSMN_PRIMITIVE: {
                 value = va_arg(ap, char *);
-                start = end = children = JSMN_NEG;
+                start = end = size = JSMN_NEG;
                 break;
             }
             default: {
                 value = NULL;
                 start = va_arg(ap, int);
                 end = va_arg(ap, int);
-                children = va_arg(ap, int);
+                size = va_arg(ap, int);
                 break;
             }
         }
@@ -80,8 +80,8 @@ void vtokeq(const char *s, const jsmntok_t *t, const size_t numtok, va_list ap)
             }
         }
 
-        if (children != JSMN_NEG && t[i].children != children) {
-            fail_msg("token %zu children is %d, not %d", i, t[i].children, children);
+        if (size != JSMN_NEG && t[i].size != size) {
+            fail_msg("token %zu size is %d, not %d", i, t[i].size, size);
         }
 
         if (s != NULL && value != NULL) {

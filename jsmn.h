@@ -141,10 +141,7 @@ typedef struct jsmntok_t {
   jsmntype_t type;              //!< type (object, array, string etc.)
   jsmnint_t start;              //!< start position in JSON data string
   jsmnint_t end;                //!< end position in JSON data string
-  union {
-  jsmnint_t children;           //!< number of children
-  jsmnint_t size __attribute__((deprecated("Use children instead; more descriptive.")));
-  };
+  jsmnint_t size;               //!< number of children
 #ifdef JSMN_PARENT_LINKS
   jsmnint_t parent;             //!< parent id
 #endif
@@ -213,7 +210,7 @@ jsmntok_t *jsmn_alloc_token(jsmn_parser *parser, jsmntok_t *tokens,
   jsmntok_t *tok;
   tok = &tokens[parser->toknext++];
   tok->start = tok->end = JSMN_NEG;
-  tok->children = 0;
+  tok->size = 0;
 #ifdef JSMN_PARENT_LINKS
   tok->parent = JSMN_NEG;
 #endif
@@ -232,7 +229,7 @@ void jsmn_fill_token(jsmntok_t *token, const jsmntype_t type,
   token->type = type;
   token->start = start;
   token->end = end;
-  token->children = 0;
+  token->size = 0;
 }
 
 #ifdef JSMN_NEXT_SIBLING
@@ -285,19 +282,19 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
 #ifndef JSMN_PERMISSIVE
   if (js[parser->pos] == 't' || js[parser->pos] == 'f' || js[parser->pos] == 'n') {
     char *literal = NULL;
-    jsmnint_t children = 0;
+    jsmnint_t size = 0;
     if (js[parser->pos] == 't') {
       literal = "true";
-      children = 4;
+      size = 4;
     } else if (js[parser->pos] == 'f') {
       literal = "false";
-      children = 5;
+      size = 5;
     } else if (js[parser->pos] == 'n') {
       literal = "null";
-      children = 4;
+      size = 4;
     }
     jsmnint_t i;
-    for (i = 1, parser->pos++; i < children; i++, parser->pos++) {
+    for (i = 1, parser->pos++; i < size; i++, parser->pos++) {
       if (parser->pos >= len || js[parser->pos] == '\0' ||
           (parser->toksuper != JSMN_NEG && js[parser->pos] == ',') ||
           js[parser->pos] == (parser->expected & JSMN_INSD_OBJ ? '}' : ']')) {
@@ -493,7 +490,7 @@ found:
 #endif
 
   if (parser->toksuper != JSMN_NEG) {
-    tokens[parser->toksuper].children++;
+    tokens[parser->toksuper].size++;
 
     if (!(tokens[parser->toksuper].type & JSMN_CONTAINER)) {
 #ifdef JSMN_PARENT_LINKS
@@ -594,7 +591,7 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
 #endif
 
       if (parser->toksuper != JSMN_NEG) {
-        tokens[parser->toksuper].children++;
+        tokens[parser->toksuper].size++;
 
         if (!(tokens[parser->toksuper].type & JSMN_CONTAINER)) {
 #ifdef JSMN_PARENT_LINKS
@@ -711,7 +708,7 @@ jsmnint_t jsmn_parse_container_open(jsmn_parser *parser, const char c,
 #endif
 
   if (parser->toksuper != JSMN_NEG) {
-    tokens[parser->toksuper].children++;
+    tokens[parser->toksuper].size++;
   }
   parser->toksuper = parser->toknext - 1;
 

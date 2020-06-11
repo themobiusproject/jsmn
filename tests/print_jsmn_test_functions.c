@@ -124,13 +124,13 @@ void print_jsmn_test_functions(const char *file)
   for (i = 0; i < rv; i++) {
     token = &tokens[i];
     if (token->type & JSMN_OBJECT) {
-      printf("%*sJSMN_OBJECT, %d, %d, %d", 10, "", token->start, token->end, token->children);
+      printf("%*sJSMN_OBJECT, %d, %d, %d", 10, "", token->start, token->end, token->size);
     } else if (token->type & JSMN_ARRAY) {
-      printf("%*sJSMN_ARRAY,  %d, %d, %d", 10, "", token->start, token->end, token->children);
+      printf("%*sJSMN_ARRAY,  %d, %d, %d", 10, "", token->start, token->end, token->size);
     } else if (token->type & JSMN_STRING) {
       printf("%*sJSMN_STRING, \"", 10, "");
       print_escaped_string(json + token->start, token->end - token->start);
-      printf("\", %d", token->children);
+      printf("\", %d", token->size);
     } else if (token->type & JSMN_PRIMITIVE) {
       printf("%*sJSMN_PRIMITIVE, \"", 10, "");
       print_escaped_string(json + token->start, token->end - token->start);

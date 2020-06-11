@@ -121,14 +121,14 @@ void print_tests_string(const char *file)
   for (i = 0; i < rv; i++) {
     token = &tokens[i];
     if (token->type & JSMN_OBJECT) {
-      printf("\n%*sJSMN_OBJECT, %d, %d, %d", 14, "", token->start, token->end, token->children);
+      printf("\n%*sJSMN_OBJECT, %d, %d, %d", 14, "", token->start, token->end, token->size);
     } else if (token->type & JSMN_ARRAY) {
-      printf("\n%*sJSMN_ARRAY,  %d, %d, %d", 14, "", token->start, token->end, token->children);
+      printf("\n%*sJSMN_ARRAY,  %d, %d, %d", 14, "", token->start, token->end, token->size);
     } else if (token->type & JSMN_STRING) {
       printf("\n%*sJSMN_STRING, ", 14, "");
       printf("\"");
       print_escaped_string(json + token->start, token->end - token->start);
-      printf("\", %d", token->children);
+      printf("\", %d", token->size);
     } else if (token->type & JSMN_PRIMITIVE) {
       printf("\n%*sJSMN_PRIMITIVE, ", 14, "");
       printf("\"");

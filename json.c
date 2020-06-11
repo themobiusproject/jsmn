@@ -128,7 +128,7 @@ jsmnint_t json_next_sibling(const jsmntok_t *tokens, const jsmnint_t t)
         return JSMN_NEG;
 
     // If token's parent only has one child, return -1
-    if (tokens[tokens[t].parent].children == 1)
+    if (tokens[tokens[t].parent].size == 1)
         return JSMN_NEG;
 
     jsmnint_t i, child_num = 1;
@@ -182,7 +182,7 @@ static inline
 jsmnint_t json_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
 {
     // if parent's children is less than or equal to key, key is bad
-    if (tokens[parent].children <= key)
+    if (tokens[parent].size <= key)
         return JSMN_NEG;
 
     // first child is the first token after the parent
@@ -259,7 +259,7 @@ void explodeJSON(const char *json, const size_t len)
         printf(" | %8d", token->start);
         printf(" | %8d", token->end);
         printf(" | %8d", token->end - token->start);
-        printf(" | %8d", token->children);
+        printf(" | %8d", token->size);
         printf(" | %8d", token->parent != JSMN_NEG ? token->parent : -1);
         printf(" | %8d", token->next_sibling != JSMN_NEG ? token->next_sibling : -1);
         printf(" | %3s", jsmnextr[(token->type & (JSMN_KEY | JSMN_VALUE)) >> 4]);
