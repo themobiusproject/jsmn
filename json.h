@@ -59,12 +59,6 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const size_t num
  * @param[in] len Length of JSON String
  */
 void explodeJSON(const char *json, size_t len);
-/**
- * @brief Print an extremely verbose description of JSON string
- *
- * @param[in] json JSON String with escape character '\0' at the end
- */
-void explodeJSON_nolen(const char *json);
 
 #ifdef __cplusplus
 }
