@@ -12,19 +12,21 @@
 #include <stdint.h>
 
 JSMN_EXPORT
-const char *jsmn_strerror(enum jsmnerr errno)
+const char *jsmn_strerror(jsmnerr errno)
 {
     switch (errno) {
         case JSMN_SUCCESS:
             return "*** Success, should not be printing an error. ***";
         case JSMN_ERROR_NOMEM:
             return "Not enough tokens were provided.";
+        case JSMN_ERROR_LEN:
+            return "Input data too long.";
         case JSMN_ERROR_INVAL:
             return "Invalid character inside JSON string.";
         case JSMN_ERROR_PART:
             return "The string is not a full JSON packet, more bytes expected.";
-        case JSMN_ERROR_LEN:
-            return "Input data too long.";
+        case JSMN_ERROR_UNMATCHED_BRACKETS:
+            return "The JSON string has unmatched brackets.";
     }
 
     return NULL;
@@ -38,13 +40,13 @@ jsmntok_t *jsmn_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
     jsmn_init(&p);
     *rv = jsmn_parse(&p, json, json_len, NULL, 0);
 
-    // enum jsmnerr has four errors, thus
-    if (*rv >= (jsmnint_t)-4) {
+    /* enum jsmnerr has four errors, thus */
+    if (*rv >= (jsmnint_t)-5) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(*rv));
         return NULL;
     }
 
-//  fprintf(stderr, "jsmn_parse: %d tokens found.\n", *rv);
+/*  fprintf(stderr, "jsmn_parse: %d tokens found.\n", *rv); */
 
     jsmntok_t *tokens = calloc(*rv, sizeof(jsmntok_t));
 
@@ -64,27 +66,19 @@ jsmnint_t jsmn_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, co
 
     rv = jsmn_parse(&p, json, json_len, tokens, num_tokens);
 
-    // enum jsmnerr has four errors, thus
-    if (rv >= (jsmnint_t)-4) {
+    /* enum jsmnerr has four errors, thus */
+    if (rv >= (jsmnint_t)-5) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(rv));
         return rv;
     }
 
-//  fprintf(stderr, "jsmn_parse: %d tokens found.\n", rv);
+/*  fprintf(stderr, "jsmn_parse: %d tokens found.\n", rv); */
 
     return rv;
 }
 
-/**
- * @brief String comparison between token and string
- *
- * @param[in] json JSON String
- * @param[in] tok Token to compare
- * @param[in] s String to complare
- * @return 0 when token string and s are equal, -1 otherwise
- */
-static
-int jsmn_token_streq(const char *json, const jsmntok_t *tok, const char *s)
+JSMN_EXPORT
+int jsmn_streq(const char *json, const jsmntok_t *tok, const char *s)
 {
     if ((tok->type & JSMN_STRING) && strlen(s) == tok->end - tok->start &&
             strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
@@ -93,88 +87,123 @@ int jsmn_token_streq(const char *json, const jsmntok_t *tok, const char *s)
     return -1;
 }
 
-static
-jsmnint_t jsmn_next_sibling(const jsmntok_t *tokens, jsmnint_t t)
+JSMN_EXPORT
+jsmnint_t jsmn_get_prev_sibling(const jsmntok_t *tokens, const jsmnint_t t)
+{
+#if defined(JSMN_NEXT_SIBLING) && defined(JSMN_PARENT_LINKS)
+    jsmnint_t sibling;
+
+    /* Start with parent's first child */
+    if (tokens[t].parent == JSMN_NEG) {
+        return JSMN_NEG;
+    }
+
+    sibling = tokens[t].parent + 1;
+
+    /* If the first child is the current token */
+    if (sibling == t) {
+        return JSMN_NEG;
+    }
+
+    /* Loop until we find previous sibling */
+    while (tokens[sibling].next_sibling != t) {
+        sibling = tokens[sibling].next_sibling;
+    }
+
+    return sibling;
+#else
+    jsmnint_t remaining, sibling = t;
+    for (remaining = JSMN_NEG; remaining != 1 && sibling != JSMN_NEG; remaining++, sibling--) {
+        remaining -= tokens[sibling]->size;
+    }
+    return sibling;
+#endif
+}
+
+JSMN_EXPORT
+jsmnint_t jsmn_get_next_sibling(const jsmntok_t *tokens, const jsmnint_t t)
 {
 #if defined(JSMN_NEXT_SIBLING)
     return tokens[t].next_sibling;
 #else
-    jsmnint_t remaining;
-    for (remaining = 1; remaining != JSMN_NEG; remaining--, t++) {
-        remaining += tokens[t]->size;
+    jsmnint_t remaining, sibling = t;
+    for (remaining = 1; remaining != JSMN_NEG; remaining--, sibling++) {
+        remaining += tokens[sibling]->size;
     }
-    return t;
+    return sibling;
 #endif
 }
 
 static
-jsmnint_t jsmn_parse_object(const char *json, const jsmntok_t *tokens, const jsmnint_t parent, const char *key)
+jsmnint_t jsmn_lookup_object(const char *json, const jsmntok_t *tokens, const jsmnint_t parent, const char *key)
 {
-    // first child is the first token after the parent
+    /* first child is the first token after the parent */
     jsmnint_t child = parent + 1;
 
-    // loop through children
+    /* loop through children */
     while (child != JSMN_NEG) {
-        // if child's string is equal to key
-        if (jsmn_token_streq(json, &tokens[child], key) == 0) {
-            // return current child
+        /* if child's string is equal to key */
+        if (jsmn_streq(json, &tokens[child], key) == JSMN_SUCCESS) {
+            /* return current child */
             return child;
         }
 
-        // move to the next child
-        child = jsmn_next_sibling(tokens, child);
+        /* move to the next child */
+        child = jsmn_get_next_sibling(tokens, child);
     }
 
-    // key didn't match any of the json keys
+    /* key didn't match any of the json keys */
     return JSMN_NEG;
 }
 
 static
-jsmnint_t jsmn_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
+jsmnint_t jsmn_lookup_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
 {
-    // if parent's children is less than or equal to key, key is bad
+    /* if parent's children is less than or equal to key, key is bad */
     if (tokens[parent].size <= key)
         return JSMN_NEG;
 
-    // first child is the first token after the parent
+    /* first child is the first token after the parent */
     jsmnint_t i, child = parent + 1;
-    // loop through children until you reach the nth child
+    /* loop through children until you reach the nth child */
     for (i = 0; i < key; i++) {
-        child = jsmn_next_sibling(tokens, child);
+        child = jsmn_get_next_sibling(tokens, child);
     }
 
-    // return nth child
+    /* return nth child */
     return child;
 }
 
 JSMN_EXPORT
-jsmnint_t jsmn_parse(const char *json, const jsmntok_t *tokens, const size_t num_keys, ...)
+jsmnint_t jsmn_lookup(const char *json, const jsmntok_t *tokens, const size_t num_keys, ...)
 {
     jsmnint_t i, pos;
 
-    // keys may be either const char * or jsmnint_t, at this point we don't care
+    /* keys may be either const char * or jsmnint_t, at this point we don't care */
     va_list keys;
     va_start(keys, num_keys);
 
-    // start at position zero
+    /* start at position zero */
     pos = 0;
     for (i = 0; i < num_keys; i++) {
         if (tokens[pos].type & JSMN_OBJECT) {
-            // if `pos`.type is an object, treat key as a const char *
-            if ((pos = jsmn_parse_object(json, tokens, pos, va_arg(keys, void *))) == JSMN_NEG) break;
-            // move position to current key's value (with checks)
-            if (tokens[pos] & JSMN_KEY)
-                pos = pos + 1;
+            /* if `pos`.type is an object, treat key as a const char * */
+            pos = jsmn_lookup_object(json, tokens, pos, va_arg(keys, void *));
+            if (pos == JSMN_NEG) { break; }
+            /* move position to current key's value (with check) */
+            if (tokens[pos].type & JSMN_KEY) {
+                pos++;
+            }
         } else if (tokens[pos].type & JSMN_ARRAY) {
-            // if `pos`.type is an array, treat key as a jsmnint_t (by way of uintptr_t)
-            pos = jsmn_parse_array(tokens, pos, (uintptr_t)va_arg(keys, void *));
+            /* if `pos`.type is an array, treat key as a jsmnint_t (by way of uintptr_t) */
+            pos = jsmn_lookup_array(tokens, pos, (uintptr_t)va_arg(keys, void *));
         } else {
-            // `pos` must be either an object or array
+            /* `pos` must be either an object or array */
             pos = JSMN_NEG;
             break;
         }
 
-        // if jsmn_parse_{object,array} returns JSMN_NEG, break
+        /* if jsmn_parse_{object,array} returns JSMN_NEG, break */
         if (pos == JSMN_NEG) {
             break;
         }

@@ -5,24 +5,6 @@
 
 #include "../jsmn.h"
 
-const char *jsmn_strerror(enum jsmnerr errno)
-{
-    switch (errno) {
-        case JSMN_SUCCESS:
-            return "*** Success, should not be printing an error. ***";
-        case JSMN_ERROR_NOMEM:
-            return "Not enough tokens were provided.";
-        case JSMN_ERROR_INVAL:
-            return "Invalid character inside JSON string.";
-        case JSMN_ERROR_PART:
-            return "The string is not a full JSON packet, more bytes expected.";
-        case JSMN_ERROR_LEN:
-            return "Input data too long.";
-    }
-
-    return NULL;
-}
-
 jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
 {
   jsmn_parser p;
@@ -31,12 +13,9 @@ jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
   *rv = jsmn_parse(&p, json, json_len, NULL, 0);
 
   // enum jsmnerr has four errors, thus
-  if (*rv + 4 < 4) {
-//  fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(*rv));
+  if (*rv >= (jsmnint_t)-5) {
     return NULL;
   }
-
-//  fprintf(stderr, "jsmn_parse: %d tokens found.\n", *rv);
 
   jsmntok_t *tokens = calloc(*rv, sizeof(jsmntok_t));
 

@@ -632,7 +632,11 @@ static void n_array_comma_after_close(void **state)
 {
     (void)state; // unused
     const char *js = "[\"\"],";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_array_comma_and_number.json
@@ -664,7 +668,11 @@ static void n_array_extra_close(void **state)
 {
     (void)state; // unused
     const char *js = "[\"x\"]]";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_array_extra_comma.json
@@ -816,7 +824,11 @@ static void n_incomplete_false(void **state)
 {
     (void)state; // unused
     const char *js = "[fals]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVES
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_incomplete_null.json
@@ -824,7 +836,11 @@ static void n_incomplete_null(void **state)
 {
     (void)state; // unused
     const char *js = "[nul]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVES
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_incomplete_true.json
@@ -832,7 +848,11 @@ static void n_incomplete_true(void **state)
 {
     (void)state; // unused
     const char *js = "[tru]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVES
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_multidigit_number_then_00.json has a null byte in it.
@@ -1404,7 +1424,11 @@ static void n_object_trailing_comment(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}/**/";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_object_trailing_comment_open.json
@@ -1412,7 +1436,11 @@ static void n_object_trailing_comment_open(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}/**//";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_object_trailing_comment_slash_open_incomplete.json
@@ -1420,7 +1448,11 @@ static void n_object_trailing_comment_slash_open_incomplete(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}/";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_object_trailing_comment_slash_open.json
@@ -1428,7 +1460,11 @@ static void n_object_trailing_comment_slash_open(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}//";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_object_two_commas_in_a_row.json
@@ -1468,7 +1504,11 @@ static void n_object_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}#";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_single_space.json
@@ -1690,7 +1730,11 @@ static void n_string_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "\"\"x";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_angle_bracket_..json
@@ -1714,7 +1758,11 @@ static void n_structure_array_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "[1]x";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_array_with_extra_array_close.json
@@ -1722,7 +1770,11 @@ static void n_structure_array_with_extra_array_close(void **state)
 {
     (void)state; // unused
     const char *js = "[1]]";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_array_with_unclosed_string.json
@@ -1754,7 +1806,11 @@ static void n_structure_close_unopened_array(void **state)
 {
     (void)state; // unused
     const char *js = "1]";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_comma_instead_of_closing_brace.json
@@ -1770,7 +1826,11 @@ static void n_structure_double_array(void **state)
 {
     (void)state; // unused
     const char *js = "[][]";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_end_array.json
@@ -1828,7 +1888,11 @@ static void n_structure_object_followed_by_closing_object(void **state)
 {
     (void)state; // unused
     const char *js = "{}}";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_object_unclosed_no_value.json
@@ -1852,7 +1916,11 @@ static void n_structure_object_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": true} \"x\"";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_open_array_apostrophe.json
@@ -1902,7 +1970,7 @@ static void n_structure_open_object_close_array(void **state)
 {
     (void)state; // unused
     const char *js = "{]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 }
 
 // n_structure_open_object_comma.json
@@ -1974,7 +2042,11 @@ static void n_structure_trailing_sharp(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}#{}";
+#ifndef JSMN_MULTIPLE
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 // n_structure_U+2060_word_joined.json
@@ -3714,12 +3786,12 @@ void test_object(void)
 //   return cmocka_run_group_tests_name("test for JSON objects", tests, NULL, NULL);
 }
 
-/* FIXME test_array 1,2 */
 static void test_array_01(void **state)
 {
     (void)state; // unused
     const char *js = "[10}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 }
 
 static void test_array_02(void **state)
@@ -3743,7 +3815,8 @@ static void test_array_04(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": 1]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 }
 
 static void test_array_05(void **state)
@@ -4115,8 +4188,14 @@ static void test_issue_27(void **state)
     (void)state; // unused
     const char *js =
         "{ \"name\" : \"Jack\", \"age\" : 27 } { \"name\" : \"Anna\", ";
-#if !defined(JSMN_PERMISSIVE) && !defined(JSMN_MULTIPLE_JSON)
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), (jsmnint_t)JSMN_ERROR_INVAL);
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), 5);
+    tokeq(js, t, 5,
+          JSMN_OBJECT, -1, -1, 2,
+          JSMN_STRING, "name", 1,
+          JSMN_STRING, "Jack", 0,
+          JSMN_STRING, "age", 1,
+          JSMN_PRIMITIVE, "27");
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), (jsmnint_t)JSMN_ERROR_PART);
 #endif
@@ -4233,14 +4312,14 @@ static void test_count_11(void **state)
 {
     (void)state; // unused
     const char *js = "[}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 }
 
 static void test_count_12(void **state)
 {
     (void)state; // unused
     const char *js = "{]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 }
 
 void test_count(void)
@@ -4324,7 +4403,13 @@ static void test_unmatched_brackets_01(void **state)
 {
     (void)state; // unused
     const char *js = "\"key 1\": 1234}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_INVAL);
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 1);
+    tokeq(js, t, 1,
+          JSMN_STRING, "key 1", 0);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+#endif
 }
 
 static void test_unmatched_brackets_02(void **state)
@@ -4338,14 +4423,28 @@ static void test_unmatched_brackets_03(void **state)
 {
     (void)state; // unused
     const char *js = "{\"key 1\": 1234}}";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
+    tokeq(js, t, 3,
+          JSMN_OBJECT, 0, 15, 1,
+          JSMN_STRING, "key 1", 1,
+          JSMN_PRIMITIVE, "1234");
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 static void test_unmatched_brackets_04(void **state)
 {
     (void)state; // unused
     const char *js = "\"key 1\"}: 1234";
+#ifndef JSMN_MULTIPLE_JSON
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 1);
+    tokeq(js, t, 1,
+          JSMN_STRING, "key 1", 0);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 static void test_unmatched_brackets_05(void **state)
