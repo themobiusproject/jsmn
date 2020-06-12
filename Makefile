@@ -1,7 +1,7 @@
 # You can put your build options here
 -include config.mk
 
-CFLAGS:=${CFLAGS} -std=c99 -Wno-invalid-source-encoding
+CFLAGS:=${CFLAGS} -std=c89 -Wno-invalid-source-encoding
 
 test: test_default test_default_low_memory test_permissive test_permissive_low_memory
 test_default: test/tests.c jsmn.h
