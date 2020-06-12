@@ -1,5 +1,5 @@
 #define JSMN_HEADER
-#include "../json.h"
+#include "../jsmn_utils.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,7 +21,7 @@ int main(void)
 
     fclose(fp);
 
-    explodeJSON(JSON_STRING, size);
+    jsmn_explodeJSON(JSON_STRING, size);
 
     free(JSON_STRING);
 

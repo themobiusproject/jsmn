@@ -39,7 +39,7 @@ if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 add_library(jsmn_obj OBJECT
-	json.c
+	jsmn_utils.c
 )
 set_target_properties(jsmn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # target_compile_definitions(jsmn_obj PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)

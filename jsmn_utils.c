@@ -1,4 +1,4 @@
-#include "json.h"
+#include "jsmn_utils.h"
 
 #ifdef UNIT_TESTING
 #include <setjmp.h>
@@ -11,17 +11,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-#if (defined(__linux__) || defined(__APPLE__) || defined(ARDUINO))
-#define EXPORT __attribute__ ((visibility ("default")))
-#else
-#define EXPORT
-#endif
-
-#ifndef NDEBUG
-#define inline
-#endif
-
-EXPORT
+JSMN_EXPORT
 const char *jsmn_strerror(enum jsmnerr errno)
 {
     switch (errno) {
@@ -40,8 +30,8 @@ const char *jsmn_strerror(enum jsmnerr errno)
     return NULL;
 }
 
-EXPORT
-jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
+JSMN_EXPORT
+jsmntok_t *jsmn_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
 {
     jsmn_parser p;
 
@@ -49,7 +39,7 @@ jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
     *rv = jsmn_parse(&p, json, json_len, NULL, 0);
 
     // enum jsmnerr has four errors, thus
-    if (*rv + 4 < 4) {
+    if (*rv >= (jsmnint_t)-4) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(*rv));
         return NULL;
     }
@@ -64,8 +54,8 @@ jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
     return tokens;
 }
 
-EXPORT
-jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, const char *json, const size_t json_len)
+JSMN_EXPORT
+jsmnint_t jsmn_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, const char *json, const size_t json_len)
 {
     jsmn_parser p;
     jsmn_init(&p);
@@ -75,7 +65,7 @@ jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, co
     rv = jsmn_parse(&p, json, json_len, tokens, num_tokens);
 
     // enum jsmnerr has four errors, thus
-    if (rv + 4 < 4) {
+    if (rv >= (jsmnint_t)-4) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(rv));
         return rv;
     }
@@ -93,8 +83,8 @@ jsmnint_t json_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, co
  * @param[in] s String to complare
  * @return 0 when token string and s are equal, -1 otherwise
  */
-static inline
-int json_token_streq(const char *json, const jsmntok_t *tok, const char *s)
+static
+int jsmn_token_streq(const char *json, const jsmntok_t *tok, const char *s)
 {
     if ((tok->type & JSMN_STRING) && strlen(s) == tok->end - tok->start &&
             strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
@@ -103,17 +93,8 @@ int json_token_streq(const char *json, const jsmntok_t *tok, const char *s)
     return -1;
 }
 
-static inline
-jsmnint_t getJSONKeyValue(const jsmntok_t *tokens, const jsmnint_t t)
-{
-    if ((tokens[t].type & JSMN_KEY) == 0)
-        return JSMN_NEG;
-
-    return (t + 1);
-}
-
-static inline
-jsmnint_t json_next_sibling(const jsmntok_t *tokens, jsmnint_t t)
+static
+jsmnint_t jsmn_next_sibling(const jsmntok_t *tokens, jsmnint_t t)
 {
 #if defined(JSMN_NEXT_SIBLING)
     return tokens[t].next_sibling;
@@ -126,8 +107,8 @@ jsmnint_t json_next_sibling(const jsmntok_t *tokens, jsmnint_t t)
 #endif
 }
 
-static inline
-jsmnint_t json_parse_object(const char *json, const jsmntok_t *tokens, const jsmnint_t parent, const char *key)
+static
+jsmnint_t jsmn_parse_object(const char *json, const jsmntok_t *tokens, const jsmnint_t parent, const char *key)
 {
     // first child is the first token after the parent
     jsmnint_t child = parent + 1;
@@ -135,21 +116,21 @@ jsmnint_t json_parse_object(const char *json, const jsmntok_t *tokens, const jsm
     // loop through children
     while (child != JSMN_NEG) {
         // if child's string is equal to key
-        if (json_token_streq(json, &tokens[child], key) == 0) {
+        if (jsmn_token_streq(json, &tokens[child], key) == 0) {
             // return current child
             return child;
         }
 
         // move to the next child
-        child = json_next_sibling(tokens, child);
+        child = jsmn_next_sibling(tokens, child);
     }
 
     // key didn't match any of the json keys
     return JSMN_NEG;
 }
 
-static inline
-jsmnint_t json_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
+static
+jsmnint_t jsmn_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, const jsmnint_t key)
 {
     // if parent's children is less than or equal to key, key is bad
     if (tokens[parent].size <= key)
@@ -159,15 +140,15 @@ jsmnint_t json_parse_array(const jsmntok_t *tokens, const jsmnint_t parent, cons
     jsmnint_t i, child = parent + 1;
     // loop through children until you reach the nth child
     for (i = 0; i < key; i++) {
-        child = json_next_sibling(tokens, child);
+        child = jsmn_next_sibling(tokens, child);
     }
 
     // return nth child
     return child;
 }
 
-EXPORT
-jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const size_t num_keys, ...)
+JSMN_EXPORT
+jsmnint_t jsmn_parse(const char *json, const jsmntok_t *tokens, const size_t num_keys, ...)
 {
     jsmnint_t i, pos;
 
@@ -180,19 +161,20 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const size_t num
     for (i = 0; i < num_keys; i++) {
         if (tokens[pos].type & JSMN_OBJECT) {
             // if `pos`.type is an object, treat key as a const char *
-            if ((pos = json_parse_object(json, tokens, pos, va_arg(keys, void *))) == JSMN_NEG) break;
+            if ((pos = jsmn_parse_object(json, tokens, pos, va_arg(keys, void *))) == JSMN_NEG) break;
             // move position to current key's value (with checks)
-            pos = getJSONKeyValue(tokens, pos);
+            if (tokens[pos] & JSMN_KEY)
+                pos = pos + 1;
         } else if (tokens[pos].type & JSMN_ARRAY) {
             // if `pos`.type is an array, treat key as a jsmnint_t (by way of uintptr_t)
-            pos = json_parse_array(tokens, pos, (uintptr_t)va_arg(keys, void *));
+            pos = jsmn_parse_array(tokens, pos, (uintptr_t)va_arg(keys, void *));
         } else {
             // `pos` must be either an object or array
             pos = JSMN_NEG;
             break;
         }
 
-        // if json_parse_{object,array} returns JSMN_NEG, break
+        // if jsmn_parse_{object,array} returns JSMN_NEG, break
         if (pos == JSMN_NEG) {
             break;
         }
@@ -202,26 +184,26 @@ jsmnint_t json_parse(const char *json, const jsmntok_t *tokens, const size_t num
     return pos;
 }
 
-EXPORT
-void explodeJSON(const char *json, const size_t len)
+JSMN_EXPORT
+void jsmn_explodeJSON(const char *json, const size_t len)
 {
     jsmnint_t rv, i, depth;
     char c;
 
-    jsmntok_t *tokens = json_tokenize(json, len, &rv);
+    jsmntok_t *tokens = jsmn_tokenize(json, len, &rv);
     jsmntok_t *token;
 
-    if (rv + 4 < 4) {
+    if (rv >= (jsmnint_t)-4) {
         printf("jsmn_parse error: %s\n", jsmn_strerror(rv));
         return;
     }
 
     const char *jsmntype[] = { "", "Object", "Array", "", "String", "", "", "", "Primitive", };
-    const char *jsmnextr[] = { "", "KEY", "VAL", "", "CLS", "", "", "", "DLM", };
+    const char *jsmnextr[] = { "", "Key  ", "Value", "", "", "", "", "", "", };
 
     printf("\n");
-    printf("    Token |      Type |    Start |      End |   Length | Children |   Parent |  Sibling |     | \n");
-    printf("----------+-----------+----------+----------+----------+----------+----------+----------+-----+-\n");
+    printf("    Token |      Type |    Start |      End |   Length | Children |   Parent |  Sibling | K/V   | \n");
+    printf("----------+-----------+----------+----------+----------+----------+----------+----------+-------+-\n");
     for (i = 0, depth = 0; i < rv; i++) {
         token = &tokens[i];
         printf(   "%9d", i);
@@ -232,7 +214,7 @@ void explodeJSON(const char *json, const size_t len)
         printf(" | %8d", token->size);
         printf(" | %8d", token->parent != JSMN_NEG ? token->parent : -1);
         printf(" | %8d", token->next_sibling != JSMN_NEG ? token->next_sibling : -1);
-        printf(" | %3s", jsmnextr[(token->type & (JSMN_KEY | JSMN_VALUE)) >> 4]);
+        printf(" | %5s", jsmnextr[(token->type & (JSMN_KEY | JSMN_VALUE)) >> 4]);
         printf(" |");
 
         if (token->type & JSMN_CONTAINER) {
@@ -258,7 +240,7 @@ void explodeJSON(const char *json, const size_t len)
             continue;
         }
 
-        printf("\n          |           |          |          |          |          |          |          |     |");
+        printf("\n          |           |          |          |          |          |          |          | Close |");
 
         depth -= 1;
         if (depth == JSMN_NEG) {

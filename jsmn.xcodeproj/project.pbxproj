@@ -22,8 +22,8 @@
 		95409CA224884551004D7E04 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
 		95409CA324884551004D7E04 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
 		95409CA424884552004D7E04 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
+		95773D7E2492EFA800ED747F /* jsmn_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 95773D7D2492EFA800ED747F /* jsmn_utils.c */; };
 		957EB5312467080B0077E79A /* jsmn.h in Headers */ = {isa = PBXBuildFile; fileRef = 957EB5302467080B0077E79A /* jsmn.h */; };
-		95CB431620A2A5ED00C36DB4 /* json.c in Sources */ = {isa = PBXBuildFile; fileRef = 95CB431420A2A5ED00C36DB4 /* json.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -114,9 +114,9 @@
 		95409C4D24880CB4004D7E04 /* jsmn_test_default_low_memory */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_default_low_memory; sourceTree = BUILT_PRODUCTS_DIR; };
 		95409C5824880CC9004D7E04 /* jsmn_test_permissive_low_memory */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_permissive_low_memory; sourceTree = BUILT_PRODUCTS_DIR; };
 		95409C9724881310004D7E04 /* jsmn_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn_defines.h; sourceTree = "<group>"; };
+		95773D7C2492EFA800ED747F /* jsmn_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = jsmn_utils.h; path = /Users/mconway/Projects/AgilePQ/jsmn/jsmn_utils.h; sourceTree = "<absolute>"; };
+		95773D7D2492EFA800ED747F /* jsmn_utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = jsmn_utils.c; path = /Users/mconway/Projects/AgilePQ/jsmn/jsmn_utils.c; sourceTree = "<absolute>"; };
 		957EB5302467080B0077E79A /* jsmn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn.h; sourceTree = "<group>"; };
-		95CB431320A2A5ED00C36DB4 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
-		95CB431420A2A5ED00C36DB4 /* json.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json.c; sourceTree = "<group>"; };
 		95EF322F2485ADDF00AEDB36 /* jsmn_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jsmn_test.c; sourceTree = "<group>"; };
 		95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libcmocka.0.7.0.dylib; sourceTree = "<group>"; };
 		95EF32382485EE2000AEDB36 /* jsmn_test_default */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_default; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,8 +217,8 @@
 				95EF322E2485ADCC00AEDB36 /* tests */,
 				957EB5302467080B0077E79A /* jsmn.h */,
 				95409C9724881310004D7E04 /* jsmn_defines.h */,
-				95CB431420A2A5ED00C36DB4 /* json.c */,
-				95CB431320A2A5ED00C36DB4 /* json.h */,
+				95773D7D2492EFA800ED747F /* jsmn_utils.c */,
+				95773D7C2492EFA800ED747F /* jsmn_utils.h */,
 				95346C06205C728B006A0917 /* Products */,
 				952CC5592490751D0051FF5E /* Vanilla */,
 				95EF32312485AE1F00AEDB36 /* Frameworks */,
@@ -538,7 +538,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95CB431620A2A5ED00C36DB4 /* json.c in Sources */,
+				95773D7E2492EFA800ED747F /* jsmn_utils.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
