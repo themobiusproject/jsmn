@@ -60,6 +60,11 @@ typedef enum {
 
   /* Complex elements */
   JSMN_CONTAINER    = JSMN_OBJECT | JSMN_ARRAY,
+#ifndef JSMN_PERMISSIVE_KEY
+  JSMN_KEY_TYPE     = JSMN_STRING,
+#else
+  JSMN_KEY_TYPE     = JSMN_STRING | JSMN_PRIMITIVE,
+#endif
   JSMN_ANY_TYPE     = JSMN_OBJECT | JSMN_ARRAY | JSMN_STRING | JSMN_PRIMITIVE,
 
   JSMN_OBJ_VAL      = JSMN_OBJECT | JSMN_VALUE,
@@ -83,14 +88,10 @@ typedef enum {
   JSMN_PRI_MINUS    = JSMN_PRI_SIGN,
 
   /* Parsing validation, expectations, and state information */
-  JSMN_CLOSE        = 0x0800,   /*!< Close OBJECT '}' or ARRAY ']' */
-  JSMN_DELIMITER    = 0x1000,   /*!< Colon ':' after KEY, Comma ',' after VALUE */
-  JSMN_PREV_KEY     = 0x2000,   /*!< Previous token is an KEY */
-  JSMN_PREV_VAL     = 0x4000,   /*!< Previous token is a VALUE */
+  JSMN_CLOSE        = 0x1000,   /*!< Close OBJECT '}' or ARRAY ']' */
+  JSMN_COLON        = 0x2000,   /*!< Colon ':' expected after KEY */
+  JSMN_COMMA        = 0x4000,   /*!< Comma ',' expected after VALUE */
   JSMN_INSD_OBJ     = 0x8000,   /*!< Inside an OBJECT */
-
-  JSMN_COLON        = JSMN_DELIMITER | JSMN_PREV_KEY,
-  JSMN_COMMA        = JSMN_DELIMITER | JSMN_PREV_VAL,
 
   /* Parsing rules */
   JSMN_ROOT_INIT    = JSMN_ANY_TYPE | JSMN_VALUE,
@@ -100,38 +101,38 @@ typedef enum {
 #else
   JSMN_ROOT         = JSMN_ANY_TYPE | JSMN_VALUE,
 #endif
-  JSMN_OPEN_OBJECT  = JSMN_STRING   | JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ,
+  JSMN_OPEN_OBJECT  = JSMN_KEY_TYPE | JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ,
   JSMN_AFTR_OBJ_KEY =                 JSMN_VALUE |              JSMN_INSD_OBJ | JSMN_COLON,
   JSMN_AFTR_OBJ_VAL =                 JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
   JSMN_OPEN_ARRAY   = JSMN_ANY_TYPE | JSMN_VALUE | JSMN_CLOSE,
   JSMN_AFTR_ARR_VAL =                 JSMN_VALUE | JSMN_CLOSE |                              JSMN_COMMA,
   JSMN_AFTR_CLOSE   =                              JSMN_CLOSE |                              JSMN_COMMA,
-  JSMN_AFTR_COLON   = JSMN_ANY_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ |                           JSMN_PREV_KEY,
-  JSMN_AFTR_COMMA_O = JSMN_STRING   | JSMN_KEY   |              JSMN_INSD_OBJ |                           JSMN_PREV_VAL,
-  JSMN_AFTR_COMMA_A = JSMN_ANY_TYPE | JSMN_VALUE |                                                        JSMN_PREV_VAL,
+  JSMN_AFTR_COLON   = JSMN_ANY_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ,
+  JSMN_AFTR_COMMA_O = JSMN_KEY_TYPE | JSMN_KEY   |              JSMN_INSD_OBJ,
+  JSMN_AFTR_COMMA_A = JSMN_ANY_TYPE | JSMN_VALUE,
 #else
   JSMN_ROOT         = JSMN_ANY_TYPE |                                           JSMN_COLON | JSMN_COMMA,
   JSMN_ROOT_AFTR_O  = JSMN_ANY_TYPE |                                                        JSMN_COMMA,
-  JSMN_OPEN_OBJECT  = JSMN_ANY_TYPE | JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ,
+  JSMN_OPEN_OBJECT  = JSMN_KEY_TYPE | JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ,
   JSMN_AFTR_OBJ_KEY =                 JSMN_VALUE |              JSMN_INSD_OBJ | JSMN_COLON,
   JSMN_AFTR_OBJ_VAL = JSMN_ANY_TYPE |              JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
   JSMN_OPEN_ARRAY   = JSMN_ANY_TYPE | JSMN_VALUE | JSMN_CLOSE,
   JSMN_AFTR_ARR_VAL = JSMN_ANY_TYPE |              JSMN_CLOSE |                 JSMN_COLON | JSMN_COMMA,
   JSMN_AFTR_CLOSE   = JSMN_ANY_TYPE |              JSMN_CLOSE |                              JSMN_COMMA,
-  JSMN_AFTR_COLON   = JSMN_ANY_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ |                           JSMN_PREV_KEY,
-  JSMN_AFTR_COLON_R = JSMN_ANY_TYPE | JSMN_VALUE |                                                        JSMN_PREV_KEY,
-  JSMN_AFTR_COMMA_O = JSMN_ANY_TYPE | JSMN_KEY   |              JSMN_INSD_OBJ |                           JSMN_PREV_VAL,
-  JSMN_AFTR_COMMA_A = JSMN_ANY_TYPE | JSMN_VALUE |                                                        JSMN_PREV_VAL,
-  JSMN_AFTR_COMMA_R = JSMN_ANY_TYPE |                                                                     JSMN_PREV_VAL,
+  JSMN_AFTR_COLON   = JSMN_ANY_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ,
+  JSMN_AFTR_COLON_R = JSMN_ANY_TYPE | JSMN_VALUE,
+  JSMN_AFTR_COMMA_O = JSMN_KEY_TYPE | JSMN_KEY   |              JSMN_INSD_OBJ,
+  JSMN_AFTR_COMMA_A = JSMN_ANY_TYPE | JSMN_VALUE,
+  JSMN_AFTR_COMMA_R = JSMN_ANY_TYPE,
 #endif
 } jsmntype_t;
 
 enum jsmnerr {
   JSMN_SUCCESS     =  0,
   JSMN_ERROR_NOMEM = -1,        /*!< Not enough tokens were provided */
-  JSMN_ERROR_INVAL = -2,        /*!< Invalid character inside JSON string */
-  JSMN_ERROR_PART  = -3,        /*!< The string is not a full JSON packet, more bytes expected */
-  JSMN_ERROR_LEN   = -4,        /*!< Input data too long */
+  JSMN_ERROR_LEN   = -2,        /*!< Input data too long */
+  JSMN_ERROR_INVAL = -3,        /*!< Invalid character inside JSON string */
+  JSMN_ERROR_PART  = -4,        /*!< The string is not a full JSON packet, more bytes expected */
 };
 
 /**
