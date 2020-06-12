@@ -24,33 +24,93 @@
 #ifndef JSMN_LOW_MEMORY
 
 # ifndef JSMN_PARENT_LINKS
-#  define JSMN_PARENT_LINKS     /*!< Adds a parent field to the token  */
+/*!
+ * @def JSMN_PARENT_LINKS
+ * @brief Adds a parent field to the token
+ *
+ * This simplifies the post-processing of tokens by adding a link to the id of
+ * a token's parent.
+ * This is enabled by default and highly recommended.
+ */
+#  define JSMN_PARENT_LINKS
 # endif
 # ifndef JSMN_NEXT_SIBLING
-#  define JSMN_NEXT_SIBLING     /*!< Adds a next_sibling field to the token */
+/*!
+ * @def JSMN_PARENT_LINKS
+ * @brief Adds a next_sibling field to the token
+ *
+ * This simplifies the post-processing of tokens by adding a link to the id of
+ * a token's next sibling.
+ * This is enabled by default and highly recommended.
+ */
+#  define JSMN_NEXT_SIBLING
 # endif
 
 #else
 
 # ifndef JSMN_SHORT_TOKENS
-#  define JSMN_SHORT_TOKENS     /*!< Changes the tokens field size from a uint32_t to a uint16_t */
-# endif                         /*   This reduces the maximum possible json string length from 4,294,967,295 to 65,535 */
+/*!
+ * @def JSMN_SHORT_TOKENS
+ * @brief Changes the tokens field size from a uint32_t to a uint16_t
+ *
+ * This reduces the jsmntok_t size by half by changing jsmntok_t field sizes
+ * from an unsigned int to an unsigned short. NOTE: This reduces the maximum
+ * possible json string length from 4,294,967,295 to 65,535 minus the size of
+ * jsmnerr.
+ */
+#  define JSMN_SHORT_TOKENS
+# endif
 
 #endif
 
-#ifdef JSMN_PERMISSIVE                  /*!< Allow all PERMISSIVE options */
+/*!
+ * @def JSMN_PERMISSIVE
+ * @brief Enables all PERMISSIVE definitions
+ *
+ * Enables JSMN_PERMISSIVE_KEY,JSMN_PERMISSIVE_PRIMITIVES, and
+ * JSMN_MULTIPLE_JSON
+ */
+#ifdef JSMN_PERMISSIVE
 # ifndef JSMN_PERMISSIVE_KEY
-#  define JSMN_PERMISSIVE_KEY           /*!< Allows PRIMITIVEs to be OBJECT KEYs */
-# endif
-# ifndef JSMN_PERMISSIVE_STRINGS        /*!< Allows STRINGs to  */
-#  define JSMN_PERMISSIVE_STRINGS
+/*!
+ * @def JSMN_PERMISSIVE_KEY
+ * @brief Allows PRIMITIVEs to be OBJECT KEYs
+ */
+#  define JSMN_PERMISSIVE_KEY
 # endif
 # ifndef JSMN_PERMISSIVE_PRIMITIVES
-#  define JSMN_PERMISSIVE_PRIMITIVES    /*!< Allows PRIMITIVEs to be any contiguous value */
+/*!
+ * @def JSMN_PERMISSIVE_PRIMITIVES
+ * @brief Allows PRIMITIVEs to be any contiguous value
+ *
+ * This allows PRIMIVITEs to be any contiguous value that does not contain a
+ * character that has a special meaning to json (`{}[]",:`)
+ */
+#  define JSMN_PERMISSIVE_PRIMITIVES
 # endif
 # ifndef JSMN_MULTIPLE_JSON
-#  define JSMN_MULTIPLE_JSON            /*!< Allows multiple json objects in a complete buffer */
+/*!
+ * @def JSMN_MULTIPLE_JSON
+ * @brief Allows multiple json objects in a complete buffer
+ *
+ * This allows jsmn to parse multiple json objects in a single buffer. Please
+ * note that if a single json object is malformed jsmn_parse will return with
+ * an error.
+ */
+#  define JSMN_MULTIPLE_JSON
 # endif
+#endif
+
+/*!
+ * @def JSMN_MULTIPLE_JSON_FAIL
+ * @brief Allows one and only one json objest to be in a complete buffer
+ *
+ * This will only allow one complete json object to be in a buffer. NOTE: If any other
+ * non-whitespace character after a successful json object jsmn_parse will
+ * return with an error.
+ */
+#ifdef JSMN_MULTIPLE_JSON_FAIL
+# undef JSMN_MULTIPLE_JSON
 #endif
 
 #endif // JSMN_DEFINES

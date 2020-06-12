@@ -913,9 +913,11 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
 
   char c;
   for (; parser->pos < len && js[parser->pos] != '\0'; parser->pos++) {
+#ifndef JSMN_MULTIPLE_JSON_FAIL
     if (parser->expected == JSMN_UNDEFINED) {
       break;
     }
+#endif
     c = js[parser->pos];
     switch (c) {
     case '{':
