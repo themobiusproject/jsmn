@@ -72,7 +72,7 @@ typedef enum {
   JSMN_STR_KEY      = JSMN_STRING | JSMN_KEY,
   JSMN_STR_VAL      = JSMN_STRING | JSMN_VALUE,
   JSMN_PRI_VAL      = JSMN_PRIMITIVE | JSMN_VALUE,
-#ifdef JSMN_PERMISSIVE
+#ifdef JSMN_PERMISSIVE_KEY
   JSMN_OBJ_KEY      = JSMN_OBJECT | JSMN_KEY,
   JSMN_ARR_KEY      = JSMN_ARRAY  | JSMN_KEY,
   JSMN_PRI_KEY      = JSMN_PRIMITIVE | JSMN_KEY,
@@ -117,7 +117,7 @@ typedef enum {
   JSMN_AFTR_OBJ_KEY =                 JSMN_VALUE |              JSMN_INSD_OBJ | JSMN_COLON,
   JSMN_AFTR_OBJ_VAL = JSMN_ANY_TYPE |              JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
   JSMN_OPEN_ARRAY   = JSMN_ANY_TYPE | JSMN_VALUE | JSMN_CLOSE,
-  JSMN_AFTR_ARR_VAL = JSMN_ANY_TYPE |              JSMN_CLOSE |                 JSMN_COLON | JSMN_COMMA,
+  JSMN_AFTR_ARR_VAL = JSMN_ANY_TYPE |              JSMN_CLOSE |                              JSMN_COMMA,
   JSMN_AFTR_CLOSE   = JSMN_ANY_TYPE |              JSMN_CLOSE |                              JSMN_COMMA,
   JSMN_AFTR_COLON   = JSMN_ANY_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ,
   JSMN_AFTR_COLON_R = JSMN_ANY_TYPE | JSMN_VALUE,
@@ -323,7 +323,7 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
   start = parser->pos;
   type = JSMN_PRIMITIVE;
 
-#ifndef JSMN_PERMISSIVE_PRIMITIVES
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
   if (js[parser->pos] == 't' || js[parser->pos] == 'f' || js[parser->pos] == 'n') {
     char *literal = NULL;
     jsmnint_t size = 0;
@@ -475,11 +475,15 @@ check_primitive_border:
     case '}':
     case ']':
     case ':':
+
+    case '{':
+    case '[':
+    case '"':
       goto found;
     default:                /* to quiet a warning from gcc */
       break;
     }
-    if (js[parser->pos] < 32 || js[parser->pos] >= 127) {
+    if (!isCharacter(js[parser->pos])) {
       parser->pos = start;
       return JSMN_ERROR_INVAL;
     }
@@ -649,11 +653,11 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
               break;
             }
           }
-#  ifdef JSMN_PERMISSIVE
+# ifdef JSMN_PERMISSIVE
           if (i == JSMN_NEG) {
             parser->toksuper = i;
           }
-#  endif
+# endif
 #endif
         }
       }
@@ -696,8 +700,8 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
       }
     }
 
-    /* Actual form feed (0x0C), new line (0x0A), carraige return (0x0D), or tab (0x09) not allowed */
-    else if (c == '\f' || c == '\n' || c == '\r' || c == '\t') {
+    /* form feed, new line, carraige return, tab, and vertical tab not allowed */
+    else if (c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v') {
       parser->pos = start;
       return JSMN_ERROR_INVAL;
     }
@@ -960,7 +964,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
     case '\n':
     case '\r':
       break;
-#ifndef JSMN_PERMISSIVE_PRIMITIVES
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     /* rfc8259: PRIMITIVEs are numbers and booleans */
     case '-':
     case '0':

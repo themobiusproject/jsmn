@@ -602,13 +602,16 @@ void test_jsontestsuite_i(void)
 //  return cmocka_run_group_tests_name("JSONTestSuite tests that may pass depending on implementation.", tests, NULL, NULL);
 }
 
-#ifndef JSMN_PERMISSIVE
 // n_array_1_true_without_comma.json
 static void n_array_1_true_without_comma(void **state)
 {
     (void)state; // unused
     const char *js = "[1 true]";
+#ifndef JSMN_PERMISSIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#endif
 }
 
 // n_array_a_invalid_utf8.json
@@ -616,7 +619,11 @@ static void n_array_a_invalid_utf8(void **state)
 {
     (void)state; // unused
     const char *js = "[aÂ]";
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE) || !defined(JSMN_UTF8)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_array_colon_instead_of_comma.json
@@ -632,10 +639,10 @@ static void n_array_comma_after_close(void **state)
 {
     (void)state; // unused
     const char *js = "[\"\"],";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
 }
 
@@ -668,10 +675,10 @@ static void n_array_extra_close(void **state)
 {
     (void)state; // unused
     const char *js = "[\"x\"]]";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
 }
 
@@ -736,7 +743,11 @@ static void n_array_just_minus(void **state)
 {
     (void)state; // unused
     const char *js = "[-]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_array_missing_value.json
@@ -775,7 +786,7 @@ static void n_array_number_and_several_commas(void **state)
 static void n_array_spaces_vertical_tab_formfeed(void **state)
 {
     (void)state; // unused
-    const char *js = "[\"a\"\\f]";
+    const char *js = "[\"\va\"\f]";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
@@ -824,7 +835,7 @@ static void n_incomplete_false(void **state)
 {
     (void)state; // unused
     const char *js = "[fals]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVES
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -836,7 +847,7 @@ static void n_incomplete_null(void **state)
 {
     (void)state; // unused
     const char *js = "[nul]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVES
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -848,21 +859,35 @@ static void n_incomplete_true(void **state)
 {
     (void)state; // unused
     const char *js = "[tru]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVES
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
 }
 
-// n_multidigit_number_then_00.json has a null byte in it.
+// n_multidigit_number_then_00.json
+static void n_multidigit_number_then_00(void **state)
+{
+    (void)state; // unused
+    const char *js = "123\0";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#endif
+}
 
 // n_number_0.1.2.json
 static void n_number_0dot1dot2(void **state)
 {
     (void)state; // unused
     const char *js = "[0.1.2]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_-01.json
@@ -870,7 +895,11 @@ static void n_number_minus01(void **state)
 {
     (void)state; // unused
     const char *js = "[-01]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_0.3e+.json
@@ -878,7 +907,11 @@ static void n_number_0dot3_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[0.3e+]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_0.3e.json
@@ -886,7 +919,11 @@ static void n_number_0dot3_e(void **state)
 {
     (void)state; // unused
     const char *js = "[0.3e]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_0_capital_E+.json
@@ -894,7 +931,11 @@ static void n_number_0_capital_Eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[0E+]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_0_capital_E.json
@@ -902,7 +943,11 @@ static void n_number_0_capital_E(void **state)
 {
     (void)state; // unused
     const char *js = "[0E]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_0.e1.json
@@ -910,7 +955,11 @@ static void n_number_0dot_e1(void **state)
 {
     (void)state; // unused
     const char *js = "[0.e1]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_0e+.json
@@ -918,7 +967,11 @@ static void n_number_0_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[0e+]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_0e.json
@@ -926,7 +979,11 @@ static void n_number_0_e(void **state)
 {
     (void)state; // unused
     const char *js = "[0e]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_1_000.json
@@ -942,7 +999,11 @@ static void n_number_1dot0_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[1.0e+]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_1.0e-.json
@@ -950,7 +1011,11 @@ static void n_number_1dot0_eminus(void **state)
 {
     (void)state; // unused
     const char *js = "[1.0e-]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_1.0e.json
@@ -958,7 +1023,11 @@ static void n_number_1dot0_e(void **state)
 {
     (void)state; // unused
     const char *js = "[1.0e]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_-1.0..json
@@ -966,7 +1035,11 @@ static void n_number_minus1dot0dot(void **state)
 {
     (void)state; // unused
     const char *js = "[-1.0.]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_1eE2.json
@@ -974,7 +1047,11 @@ static void n_number_1_eE2(void **state)
 {
     (void)state; // unused
     const char *js = "[1eE2]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_+1.json
@@ -982,7 +1059,11 @@ static void n_number_plus1(void **state)
 {
     (void)state; // unused
     const char *js = "[+1]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_.-1.json
@@ -990,7 +1071,11 @@ static void n_number_dotminus1(void **state)
 {
     (void)state; // unused
     const char *js = "[.-1]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_2.e+3.json
@@ -998,7 +1083,11 @@ static void n_number_2dot_eplus3(void **state)
 {
     (void)state; // unused
     const char *js = "[2.e+3]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_2.e-3.json
@@ -1006,7 +1095,11 @@ static void n_number_2dot_eminus3(void **state)
 {
     (void)state; // unused
     const char *js = "[2.e-3]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_2.e3.json
@@ -1014,7 +1107,11 @@ static void n_number_2dot_e3(void **state)
 {
     (void)state; // unused
     const char *js = "[2.e3]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_.2e-3.json
@@ -1022,7 +1119,11 @@ static void n_number_dot2_eminus3(void **state)
 {
     (void)state; // unused
     const char *js = "[.2e-3]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_-2..json
@@ -1030,7 +1131,11 @@ static void n_number_minus2dot(void **state)
 {
     (void)state; // unused
     const char *js = "[-2.]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_9.e+.json
@@ -1038,7 +1143,11 @@ static void n_number_9dot_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[9.e+]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_expression.json
@@ -1046,7 +1155,11 @@ static void n_number_expression(void **state)
 {
     (void)state; // unused
     const char *js = "[1+2]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_hex_1_digit.json
@@ -1054,7 +1167,11 @@ static void n_number_hex_1_digit(void **state)
 {
     (void)state; // unused
     const char *js = "[0x1]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_hex_2_digits.json
@@ -1062,7 +1179,11 @@ static void n_number_hex_2_digits(void **state)
 {
     (void)state; // unused
     const char *js = "[0x42]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_infinity.json
@@ -1070,7 +1191,11 @@ static void n_number_infinity(void **state)
 {
     (void)state; // unused
     const char *js = "[Infinity]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_+Inf.json
@@ -1078,7 +1203,11 @@ static void n_number_plusInf(void **state)
 {
     (void)state; // unused
     const char *js = "[+Inf]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_Inf.json
@@ -1086,7 +1215,11 @@ static void n_number_Inf(void **state)
 {
     (void)state; // unused
     const char *js = "[Inf]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_invalid+-.json
@@ -1094,7 +1227,11 @@ static void n_number_invalid_plusminus(void **state)
 {
     (void)state; // unused
     const char *js = "[0e+-1]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_invalid-negative-real.json
@@ -1102,7 +1239,11 @@ static void n_number_invalid_negative_real(void **state)
 {
     (void)state; // unused
     const char *js = "[-123.123foo]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_invalid-utf-8-in-bigger-int.json
@@ -1110,7 +1251,11 @@ static void n_number_invalid_utf8_in_bigger_int(void **state)
 {
     (void)state; // unused
     const char *js = "[123Â]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_invalid-utf-8-in-exponent.json
@@ -1118,16 +1263,23 @@ static void n_number_invalid_utf8_in_exponent(void **state)
 {
     (void)state; // unused
     const char *js = "[1e1Â]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_invalid-utf-8-in-int.json
 static void n_number_invalid_utf8_in_int(void **state)
 {
     (void)state; // unused
-    const char *js = "[0Â]\
-";
+    const char *js = "[0Â]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_++.json
@@ -1135,7 +1287,11 @@ static void n_number_plusplus(void **state)
 {
     (void)state; // unused
     const char *js = "[++1234]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_minus_infinity.json
@@ -1143,7 +1299,11 @@ static void n_number_minus_infinity(void **state)
 {
     (void)state; // unused
     const char *js = "[-Infinity]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_minus_sign_with_trailing_garbage.json
@@ -1151,7 +1311,11 @@ static void n_number_minus_sign_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "[-foo]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_minus_space_1.json
@@ -1167,7 +1331,11 @@ static void n_number_minusNaN(void **state)
 {
     (void)state; // unused
     const char *js = "[-NaN]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_NaN.json
@@ -1175,7 +1343,11 @@ static void n_number_NaN(void **state)
 {
     (void)state; // unused
     const char *js = "[NaN]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_neg_int_starting_with_zero.json
@@ -1183,7 +1355,11 @@ static void n_number_neg_int_starting_with_zero(void **state)
 {
     (void)state; // unused
     const char *js = "[-012]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_neg_real_without_int_part.json
@@ -1191,7 +1367,11 @@ static void n_number_neg_real_without_int_part(void **state)
 {
     (void)state; // unused
     const char *js = "[-.123]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_neg_with_garbage_at_end.json
@@ -1199,7 +1379,11 @@ static void n_number_neg_with_garbage_at_end(void **state)
 {
     (void)state; // unused
     const char *js = "[-1x]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_real_garbage_after_e.json
@@ -1207,7 +1391,11 @@ static void n_number_real_garbage_after_e(void **state)
 {
     (void)state; // unused
     const char *js = "[1ea]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_real_with_invalid_utf8_after_e.json
@@ -1215,7 +1403,11 @@ static void n_number_real_with_invalid_utf8_after_e(void **state)
 {
     (void)state; // unused
     const char *js = "[1eÂ]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_real_without_fractional_part.json
@@ -1223,7 +1415,11 @@ static void n_number_real_without_fractional_part(void **state)
 {
     (void)state; // unused
     const char *js = "[1.]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_starting_with_dot.json
@@ -1231,7 +1427,11 @@ static void n_number_starting_with_dot(void **state)
 {
     (void)state; // unused
     const char *js = "[.123]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_U+FF11_fullwidth_digit_one.json
@@ -1239,7 +1439,11 @@ static void n_number_U_FF11_fullwidth_digit_one(void **state)
 {
     (void)state; // unused
     const char *js = "[Ôºë]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_with_alpha_char.json
@@ -1247,7 +1451,11 @@ static void n_number_with_alpha_char(void **state)
 {
     (void)state; // unused
     const char *js = "[1.8011670033376514H-308]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_with_alpha.json
@@ -1255,7 +1463,11 @@ static void n_number_with_alpha(void **state)
 {
     (void)state; // unused
     const char *js = "[1.2a-3]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_number_with_leading_zero.json
@@ -1263,7 +1475,11 @@ static void n_number_with_leading_zero(void **state)
 {
     (void)state; // unused
     const char *js = "[012]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_object_bad_value.json
@@ -1271,15 +1487,18 @@ static void n_object_bad_value(void **state)
 {
     (void)state; // unused
     const char *js = "[\"x\", truth]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#endif
 }
 
 // n_object_bracket_key.json
 static void n_object_bracket_key(void **state)
 {
     (void)state; // unused
-    const char *js = "{[: \"x\"}\
-";
+    const char *js = "{[: \"x\"}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
@@ -1304,7 +1523,11 @@ static void n_object_emoji(void **state)
 {
     (void)state; // unused
     const char *js = "{üá®üá≠}";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
 // n_object_garbage_at_end.json
@@ -1376,7 +1599,11 @@ static void n_object_non_string_key_but_huge_number_instead(void **state)
 {
     (void)state; // unused
     const char *js = "{9999E9999:1}";
+#ifndef JSMN_PERMISSIVE_KEY
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#endif
 }
 
 // n_object_non_string_key.json
@@ -1384,7 +1611,11 @@ static void n_object_non_string_key(void **state)
 {
     (void)state; // unused
     const char *js = "{1:1}";
+#ifndef JSMN_PERMISSIVE_KEY
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#endif
 }
 
 // n_object_repeated_null_null.json
@@ -1392,7 +1623,11 @@ static void n_object_repeated_null_null(void **state)
 {
     (void)state; // unused
     const char *js = "{null:null,null:null}";
+#ifndef JSMN_PERMISSIVE_KEY
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 5);
+#endif
 }
 
 // n_object_several_trailing_commas.json
@@ -1424,10 +1659,10 @@ static void n_object_trailing_comment(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}/**/";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
 #endif
 }
 
@@ -1436,10 +1671,10 @@ static void n_object_trailing_comment_open(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}/**//";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
 #endif
 }
 
@@ -1448,10 +1683,10 @@ static void n_object_trailing_comment_slash_open_incomplete(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}/";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
 #endif
 }
 
@@ -1460,10 +1695,10 @@ static void n_object_trailing_comment_slash_open(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}//";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
 #endif
 }
 
@@ -1480,7 +1715,11 @@ static void n_object_unquoted_key(void **state)
 {
     (void)state; // unused
     const char *js = "{a: \"b\"}";
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE) && !defined(JSMN_PERMISSIVE_KEY)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
+#endif
 }
 
 // n_object_unterminated-value.json
@@ -1504,10 +1743,10 @@ static void n_object_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}#";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
 #endif
 }
 
@@ -1556,10 +1795,20 @@ static void n_string_accentuated_char_no_quotes(void **state)
 {
     (void)state; // unused
     const char *js = "[√©]";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE	
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#endif
 }
 
-// n_string_backslash_00.json has a null byte in it.
+// n_string_backslash_00.json
+static void n_string_backslash_00(void **state)
+{
+    (void)state; // unused
+    const char *js = "[\"\\\0\"]";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+}
 
 // n_string_escaped_backslash_bad.json
 static void n_string_escaped_backslash_bad(void **state)
@@ -1569,7 +1818,13 @@ static void n_string_escaped_backslash_bad(void **state)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 }
 
-// n_string_escaped_ctrl_char_tab.json has a null byte in it.
+// n_string_escaped_ctrl_char_tab.json
+static void n_string_escaped_ctrl_char_tab(void **state)
+{
+    (void)state; // unused
+    const char *js = "[\"\\\t\"]";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+}
 
 // n_string_escaped_emoji.json
 static void n_string_escaped_emoji(void **state)
@@ -1688,7 +1943,11 @@ static void n_string_single_string_no_double_quotes(void **state)
 {
     (void)state; // unused
     const char *js = "abc";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#endif
 }
 
 // n_string_start_escape_unclosed.json
@@ -1699,7 +1958,13 @@ static void n_string_start_escape_unclosed(void **state)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 }
 
-// n_string_unescaped_crtl_char.json has a null byte in it.
+// n_string_unescaped_crtl_char.json
+static void n_string_unescaped_crtl_char(void **state)
+{
+    (void)state; // unused
+    const char *js = "[\"aa\0\"]";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+}
 
 // n_string_unescaped_newline.json
 static void n_string_unescaped_newline(void **state)
@@ -1730,10 +1995,10 @@ static void n_string_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "\"\"x";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
 #endif
 }
 
@@ -1758,10 +2023,10 @@ static void n_structure_array_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "[1]x";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
 }
 
@@ -1770,10 +2035,10 @@ static void n_structure_array_with_extra_array_close(void **state)
 {
     (void)state; // unused
     const char *js = "[1]]";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
 }
 
@@ -1806,10 +2071,10 @@ static void n_structure_close_unopened_array(void **state)
 {
     (void)state; // unused
     const char *js = "1]";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
 #endif
 }
 
@@ -1826,10 +2091,12 @@ static void n_structure_double_array(void **state)
 {
     (void)state; // unused
     const char *js = "[][]";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
-#else
+#if defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#elif defined(JSMN_MULTIPLE_JSON)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
 #endif
 }
 
@@ -1873,7 +2140,13 @@ static void n_structure_no_data(void **state)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
-// n_structure_null-byte-outside-string.json has a null byte in it.
+// n_structure_null-byte-outside-string.json
+static void n_structure_null_byte_outside_string(void **state)
+{
+    (void)state; // unused
+    const char *js = "[\0]";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+}
 
 // n_structure_number_with_trailing_garbage.json
 static void n_structure_number_with_trailing_garbage(void **state)
@@ -1888,10 +2161,10 @@ static void n_structure_object_followed_by_closing_object(void **state)
 {
     (void)state; // unused
     const char *js = "{}}";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
 #endif
 }
 
@@ -1916,10 +2189,10 @@ static void n_structure_object_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": true} \"x\"";
-#ifndef JSMN_MULTIPLE_JSON
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
 #endif
 }
 
@@ -2042,10 +2315,10 @@ static void n_structure_trailing_sharp(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\":\"b\"}#{}";
-#ifndef JSMN_MULTIPLE
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
-#else
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
 #endif
 }
 
@@ -2136,12 +2409,10 @@ static void n_structure_whitespace_U_2060_word_joiner(void **state)
     const char *js = "[‚Å†]";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 }
-#endif
 
 void test_jsontestsuite_n(void)
 {
     const struct CMUnitTest tests[] = {
-#ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(n_array_1_true_without_comma, jsmn_setup),
         cmocka_unit_test_setup(n_array_a_invalid_utf8, jsmn_setup),
         cmocka_unit_test_setup(n_array_colon_instead_of_comma, jsmn_setup),
@@ -2171,7 +2442,7 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_incomplete_false, jsmn_setup),
         cmocka_unit_test_setup(n_incomplete_null, jsmn_setup),
         cmocka_unit_test_setup(n_incomplete_true, jsmn_setup),
-//      cmocka_unit_test_setup(n_multidigit_number_then_00, jsmn_setup),
+        cmocka_unit_test_setup(n_multidigit_number_then_00, jsmn_setup),
         cmocka_unit_test_setup(n_number_minus01, jsmn_setup),
         cmocka_unit_test_setup(n_number_minus1dot0dot, jsmn_setup),
         cmocka_unit_test_setup(n_number_minus2dot, jsmn_setup),
@@ -2259,10 +2530,10 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_string_1_surrogate_then_escape_u1, jsmn_setup),
         cmocka_unit_test_setup(n_string_1_surrogate_then_escape_u1x, jsmn_setup),
         cmocka_unit_test_setup(n_string_accentuated_char_no_quotes, jsmn_setup),
-//      cmocka_unit_test_setup(n_string_backslash_00, jsmn_setup),
+        cmocka_unit_test_setup(n_string_backslash_00, jsmn_setup),
         cmocka_unit_test_setup(n_string_escape_x, jsmn_setup),
         cmocka_unit_test_setup(n_string_escaped_backslash_bad, jsmn_setup),
-//      cmocka_unit_test_setup(n_string_escaped_ctrl_char_tab, jsmn_setup),
+        cmocka_unit_test_setup(n_string_escaped_ctrl_char_tab, jsmn_setup),
         cmocka_unit_test_setup(n_string_escaped_emoji, jsmn_setup),
         cmocka_unit_test_setup(n_string_incomplete_escape, jsmn_setup),
         cmocka_unit_test_setup(n_string_incomplete_escaped_character, jsmn_setup),
@@ -2278,7 +2549,7 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_string_single_quote, jsmn_setup),
         cmocka_unit_test_setup(n_string_single_string_no_double_quotes, jsmn_setup),
         cmocka_unit_test_setup(n_string_start_escape_unclosed, jsmn_setup),
-//      cmocka_unit_test_setup(n_string_unescaped_crtl_char, jsmn_setup),
+        cmocka_unit_test_setup(n_string_unescaped_crtl_char, jsmn_setup),
         cmocka_unit_test_setup(n_string_unescaped_newline, jsmn_setup),
         cmocka_unit_test_setup(n_string_unescaped_tab, jsmn_setup),
         cmocka_unit_test_setup(n_string_unicode_CapitalU, jsmn_setup),
@@ -2301,7 +2572,7 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_structure_lone_invalid_utf8, jsmn_setup),
         cmocka_unit_test_setup(n_structure_lone_open_bracket, jsmn_setup),
         cmocka_unit_test_setup(n_structure_no_data, jsmn_setup),
-//      cmocka_unit_test_setup(n_structure_null_byte_outside_string, jsmn_setup),
+        cmocka_unit_test_setup(n_structure_null_byte_outside_string, jsmn_setup),
         cmocka_unit_test_setup(n_structure_number_with_trailing_garbage, jsmn_setup),
         cmocka_unit_test_setup(n_structure_object_followed_by_closing_object, jsmn_setup),
         cmocka_unit_test_setup(n_structure_object_unclosed_no_value, jsmn_setup),
@@ -2334,7 +2605,6 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_structure_UTF8_BOM_no_data, jsmn_setup),
         cmocka_unit_test_setup(n_structure_whitespace_formfeed, jsmn_setup),
         cmocka_unit_test_setup(n_structure_whitespace_U_2060_word_joiner, jsmn_setup),
-#endif
     };
 
     memcpy(cur_test, tests, sizeof(tests));
@@ -3823,15 +4093,7 @@ static void test_array_05(void **state)
 {
     (void)state; // unused
     const char *js = "[\"a\": 1]";
-#ifndef JSMN_PERMISSIVE
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
-#else
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
-    tokeq(js, t, 3,
-          JSMN_ARRAY, -1, -1, 1,
-          JSMN_STRING, "a", 1,
-          JSMN_PRIMITIVE, "1");
-#endif
 }
 
 void test_array(void)

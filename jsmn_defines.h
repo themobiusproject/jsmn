@@ -1,11 +1,12 @@
 #ifndef JSMN_DEFINES
 #define JSMN_DEFINES
 
-/* If nothing is defined, the default definitions are JSMN_PARENT_LINKS and   *
+/*!
+ * If nothing is defined, the default definitions are JSMN_PARENT_LINKS and   *
  *   JSMN_NEXT_SIBLING with a jsmntok_t field size of 4 bytes (unsigned int). *
  * This will parse one json object in a buffer at a time and return after a   *
  *   successful json object parse. To check if there is more data in the      *
- *   buffer that hasn't been parsed, run jsmn_eof.                            */
+ *   buffer that hasn't been parsed, run jsmn_eof.                           !*/
 
 /*! @def JSMN_PARENT_LINKS
  * @brief Adds a parent field to the token
@@ -52,7 +53,7 @@
 /*! @def JSMN_PERMISSIVE
  * @brief Enables all PERMISSIVE definitions
  *
- * Enables JSMN_PERMISSIVE_KEY, JSMN_PERMISSIVE_PRIMITIVES, and
+ * Enables JSMN_PERMISSIVE_KEY, JSMN_PERMISSIVE_PRIMITIVE, and
  *   JSMN_MULTIPLE_JSON
  */
 
@@ -60,7 +61,7 @@
  * @brief Allows PRIMITIVEs to be OBJECT KEYs
  */
 
-/*! @def JSMN_PERMISSIVE_PRIMITIVES
+/*! @def JSMN_PERMISSIVE_PRIMITIVE
  * @brief Allows PRIMITIVEs to be any contiguous value
  *
  * This allows PRIMIVITEs to be any contiguous value that does not contain a
@@ -106,8 +107,8 @@
 # ifndef JSMN_PERMISSIVE_KEY
 #  define JSMN_PERMISSIVE_KEY
 # endif
-# ifndef JSMN_PERMISSIVE_PRIMITIVES
-#  define JSMN_PERMISSIVE_PRIMITIVES
+# ifndef JSMN_PERMISSIVE_PRIMITIVE
+#  define JSMN_PERMISSIVE_PRIMITIVE
 # endif
 # ifndef JSMN_MULTIPLE_JSON
 #  define JSMN_MULTIPLE_JSON
