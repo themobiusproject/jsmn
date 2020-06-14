@@ -203,13 +203,6 @@
 			path = test;
 			sourceTree = "<group>";
 		};
-		952CC5592490751D0051FF5E /* Vanilla */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Vanilla;
-			sourceTree = "<group>";
-		};
 		95346BFC205C728B006A0917 = {
 			isa = PBXGroup;
 			children = (
@@ -220,7 +213,6 @@
 				95773D7D2492EFA800ED747F /* jsmn_utils.c */,
 				95773D7C2492EFA800ED747F /* jsmn_utils.h */,
 				95346C06205C728B006A0917 /* Products */,
-				952CC5592490751D0051FF5E /* Vanilla */,
 				95EF32312485AE1F00AEDB36 /* Frameworks */,
 			);
 			sourceTree = "<group>";

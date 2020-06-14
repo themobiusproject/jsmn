@@ -836,7 +836,7 @@ static void n_incomplete_false(void **state)
     (void)state; // unused
     const char *js = "[fals]";
 #ifndef JSMN_PERMISSIVE_PRIMITIVE
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
@@ -848,7 +848,7 @@ static void n_incomplete_null(void **state)
     (void)state; // unused
     const char *js = "[nul]";
 #ifndef JSMN_PERMISSIVE_PRIMITIVE
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
@@ -860,7 +860,7 @@ static void n_incomplete_true(void **state)
     (void)state; // unused
     const char *js = "[tru]";
 #ifndef JSMN_PERMISSIVE_PRIMITIVE
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
 #endif
@@ -871,7 +871,7 @@ static void n_multidigit_number_then_00(void **state)
 {
     (void)state; // unused
     const char *js = "123\0";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
@@ -2413,6 +2413,7 @@ static void n_structure_whitespace_U_2060_word_joiner(void **state)
 void test_jsontestsuite_n(void)
 {
     const struct CMUnitTest tests[] = {
+#ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(n_array_1_true_without_comma, jsmn_setup),
         cmocka_unit_test_setup(n_array_a_invalid_utf8, jsmn_setup),
         cmocka_unit_test_setup(n_array_colon_instead_of_comma, jsmn_setup),
@@ -2605,6 +2606,7 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_structure_UTF8_BOM_no_data, jsmn_setup),
         cmocka_unit_test_setup(n_structure_whitespace_formfeed, jsmn_setup),
         cmocka_unit_test_setup(n_structure_whitespace_U_2060_word_joiner, jsmn_setup),
+#endif
     };
 
     memcpy(cur_test, tests, sizeof(tests));
@@ -4346,10 +4348,10 @@ static void test_partial_array_01(void **state)
     }
     assert_int_equal(jsmn_parse(&p, js, i, t, 6), 6);
     tokeq(js, t, 6,
-          JSMN_ARRAY, -1, -1, 3,
+          JSMN_ARRAY, 0, 26, 3,
           JSMN_PRIMITIVE, "1",
           JSMN_PRIMITIVE, "true",
-          JSMN_ARRAY, -1, -1, 2,
+          JSMN_ARRAY, 11, 25, 2,
           JSMN_PRIMITIVE, "123",
           JSMN_STRING, "hello", 0);
 }
@@ -4381,10 +4383,10 @@ static void test_array_nomem_01(void **state)
         assert_int_equal(jsmn_parse(&p, js, strlen(js), t, i), (jsmnint_t)JSMN_ERROR_NOMEM);
         assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), 6);
         tokeq(js, t, 6,
-              JSMN_ARRAY, -1, -1, 3,
+              JSMN_ARRAY, 2, 28, 3,
               JSMN_PRIMITIVE, "1",
               JSMN_PRIMITIVE, "true",
-              JSMN_ARRAY, -1, -1, 2,
+              JSMN_ARRAY, 13, 27, 2,
               JSMN_PRIMITIVE, "123",
               JSMN_STRING, "hello", 0);
     }
