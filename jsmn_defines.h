@@ -78,6 +78,10 @@
  *   an error.
  */
 
+/*! @def JSMN_MULTIPLE_JSON_FAIL
+ * @brief Fails if there is more than one json object in a buffer.
+ */
+
 #ifndef JSMN_API
 # ifdef JSMN_STATIC
 #  define JSMN_API static
