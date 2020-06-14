@@ -1,6 +1,7 @@
 ##### Custom
 Index/
 build_*/
+doxygen/
 
 ##### C.gitignore
 # Prerequisites
