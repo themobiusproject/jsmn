@@ -1378,7 +1378,7 @@ int test_object(void) {
 }
 
 int test_array(void) {
-  check(query("[10}", JSMN_ERROR_INVAL));
+  check(query("[10}", JSMN_ERROR_UNMATCHED_BRACKETS));
   check(query("[1,,3]", JSMN_ERROR_INVAL));
   check(parse("[10]", 2, 2, JSMN_ARRAY, -1, -1, 1, JSMN_PRIMITIVE, "10"));
   check(query("{\"a\": 1]", JSMN_ERROR_INVAL));
@@ -1539,7 +1539,12 @@ int test_issue_27(void) {
   const char *js =
       "{ \"name\" : \"Jack\", \"age\" : 27 } { \"name\" : \"Anna\", ";
 #ifndef JSMN_MULTIPLE_JSON
-  check(query(js, JSMN_ERROR_INVAL));
+  check(parse(js, 8, 5,
+              JSMN_OBJECT, -1, -1, 2,
+              JSMN_STRING, "name", 1,
+              JSMN_STRING, "Jack", 0,
+              JSMN_STRING, "age", 1,
+              JSMN_PRIMITIVE, "27"));
 #else
   check(query(js, JSMN_ERROR_PART));
 #endif

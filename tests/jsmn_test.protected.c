@@ -872,9 +872,9 @@ static void n_multidigit_number_then_00(void **state)
     (void)state; // unused
     const char *js = "123\0";
 #if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, 4, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 #else
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+    assert_int_equal(jsmn_parse(&p, js, 4, NULL, 0), 1);
 #endif
 }
 
@@ -1807,7 +1807,7 @@ static void n_string_backslash_00(void **state)
 {
     (void)state; // unused
     const char *js = "[\"\\\0\"]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, 6, NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
 // n_string_escaped_backslash_bad.json
@@ -1963,7 +1963,7 @@ static void n_string_unescaped_crtl_char(void **state)
 {
     (void)state; // unused
     const char *js = "[\"aa\0\"]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, 7, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 }
 
 // n_string_unescaped_newline.json
@@ -2145,7 +2145,7 @@ static void n_structure_null_byte_outside_string(void **state)
 {
     (void)state; // unused
     const char *js = "[\0]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, 3, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
 }
 
 // n_structure_number_with_trailing_garbage.json

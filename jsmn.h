@@ -344,7 +344,8 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
       pos = tokens[parser->toknext - 1].start;
     } else {
       pos = parser->pos;
-      while (pos != JSMN_NEG && !isSpecialChar(js[pos]) && isCharacter(js[pos])) {
+      while (pos != JSMN_NEG && !isWhitespace(js[pos]) &&
+             !isSpecialChar(js[pos]) && isCharacter(js[pos])) {
         pos--;
       }
       pos++;
@@ -391,7 +392,7 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
           } else if (type & JSMN_PRI_DECIMAL) {
             expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
           } else if (parser->pos == pos ||
-              (parser->pos + 1 == pos && (type & JSMN_PRI_MINUS))) {
+                     (parser->pos + 1 == pos && (type & JSMN_PRI_MINUS))) {
             expected = JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
           } else {
             expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
@@ -414,7 +415,7 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
           } else if (type & JSMN_PRI_DECIMAL) {
             expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
           } else {
-            expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+            expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
           }
           break;
         case '-':
