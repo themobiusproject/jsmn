@@ -344,8 +344,10 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
       pos = tokens[parser->toknext - 1].start;
     } else {
       pos = parser->pos;
-      while (pos != JSMN_NEG && !isWhitespace(js[pos]) &&
-             !isSpecialChar(js[pos]) && isCharacter(js[pos])) {
+      while (pos != JSMN_NEG &&
+             !isWhitespace(js[pos]) &&
+             !isSpecialChar(js[pos]) &&
+             isCharacter(js[pos])) {
         pos--;
       }
       pos++;
@@ -354,7 +356,9 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
   type = JSMN_PRIMITIVE;
 
 #ifndef JSMN_PERMISSIVE_PRIMITIVE
-  if (js[pos] == 't' || js[pos] == 'f' || js[pos] == 'n') {
+  if (js[pos] == 't' ||
+      js[pos] == 'f' ||
+      js[pos] == 'n') {
     char *literal = NULL;
     jsmnint_t size = 0;
     if (js[pos] == 't') {
@@ -369,14 +373,16 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
     }
     jsmnint_t i;
     for (i = 1, pos++; i < size; i++, pos++) {
-      if (pos == len || js[pos] == '\0') {
+      if (pos == len ||
+          js[pos] == '\0') {
         return JSMN_ERROR_PART;
       } else if (js[pos] != literal[i]) {
         return JSMN_ERROR_INVAL;
       }
     }
     type |= JSMN_PRI_LITERAL;
-    if (pos == len || js[pos] == '\0') {
+    if (pos == len ||
+        js[pos] == '\0') {
       goto found;
     }
   } else {
@@ -532,7 +538,8 @@ found:
     parser->expected = JSMN_ROOT;
     type |= JSMN_VALUE;
   }
-  if (pos == len || js[pos] == '\0') {
+  if (pos == len ||
+      js[pos] == '\0') {
     parser->expected |= JSMN_PRI_CONTINUE;
   }
 
@@ -711,7 +718,8 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
           pos++;
           jsmnint_t i;
           for (i = pos + 4; pos < i; pos++) {
-            if (pos == len || js[pos] == '\0') {
+            if (pos == len ||
+                js[pos] == '\0') {
               return JSMN_ERROR_PART;
             }
             /* If it isn't a hex character we have an error */
@@ -728,7 +736,11 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
     }
 
     /* form feed, new line, carraige return, tab, and vertical tab not allowed */
-    else if (c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v') {
+    else if (c == '\f' ||
+             c == '\n' ||
+             c == '\r' ||
+             c == '\t' ||
+             c == '\v') {
       return JSMN_ERROR_INVAL;
     }
   }
@@ -819,7 +831,8 @@ jsmnint_t jsmn_parse_container_close(jsmn_parser *parser, const char c,
     }
 #endif
     token = &tokens[parser->toksuper];
-    if (!(token->type & type) || token->end != JSMN_NEG) {
+    if (!(token->type & type) ||
+        token->end != JSMN_NEG) {
       return JSMN_ERROR_UNMATCHED_BRACKETS;
     }
     token->end = parser->pos + 1;
