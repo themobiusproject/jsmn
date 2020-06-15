@@ -467,7 +467,6 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
       return JSMN_ERROR_INVAL;
     }
     goto found;
-    }
   }
 check_primitive_border:
   switch (js[pos]) {
