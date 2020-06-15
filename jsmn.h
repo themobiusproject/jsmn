@@ -940,80 +940,71 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
     }
 #endif
     c = js[parser->pos];
-    switch (c) {
-      case '{':
-      case '[':
-        r = jsmn_parse_container_open(parser, c, tokens, num_tokens);
-        if (r != JSMN_SUCCESS) {
-          return r;
-        }
-        count++;
-        break;
-      case '}':
-      case ']':
-        r = jsmn_parse_container_close(parser, c, tokens);
-        if (r != JSMN_SUCCESS) {
-          return r;
-        }
-        break;
-      case '\"':
-        r = jsmn_parse_string(parser, js, len, tokens, num_tokens);
-        if (r != JSMN_SUCCESS) {
-          return r;
-        }
-        count++;
-        break;
-      case ':':
-        r = jsmn_parse_colon(parser, tokens);
-        if (r != JSMN_SUCCESS) {
-          return r;
-        }
-        break;
-      case ',':
-        r = jsmn_parse_comma(parser, tokens);
-        if (r != JSMN_SUCCESS) {
-          return r;
-        }
-        break;
-      /* Valid whitespace */
-      case ' ':
-      case '\t':
-      case '\n':
-      case '\r':
-        break;
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
-      /* rfc8259: PRIMITIVEs are numbers and booleans */
-      case '-':
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-      case 't':
-      case 'f':
-      case 'n':
-#else
-      /* In permissive mode every unquoted value is a PRIMITIVE */
-      default:
-#endif
-        r = jsmn_parse_primitive(parser, js, len, tokens, num_tokens);
-        if (r != JSMN_SUCCESS) {
-          return r;
-        }
-        count++;
-        break;
-
-#ifndef JSMN_PERMISSIVE
-      /* Unexpected char */
-      default:
-        return JSMN_ERROR_INVAL;
-#endif
+    if (c == '{' || c == '[') {
+      r = jsmn_parse_container_open(parser, c, tokens, num_tokens);
+      if (r != JSMN_SUCCESS) {
+        return r;
+      }
+      count++;
+      continue;
     }
+
+    if (c == '}' || c == ']') {
+      r = jsmn_parse_container_close(parser, c, tokens);
+      if (r != JSMN_SUCCESS) {
+        return r;
+      }
+      continue;
+    }
+
+    if (c == '"') {
+      r = jsmn_parse_string(parser, js, len, tokens, num_tokens);
+      if (r != JSMN_SUCCESS) {
+        return r;
+      }
+      count++;
+      continue;
+    }
+
+    if (c == ':') {
+      r = jsmn_parse_colon(parser, tokens);
+      if (r != JSMN_SUCCESS) {
+        return r;
+      }
+      continue;
+    }
+
+    if (c == ',') {
+      r = jsmn_parse_comma(parser, tokens);
+      if (r != JSMN_SUCCESS) {
+        return r;
+      }
+      continue;
+    }
+
+    /* Valid whitespace */
+    if (isWhitespace(c)) {
+      continue;
+    }
+
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
+    /* rfc8259: PRIMITIVEs are numbers and booleans */
+    if (c == '-' || c == 't' || c == 'f' || c == 'n' ||
+        (c >= '0' && c <= '9')) {
+#else
+    /* In permissive mode every unquoted value is a PRIMITIVE */
+    if (isCharacter(c) || c == '\\') {
+#endif
+      r = jsmn_parse_primitive(parser, js, len, tokens, num_tokens);
+      if (r != JSMN_SUCCESS) {
+        return r;
+      }
+      count++;
+      continue;
+    }
+
+    /* Unexpected char */
+    return JSMN_ERROR_INVAL;
   }
 
   if (parser->toksuper != JSMN_NEG) {
