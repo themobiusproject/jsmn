@@ -36,7 +36,6 @@
 
 #include <stddef.h>
 #include <limits.h>
-#include <stdint.h>
 
 #include "jsmn_defines.h"
 
@@ -50,7 +49,7 @@ typedef unsigned int jsmnint_t;
 /**
  * JSON type identifier. Basic types are:
  */
-typedef enum : uint16_t {
+typedef enum {
   JSMN_UNDEFINED    = 0x0000,
   JSMN_OBJECT       = 0x0001,   /*!< Object */
   JSMN_ARRAY        = 0x0002,   /*!< Array */
@@ -133,7 +132,7 @@ typedef enum : uint16_t {
 /*!
  * JSMN Error Codes
  */
-typedef enum jsmnerr : int8_t {
+typedef enum jsmnerr {
   JSMN_SUCCESS                  =  0,
   JSMN_ERROR_NOMEM              = -1,   /*!< Not enough tokens were provided */
   JSMN_ERROR_LEN                = -2,   /*!< Input data too long */
@@ -145,7 +144,7 @@ typedef enum jsmnerr : int8_t {
 /*!
  * JSMN Boolean
  */
-typedef enum jsmnbool : uint8_t {
+typedef enum jsmnbool {
   JSMN_FALSE        =  0,
   JSMN_TRUE         =  1,
 } jsmnbool;
