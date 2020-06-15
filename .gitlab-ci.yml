@@ -15,7 +15,10 @@ build:
     - make
   artifacts:
     paths:
-      - mybinary
+      - tests/jsmn_test_default
+      - tests/jsmn_test_default_low_memory
+      - tests/jsmn_test_permissive
+      - tests/jsmn_test_permissive_low_memory
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
       #   paths:
@@ -25,5 +28,7 @@ build:
 test:
   stage: test
   script:
-    - cd tests
-    - ctest
+    - tests/jsmn_test_default
+    - tests/jsmn_test_default_low_memory
+    - tests/jsmn_test_permissive
+    - tests/jsmn_test_permissive_low_memory
