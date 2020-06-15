@@ -91,4 +91,4 @@ void jsmn_explodeJSON(const char *json, size_t len);
 }
 #endif
 
-#endif // __JSMN_UTILS_H__
+#endif /* __JSMN_UTILS_H__ */

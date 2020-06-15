@@ -134,4 +134,4 @@
 # define JSMN_LOCAL
 #endif
 
-#endif // JSMN_DEFINES
+#endif /* JSMN_DEFINES */
