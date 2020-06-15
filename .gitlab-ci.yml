@@ -25,5 +25,5 @@ build:
 test:
   stage: test
   script:
-    - cd unit_tests
+    - cd tests
     - ctest

@@ -34,7 +34,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 	add_subdirectory(example)
-	add_subdirectory(test)
+#	add_subdirectory(test)
 	add_subdirectory(tests)
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
