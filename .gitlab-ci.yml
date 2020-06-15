@@ -10,7 +10,7 @@ build:
   # before_script:
   #   - apt update && apt -y install make autoconf
   script:
-    - apt update && apt -y install cmake cmocka
+    - apt update && apt -y install cmake libcmocka-dev
     - cmake -DCMAKE_BUILD_TYPE=Debug ./
     - make
   artifacts:
