@@ -1,5 +1,5 @@
-#ifndef __JSMN_UTILS_H__
-#define __JSMN_UTILS_H__
+#ifndef JSMN_JSMN_UTILS_H__
+#define JSMN_JSMN_UTILS_H__
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -91,4 +91,4 @@ void jsmn_explodeJSON(const char *json, size_t len);
 }
 #endif
 
-#endif /* __JSMN_UTILS_H__ */
+#endif /* JSMN_JSMN_UTILS_H__ */

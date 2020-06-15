@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef JSMN_H
-#define JSMN_H
+#ifndef JSMN_JSMN_H__
+#define JSMN_JSMN_H__
 
 #ifdef UNIT_TESTING
 #include <stdarg.h>
@@ -376,7 +376,8 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
       if (pos == len ||
           js[pos] == '\0') {
         return JSMN_ERROR_PART;
-      } else if (js[pos] != literal[i]) {
+      }
+      if (js[pos] != literal[i]) {
         return JSMN_ERROR_INVAL;
       }
     }
@@ -463,8 +464,8 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
     }
     if (!(expected & JSMN_CLOSE)) {
       return JSMN_ERROR_INVAL;
-    } else {
-      goto found;
+    }
+    goto found;
     }
   }
 check_primitive_border:
@@ -489,22 +490,9 @@ check_primitive_border:
   }
 #else
   for (; pos < len && js[pos] != '\0'; pos++) {
-    switch (js[pos]) {
-      case ' ':
-      case '\t':
-      case '\n':
-      case '\r':
-      case ',':
-      case '}':
-      case ']':
-      case ':':
-
-      case '{':
-      case '[':
-      case '"':
-        goto found;
-      default:              /* to quiet a warning from gcc */
-        break;
+    if (isWhitespace(js[pos]) ||
+        isSpecialChar(js[pos])) {
+      goto found;
     }
     if (!isCharacter(js[pos])) {
       return JSMN_ERROR_INVAL;
@@ -767,7 +755,7 @@ jsmnint_t jsmn_parse_container_open(jsmn_parser *parser, const char c,
 
   if (tokens == NULL) {
     parser->toksuper++;
-    if (parser->toksuper < (sizeof(jsmnint_t) * 8) &&
+    if (parser->toksuper < (sizeof(jsmnint_t) * CHAR_BIT) &&
         parser->expected & JSMN_INSD_OBJ) {
       parser->toknext |= (1 << parser->toksuper);
     }
@@ -872,8 +860,8 @@ jsmnint_t jsmn_parse_container_close(jsmn_parser *parser, const char c,
 static
 jsmnint_t jsmn_parse_colon(jsmn_parser *parser, jsmntok_t *tokens)
 {
-  /* If a COLON wasn't expected; strict check because it is a complex enum */
-  if (!((parser->expected & JSMN_COLON) == JSMN_COLON)) {
+  /* If a COLON wasn't expected */
+  if (!(parser->expected & JSMN_COLON)) {
     return JSMN_ERROR_INVAL;
   }
 
@@ -902,8 +890,8 @@ jsmnint_t jsmn_parse_colon(jsmn_parser *parser, jsmntok_t *tokens)
 static
 jsmnint_t jsmn_parse_comma(jsmn_parser *parser, jsmntok_t *tokens)
 {
-  /* If a COMMA wasn't expected; strict check because it is a complex enum */
-  if (!((parser->expected & JSMN_COMMA) == JSMN_COMMA)) {
+  /* If a COMMA wasn't expected */
+  if (!(parser->expected & JSMN_COMMA)) {
     return JSMN_ERROR_INVAL;
   }
 
@@ -1071,4 +1059,4 @@ void jsmn_init(jsmn_parser *parser)
 
 #endif /* JSMN_HEADER */
 
-#endif /* JSMN_H */
+#endif /* JSMN_JSMN_H__ */

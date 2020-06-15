@@ -4667,7 +4667,9 @@ static void test_unmatched_brackets_01(void **state)
 {
     (void)state; // unused
     const char *js = "\"key 1\": 1234}";
-#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
+#if defined(JSMN_MULTIPLE_JSON)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+#elif defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 1);

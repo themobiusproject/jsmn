@@ -1,5 +1,5 @@
-#ifndef JSMN_DEFINES
-#define JSMN_DEFINES
+#ifndef JSMN_JSMN_DEFINES_H__
+#define JSMN_JSMN_DEFINES_H__
 
 /*!
  * If nothing is defined, the default definitions are JSMN_PARENT_LINKS and   *
@@ -134,4 +134,4 @@
 # define JSMN_LOCAL
 #endif
 
-#endif /* JSMN_DEFINES */
+#endif /* JSMN_JSMN_DEFINES_H__ */
