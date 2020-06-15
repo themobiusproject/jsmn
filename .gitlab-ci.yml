@@ -28,6 +28,7 @@ build:
 test:
   stage: test
   script:
+    - apt update && apt -y install libcmocka-dev
     - tests/jsmn_test_default
     - tests/jsmn_test_default_low_memory
     - tests/jsmn_test_permissive
