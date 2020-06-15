@@ -4667,12 +4667,12 @@ static void test_unmatched_brackets_01(void **state)
 {
     (void)state; // unused
     const char *js = "\"key 1\": 1234}";
-#ifndef JSMN_MULTIPLE_JSON
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 1);
     tokeq(js, t, 1,
           JSMN_STRING, "key 1", 0);
-#else
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 #endif
 }
 
@@ -4687,14 +4687,14 @@ static void test_unmatched_brackets_03(void **state)
 {
     (void)state; // unused
     const char *js = "{\"key 1\": 1234}}";
-#ifndef JSMN_MULTIPLE_JSON
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
     tokeq(js, t, 3,
           JSMN_OBJECT, 0, 15, 1,
           JSMN_STRING, "key 1", 1,
           JSMN_PRIMITIVE, "1234");
-#else
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
 #endif
 }
 
@@ -4702,12 +4702,12 @@ static void test_unmatched_brackets_04(void **state)
 {
     (void)state; // unused
     const char *js = "\"key 1\"}: 1234";
-#ifndef JSMN_MULTIPLE_JSON
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 1);
     tokeq(js, t, 1,
           JSMN_STRING, "key 1", 0);
-#else
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
 #endif
 }
 
