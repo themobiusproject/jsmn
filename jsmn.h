@@ -303,9 +303,8 @@ jsmnbool isHexadecimal(const char c)
 static
 jsmnbool isCharacter(const char c)
 {
-  if ((c >= 0x20 && c <= 0x21) ||
-      (c >= 0x23 && c <= 0x5B) ||
-      (c >= 0x5D)) {
+/*if (c >= 0x20 && c != 0x22 && c != 0x5C) {*/
+  if (c >= ' '  && c != '"'  && c != '\\') {
     return JSMN_TRUE;
   }
   return JSMN_FALSE;
