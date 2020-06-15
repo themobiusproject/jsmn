@@ -145,8 +145,8 @@ typedef enum jsmnerr {
  * JSMN Boolean
  */
 typedef enum jsmnbool {
-  JSMN_FALSE        =  0,
-  JSMN_TRUE         =  1,
+  JSMN_FALSE        =  0,       /*!< false */
+  JSMN_TRUE         =  1,       /*!< true */
 } jsmnbool;
 
 /**
@@ -303,7 +303,6 @@ jsmnbool isHexadecimal(const char c)
 static
 jsmnbool isCharacter(const char c)
 {
-/*if (c >= 0x20 && c != 0x22 && c != 0x5C) {*/
   if (c >= ' '  && c != '"'  && c != '\\') {
     return JSMN_TRUE;
   }
@@ -356,25 +355,19 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
   type = JSMN_PRIMITIVE;
 
 #ifndef JSMN_PERMISSIVE_PRIMITIVE
-  if (js[pos] == 't' ||
-      js[pos] == 'f' ||
-      js[pos] == 'n') {
-    char *literal = NULL;
-    jsmnint_t size = 0;
-    if (js[pos] == 't') {
-      literal = "true";
-    } else if (js[pos] == 'f') {
-      literal = "false";
-    } else if (js[pos] == 'n') {
-      literal = "null";
+  char literal[][6] = { "true", "false", "null" };
+  jsmnint_t i;
+  for (i = 0; i < sizeof(literal) / sizeof(literal[0]); i++) {
+    if (js[pos] != literal[i][0]) {
+      continue;
     }
-    jsmnint_t i;
-    for (i = 1, pos++; literal[i] != '\0'; i++, pos++) {
+    jsmnint_t j;
+    for (j = 1, pos++; literal[i][j] != '\0'; j++, pos++) {
       if (pos == len ||
           js[pos] == '\0') {
         return JSMN_ERROR_PART;
       }
-      if (js[pos] != literal[i]) {
+      if (js[pos] != literal[i][j]) {
         return JSMN_ERROR_INVAL;
       }
     }
@@ -383,87 +376,89 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
         js[pos] == '\0') {
       goto found;
     }
-  } else {
-    expected = JSMN_PRI_MINUS | JSMN_PRI_INTEGER;
-    for (; pos < len && js[pos] != '\0'; pos++) {
-      switch (js[pos]) {
-        case '0':
-          if (!(expected & JSMN_PRI_INTEGER)) {
-            return JSMN_ERROR_INVAL;
-          }
-          if (type & JSMN_PRI_EXPONENT) {
-            expected = JSMN_PRI_INTEGER | JSMN_CLOSE;
-          } else if (type & JSMN_PRI_DECIMAL) {
-            expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
-          } else if (parser->pos == pos ||
-                     (parser->pos + 1 == pos && (type & JSMN_PRI_MINUS))) {
-            expected = JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
-          } else {
-            expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
-          }
-          break;
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-          if (!(expected & JSMN_PRI_INTEGER)) {
-            return JSMN_ERROR_INVAL;
-          }
-          if (type & JSMN_PRI_EXPONENT) {
-            expected = JSMN_PRI_INTEGER | JSMN_CLOSE;
-          } else if (type & JSMN_PRI_DECIMAL) {
-            expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
-          } else {
-            expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
-          }
-          break;
-        case '-':
-          if (!(expected & JSMN_PRI_MINUS)) {
-            return JSMN_ERROR_INVAL;
-          }
-          expected = JSMN_PRI_INTEGER;
-          if (parser->pos == pos) {
-            type |= JSMN_PRI_MINUS;
-          }
-          break;
-        case '+':
-          if (!(expected & JSMN_PRI_SIGN)) {
-            return JSMN_ERROR_INVAL;
-          }
-          expected = JSMN_PRI_INTEGER;
-          break;
-        case '.':
-          if (!(expected & JSMN_PRI_DECIMAL)) {
-            return JSMN_ERROR_INVAL;
-          }
-          type |= JSMN_PRI_DECIMAL;
-          expected = JSMN_PRI_INTEGER;
-          break;
-        case 'e':
-        case 'E':
-          if (!(expected & JSMN_PRI_EXPONENT)) {
-            return JSMN_ERROR_INVAL;
-          }
-          type |= JSMN_PRI_EXPONENT;
-          expected = JSMN_PRI_SIGN | JSMN_PRI_INTEGER;
-          break;
-        default:
-          if (!(expected & JSMN_CLOSE)) {
-            return JSMN_ERROR_INVAL;
-          }
-          goto check_primitive_border;
+    goto check_primitive_border;
+  }
+
+  expected = JSMN_PRI_MINUS | JSMN_PRI_INTEGER;
+  for (; pos < len && js[pos] != '\0'; pos++) {
+    if (js[pos] == '0') {
+      if (!(expected & JSMN_PRI_INTEGER)) {
+        return JSMN_ERROR_INVAL;
       }
+      if (type & JSMN_PRI_EXPONENT) {
+        expected = JSMN_PRI_INTEGER | JSMN_CLOSE;
+      } else if (type & JSMN_PRI_DECIMAL) {
+        expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+      } else if (parser->pos == pos ||
+                 (parser->pos + 1 == pos && (type & JSMN_PRI_MINUS))) {
+        expected = JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+      } else {
+        expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+      }
+      continue;
     }
+
+    if (js[pos] >= '1' && js[pos] <= '9') {
+      if (!(expected & JSMN_PRI_INTEGER)) {
+        return JSMN_ERROR_INVAL;
+      }
+      if (type & JSMN_PRI_EXPONENT) {
+        expected = JSMN_PRI_INTEGER | JSMN_CLOSE;
+      } else if (type & JSMN_PRI_DECIMAL) {
+        expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+      } else {
+        expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+      }
+      continue;
+    }
+
+    if (js[pos] == '-') {
+      if (!(expected & JSMN_PRI_MINUS)) {
+        return JSMN_ERROR_INVAL;
+      }
+      expected = JSMN_PRI_INTEGER;
+      if (parser->pos == pos) {
+        type |= JSMN_PRI_MINUS;
+      }
+      continue;
+    }
+
+    if (js[pos] == '+') {
+      if (!(expected & JSMN_PRI_SIGN)) {
+        return JSMN_ERROR_INVAL;
+      }
+      expected = JSMN_PRI_INTEGER;
+      continue;
+    }
+
+    if (js[pos] == '.') {
+      if (!(expected & JSMN_PRI_DECIMAL)) {
+        return JSMN_ERROR_INVAL;
+      }
+      type |= JSMN_PRI_DECIMAL;
+      expected = JSMN_PRI_INTEGER;
+      continue;
+    }
+
+    if (js[pos] == 'e' || js[pos] == 'E') {
+      if (!(expected & JSMN_PRI_EXPONENT)) {
+        return JSMN_ERROR_INVAL;
+      }
+      type |= JSMN_PRI_EXPONENT;
+      expected = JSMN_PRI_SIGN | JSMN_PRI_INTEGER;
+      continue;
+    }
+
     if (!(expected & JSMN_CLOSE)) {
       return JSMN_ERROR_INVAL;
     }
-    goto found;
+    goto check_primitive_border;
   }
+  if (!(expected & JSMN_CLOSE)) {
+    return JSMN_ERROR_INVAL;
+  }
+  goto found;
+
 check_primitive_border:
   switch (js[pos]) {
     case ' ':
