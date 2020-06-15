@@ -35,6 +35,7 @@
 #define JSMN_VERSION_PATCH 0
 
 #include <stddef.h>
+#include <limits.h>
 
 #include "jsmn_defines.h"
 
