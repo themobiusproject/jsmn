@@ -798,7 +798,7 @@ jsmnint_t jsmn_parse_container_close(jsmn_parser *parser, const char c,
   }
 
   if (tokens == NULL) {
-    if (parser->toksuper < (sizeof(jsmnint_t) * 8)) {
+    if (parser->toksuper < (sizeof(jsmnint_t) * CHAR_BIT)) {
       jsmntype_t type;
       type = (c == '}' ? JSMN_OBJECT : JSMN_ARRAY);
       if ((((parser->toknext & (1 << parser->toksuper)) == 1) && !(type & JSMN_OBJECT)) ||
@@ -897,7 +897,7 @@ jsmnint_t jsmn_parse_comma(jsmn_parser *parser, jsmntok_t *tokens)
 
   jsmntype_t type = JSMN_UNDEFINED;
   if (tokens == NULL) {
-    if (parser->toksuper < (sizeof(jsmnint_t) * 8) &&
+    if (parser->toksuper < (sizeof(jsmnint_t) * CHAR_BIT) &&
         parser->toknext & (1 << parser->toksuper)) {
       type = JSMN_INSD_OBJ;
     }
