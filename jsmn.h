@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef JSMN_JSMN_H__
-#define JSMN_JSMN_H__
+#ifndef JSMN_JSMN_H_
+#define JSMN_JSMN_H_
 
 #ifdef UNIT_TESTING
 #include <stdarg.h>
@@ -364,16 +364,13 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
     jsmnint_t size = 0;
     if (js[pos] == 't') {
       literal = "true";
-      size = 4;
     } else if (js[pos] == 'f') {
       literal = "false";
-      size = 5;
     } else if (js[pos] == 'n') {
       literal = "null";
-      size = 4;
     }
     jsmnint_t i;
-    for (i = 1, pos++; i < size; i++, pos++) {
+    for (i = 1, pos++; literal[i] != '\0'; i++, pos++) {
       if (pos == len ||
           js[pos] == '\0') {
         return JSMN_ERROR_PART;
@@ -1059,4 +1056,4 @@ void jsmn_init(jsmn_parser *parser)
 
 #endif /* JSMN_HEADER */
 
-#endif /* JSMN_JSMN_H__ */
+#endif /* JSMN_JSMN_H_ */
