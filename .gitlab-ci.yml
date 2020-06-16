@@ -15,7 +15,7 @@ build:
   artifacts:
     paths:
       - tests/jsmn_test_*
-      - CMakeFiles/jsmn_test_*/*.gcno
+      - tests/CMakeFiles/jsmn_test_*/*.gcno
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
       #   paths:
