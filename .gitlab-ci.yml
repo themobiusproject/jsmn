@@ -7,29 +7,36 @@ build:
   stage: build
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
-  # before_script:
-  #   - apt update && apt -y install make autoconf
-  script:
+  before_script:
     - apt update && apt -y install cmake libcmocka-dev
+  script:
     - cmake -DCMAKE_BUILD_TYPE=Debug ./
     - make
   artifacts:
     paths:
-      - tests/jsmn_test_default
-      - tests/jsmn_test_default_low_memory
-      - tests/jsmn_test_permissive
-      - tests/jsmn_test_permissive_low_memory
+      - tests/jsmn_test_*
+      - CMakeFiles/jsmn_test_*/*.gcno
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
       #   paths:
       #     - "*.o"
 
 # run tests using the binary built before
-test:
+jsmn_test:
   stage: test
+  before_script:
+    - apt update && apt -y install libcmocka-dev gcovr
   script:
-    - apt update && apt -y install libcmocka-dev
     - tests/jsmn_test_default
     - tests/jsmn_test_default_low_memory
     - tests/jsmn_test_permissive
     - tests/jsmn_test_permissive_low_memory
+  artifacts:
+    paths:
+      - CMakeFiles/jsmn_test_*/*.gcno
+  after_script:
+    - mkdir coverage
+    - gcovr -r . --xml -o coverage/cobertura-coverage.xml
+  artifacts:
+    reports:
+      cobertura: coverage/cobertura-coverage.xml
