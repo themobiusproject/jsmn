@@ -4807,6 +4807,16 @@ void test_object_key(void)
 //  return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 
+#if !defined(JSMN_PERMISSIVE) && !defined(JSMN_LOW_MEMORY)
+# define JSMN_TEST_GROUP "jsmn_test_default"
+#elif !defined(JSMN_PERMISSIVE)
+# define JSMN_TEST_GROUP "jsmn_test_default_low_memory"
+#elif !defined(JSMN_LOW_MEMORY)
+# define JSMN_TEST_GROUP "jsmn_test_permissive"
+#else
+# define JSMN_TEST_GROUP "jsmn_test_permissive_low_memory"
+#endif
+
 int main(void)
 {
     struct CMUnitTest *tests = cur_test = calloc(512, sizeof(struct CMUnitTest));
@@ -4831,6 +4841,6 @@ int main(void)
     test_jsontestsuite_n();
     test_jsontestsuite_y();
 
-    return _cmocka_run_group_tests("jsmn_test", tests, total_tests, NULL, NULL);
+    return _cmocka_run_group_tests(JSMN_TEST_GROUP, tests, total_tests, NULL, NULL);
 //  return cmocka_run_group_tests(tests, NULL, NULL);
 }
