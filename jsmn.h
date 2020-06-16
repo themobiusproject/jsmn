@@ -920,7 +920,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
                      const size_t len, jsmntok_t *tokens,
                      const size_t num_tokens)
 {
-  if (len >= (jsmnint_t)JSMN_ERROR_MAX)) {
+  if (len >= (jsmnint_t)JSMN_ERROR_MAX) {
     return JSMN_ERROR_LEN;
   }
 
