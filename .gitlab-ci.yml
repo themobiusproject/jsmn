@@ -2,13 +2,16 @@
 # image: ubuntu needs to update tzdata noninteractively
 image: ubuntu
 
+before_script:
+  - export DEBIAN_FRONTEND=noninteractive
+  - apt-get update
+
 build:
   stage: build
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
   before_script:
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt update && apt -y install build-essential cmake libcmocka-dev
+    - apt-get -y install build-essential cmake libcmocka-dev
   script:
     - cmake -DCMAKE_BUILD_TYPE=Debug ./
     - make
@@ -26,8 +29,7 @@ build:
 test:
   stage: test
   before_script:
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt update && apt -y install libcmocka-dev gcovr lcov
+    - apt-get -y install libcmocka-dev gcovr lcov
   script:
     - tests/jsmn_test_default
     - tests/jsmn_test_default_low_memory
@@ -52,11 +54,10 @@ pages:
   dependencies:
     - test
   before_script:
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt update && apt -y install rsync
+    - apt-get -y install rsync
   script:
     - mkdir -p public/coverage/
-    - rsync -avP coverage/ public/coverage/
+    - rsync -avP coverage/ public/
   artifacts:
     paths:
       - public
