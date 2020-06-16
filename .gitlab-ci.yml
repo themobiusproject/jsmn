@@ -29,7 +29,7 @@ doxygen:
     - doxygen Doxyfile
   artifacts:
     paths:
-      - html/
+      - doxygen/
   only:
     - master
 
@@ -70,7 +70,7 @@ pages:
     - mkdir -p public/coverage/
     - rsync -avP coverage/ public/coverage/
     - mkdir -p public/docs/
-    - rsync -avP html/ public/docs/
+    - rsync -avP doxygen/ public/docs/
   artifacts:
     paths:
       - public
