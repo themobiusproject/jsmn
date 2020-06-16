@@ -41,7 +41,7 @@ jsmntok_t *jsmn_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
     *rv = jsmn_parse(&p, json, json_len, NULL, 0);
 
     /* enum jsmnerr has four errors, thus */
-    if (*rv >= (jsmnint_t)-5) {
+    if (*rv >= (jsmnint_t)JSMN_ERROR_MAX) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(*rv));
         return NULL;
     }
@@ -67,7 +67,7 @@ jsmnint_t jsmn_tokenize_noalloc(jsmntok_t *tokens, const uint32_t num_tokens, co
     rv = jsmn_parse(&p, json, json_len, tokens, num_tokens);
 
     /* enum jsmnerr has four errors, thus */
-    if (rv >= (jsmnint_t)-5) {
+    if (rv >= (jsmnint_t)JSMN_ERROR_MAX) {
         fprintf(stderr, "jsmn_parse error: %s\n", jsmn_strerror(rv));
         return rv;
     }

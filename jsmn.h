@@ -139,6 +139,8 @@ typedef enum jsmnerr {
   JSMN_ERROR_INVAL              = -3,   /*!< Invalid character inside JSON string */
   JSMN_ERROR_PART               = -4,   /*!< The string is not a full JSON packet, more bytes expected */
   JSMN_ERROR_UNMATCHED_BRACKETS = -5,   /*!< The JSON string has unmatched brackets */
+
+  JSMN_ERROR_MAX                = -5,   /*!< "MAX" value to be tested against when checking for errors */
 } jsmnerr;
 
 /*!
@@ -588,10 +590,6 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
     return JSMN_ERROR_INVAL;
   }
 
-  if (len >= JSMN_NEG) {
-    return JSMN_ERROR_LEN;
-  }
-
   jsmnint_t pos = parser->pos;
 
   /* Skip starting quote */
@@ -922,6 +920,10 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
                      const size_t len, jsmntok_t *tokens,
                      const size_t num_tokens)
 {
+  if (len >= (jsmnint_t)JSMN_ERROR_MAX)) {
+    return JSMN_ERROR_LEN;
+  }
+
   jsmnint_t r;
   jsmnint_t count = parser->toknext;
 

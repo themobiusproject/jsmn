@@ -13,7 +13,7 @@ jsmntok_t *json_tokenize(const char *json, const size_t json_len, jsmnint_t *rv)
   *rv = jsmn_parse(&p, json, json_len, NULL, 0);
 
   // enum jsmnerr has four errors, thus
-  if (*rv >= (jsmnint_t)-5) {
+  if (*rv >= (jsmnint_t)JSMN_ERROR_MAX) {
     return NULL;
   }
 
