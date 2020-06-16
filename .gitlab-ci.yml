@@ -1,6 +1,5 @@
-# use the official gcc image, based on debian
-# can use verions as well, like gcc:5.2
-# see https://hub.docker.com/_/gcc/
+# image: gcc has a bad version of lcov
+# image: ubuntu needs to update tzdata noninteractively
 image: ubuntu
 
 build:
@@ -8,6 +7,8 @@ build:
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
   before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime
     - apt update && apt -y install build-essential cmake libcmocka-dev
   script:
     - cmake -DCMAKE_BUILD_TYPE=Debug ./
