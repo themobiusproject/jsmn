@@ -8,7 +8,7 @@ build:
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
   before_script:
-    - apt update && apt -y install cmake libcmocka-dev
+    - apt update && apt -y install build-essential cmake libcmocka-dev
   script:
     - cmake -DCMAKE_BUILD_TYPE=Debug ./
     - make
