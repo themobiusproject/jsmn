@@ -15,6 +15,7 @@ build:
   artifacts:
     paths:
       - tests/jsmn_test_*
+      - tests/CMakeFiles/jsmn_test_*/*.gcda
       - tests/CMakeFiles/jsmn_test_*/*.gcno
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
@@ -36,7 +37,7 @@ test:
       - CMakeFiles/jsmn_test_*/*.gcno
   after_script:
     - mkdir coverage
-    - lcov --capture --directory tests/ --output-file coverage/coverage.info
+    - lcov --base-directory . --directory . --capture --output-file coverage/coverage.info
     - genhtml coverage/coverage.info --output-directory coverage
     - gcovr -r . --xml -o coverage/cobertura-coverage.xml
   artifacts:
