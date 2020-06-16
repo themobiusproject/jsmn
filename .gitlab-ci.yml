@@ -47,15 +47,19 @@ test:
     reports:
       cobertura: coverage/cobertura-coverage.xml
 
-# pages:
-#   stage: deploy
-#   dependencies:
-#     - test
-#   script:
-#     - mv coverage public/
-#   artifacts:
-#     paths:
-#       - public
-#     expire_in: 30 days
-#   only:
-#     - master
+pages:
+  stage: deploy
+  dependencies:
+    - test
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt update && apt -y install rsync
+  script:
+    - mkdir -p public/coverage/
+    - rsync -avP coverage/ public/coverage/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
