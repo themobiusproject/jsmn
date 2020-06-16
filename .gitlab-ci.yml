@@ -36,24 +36,11 @@ test:
       - CMakeFiles/jsmn_test_*/*.gcno
   after_script:
     - mkdir coverage
-    - gcovr -r . --xml coverage/cobertura-coverage.xml
     - lcov --capture --directory tests/ --output-file coverage/coverage.info
     - genhtml coverage/coverage.info --output-directory coverage
+    - gcovr -r . --xml -o coverage/cobertura-coverage.xml
   artifacts:
     paths:
       - coverage
     reports:
       cobertura: coverage/cobertura-coverage.xml
-
-pages:
-  stage: deploy
-  dependencies:
-    - test
-  script:
-    - mv coverage public/
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
-  only:
-    - master
