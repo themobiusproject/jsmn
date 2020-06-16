@@ -27,24 +27,25 @@ test:
     - export DEBIAN_FRONTEND=noninteractive
     - apt-get update && apt-get -y install libcmocka-dev gcovr lcov
   script:
-    - CMOCKA_XML_FILE='tests/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_default
-    - CMOCKA_XML_FILE='tests/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_default_low_memory
-    - CMOCKA_XML_FILE='tests/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_permissive
-    - CMOCKA_XML_FILE='tests/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_permissive_low_memory
+    - mkdir junit
+    - CMOCKA_XML_FILE='junit/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_default
+    - CMOCKA_XML_FILE='junit/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_default_low_memory
+    - CMOCKA_XML_FILE='junit/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_permissive
+    - CMOCKA_XML_FILE='junit/%g.xml' CMOCKA_MESSAGE_OUTPUT=xml tests/jsmn_test_permissive_low_memory
   after_script:
     - mkdir coverage
     - lcov --base-directory . --directory . --capture --output-file coverage/coverage.info
     - genhtml coverage/coverage.info --output-directory coverage
-    - gcovr -r . --xml-pretty -o coverage/cobertura-coverage.xml
+    - mkdir cobertura
+    - gcovr -r . --xml-pretty -o cobertura/coverage.xml
   artifacts:
     paths:
-      - coverage
-      - tests/*.xml
+      - coverage/
     reports:
       cobertura:
-        - coverage/cobertura-coverage.xml
+        - cobertura/coverage.xml
       junit:
-        - tests/*.xml
+        - junit/jsmn_test_*.xml
 
 pages:
   stage: deploy
