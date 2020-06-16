@@ -1,6 +1,8 @@
 JSMN
 ====
 
+[![pipeline status](https://gitlab.com/themobiusproject/jsmn/badges/master/pipeline.svg)](https://gitlab.com/themobiusproject/jsmn/-/commits/master) [![coverage report](https://gitlab.com/themobiusproject/jsmn/badges/master/coverage.svg)](https://gitlab.com/themobiusproject/jsmn/-/commits/master)
+
 jsmn (pronounced like 'jasmine') is a minimalistic JSON parser in C. It can be
 easily integrated into resource-limited or embedded projects.
 

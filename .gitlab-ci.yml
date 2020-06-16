@@ -20,9 +20,23 @@ build:
       #   paths:
       #     - "*.o"
 
+doxygen:
+  stage: build
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update && apt-get -y install doxygen
+  script:
+    - doxygen Doxyfile
+  artifacts:
+    paths:
+      - html/
+  only:
+    - master
+
 # run tests using the binary built before
 test:
   stage: test
+  needs: ["build"]
   before_script:
     - export DEBIAN_FRONTEND=noninteractive
     - apt-get update && apt-get -y install libcmocka-dev gcovr lcov
@@ -55,6 +69,8 @@ pages:
   script:
     - mkdir -p public/coverage/
     - rsync -avP coverage/ public/coverage/
+    - mkdir -p public/docs/
+    - rsync -avP html/ public/docs/
   artifacts:
     paths:
       - public
