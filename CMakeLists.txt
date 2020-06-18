@@ -3,13 +3,23 @@ cmake_policy(SET CMP0063 NEW)
 
 project(JSMN)
 
-set(JSMN_VERSION_MAJOR 2)
-set(JSMN_VERSION_MINOR 0)
-set(JSMN_VERSION_PATCH 0)
+file(STRINGS "${PROJECT_SOURCE_DIR}/jsmn.h"
+	${CMAKE_PROJECT_NAME}_SPEC REGEX "^#[ \t]*define[ \t]+${CMAKE_PROJECT_NAME}_VERSION_[A-Z]+[ \t]+[0-9]+.*$")
+if(${CMAKE_PROJECT_NAME}_SPEC)
+#	message(STATUS "${${CMAKE_PROJECT_NAME}_SPEC}")
+	foreach(item IN ITEMS MAJOR MINOR PATCH)
+		string(REGEX REPLACE ".*#[ \t]*define[ \t]+${CMAKE_PROJECT_NAME}_VERSION_${item}+[ \t]+([0-9]+).*$"
+			"\\1" XYZ ${${CMAKE_PROJECT_NAME}_SPEC})
+		set("${CMAKE_PROJECT_NAME}_VERSION_${item}" ${XYZ} CACHE STRING "Version number for the build of the ${CMAKE_PROJECT_NAME} library.")
+	endforeach()
+	set("${CMAKE_PROJECT_NAME}_PROJECT_VERSION"
+	    ${${CMAKE_PROJECT_NAME}_VERSION_MAJOR}.${${CMAKE_PROJECT_NAME}_VERSION_MINOR}.${${CMAKE_PROJECT_NAME}_VERSION_PATCH}
+			CACHE STRING "Full version number for the build of the ${CMAKE_PROJECT_NAME} library.")
+endif()
 
 if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
-set(CMAKE_C_FLAGS   "${CMAKE_C99_STANDARD_COMPILE_OPTION}")
+set(CMAKE_C_FLAGS   "${CMAKE_C89_STANDARD_COMPILE_OPTION}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX11_STANDARD_COMPILE_OPTION}")
 
 if(!WIN32)
@@ -42,7 +52,6 @@ add_library(jsmn_obj OBJECT
 	jsmn_utils.c
 )
 set_target_properties(jsmn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-# target_compile_definitions(jsmn_obj PRIVATE JSMN_DEFINES JSMN_PARENT_LINKS JSMN_NEXT_SIBLING JSMN_SHORT_TOKENS)
 
 add_library(jsmn
 	$<TARGET_OBJECTS:jsmn_obj>
@@ -53,6 +62,32 @@ target_include_directories(jsmn
 
 set_target_properties(jsmn
                       PROPERTIES
-                      VERSION ${JSMN_VERSION_MAJOR}.${JSMN_VERSION_MINOR}.${JSMN_VERSION_PATCH}
-                      SOVERSION ${JSMN_VERSION_MAJOR}.${JSMN_VERSION_MINOR}.${JSMN_VERSION_PATCH}
+                      VERSION ${${CMAKE_PROJECT_NAME}_PROJECT_VERSION}
+                      SOVERSION ${${CMAKE_PROJECT_NAME}_PROJECT_VERSION}
 )
+
+option(BUILD_DOC "Build documentation" ON)
+
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+	# set input and output files
+	set(DOXYGEN_${CMAKE_PROJECT_NAME}_DIR ${CMAKE_SOURCE_DIR}/.doxygen)
+	set(DOXYGEN_${CMAKE_PROJECT_NAME}_IN ${DOXYGEN_${CMAKE_PROJECT_NAME}_DIR}/Doxyfile.in)
+	set(DOXYGEN_${CMAKE_PROJECT_NAME}_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+
+	# request to configure the file
+	configure_file(${DOXYGEN_${CMAKE_PROJECT_NAME}_IN} ${DOXYGEN_${CMAKE_PROJECT_NAME}_OUT} @ONLY)
+
+	# note the option ALL which allows to build the docs together with the application
+	add_custom_target(jsmn_doc
+		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+	  COMMENT "Generating API documentation with Doxygen"
+		VERBATIM )
+	set_directory_properties(${CMAKE_CURRENT_BINARY_DIR}
+		PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+			doxygen
+			Doxyfile)
+else (DOXYGEN_FOUND)
+	message("Doxygen need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)
