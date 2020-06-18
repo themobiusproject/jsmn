@@ -51,21 +51,22 @@ test:
 
 coverage:
   stage: docs
-  coverage: /regular ^\s+lines\.+:\s(\d+\.\d\%)\s\(.*lines\)$/
+#  coverage: /regular ^\s+lines\.+:\s(\d+\.\d\%)\s\(.*lines\)$/
   needs:
     - test
   before_script:
     - apk update
-    - apk add gcovr lcov
+#    - apk add gcovr lcov
+#    - apk add gcovr lcov
   script:
-    - mkdir coverage
-    - lcov --base-directory . --directory . --capture --output-file coverage/coverage.info
-    - genhtml coverage/coverage.info --output-directory coverage
+#    - mkdir coverage
+#    - lcov --base-directory . --directory . --capture --output-file coverage/coverage.info
+#    - genhtml coverage/coverage.info --output-directory coverage
     - mkdir cobertura
     - gcovr -r . --xml-pretty -o cobertura/coverage.xml
   artifacts:
-    paths:
-      - coverage/
+#    paths:
+#      - coverage/
     reports:
       cobertura:
         - cobertura/coverage.xml
@@ -94,8 +95,8 @@ pages:
     - apk update
     - apk add rsync
   script:
-    - mkdir -p public/coverage/
-    - rsync -avP coverage/ public/coverage/
+#    - mkdir -p public/coverage/
+#    - rsync -avP coverage/ public/coverage/
     - mkdir -p public/docs/
     - rsync -avP doxygen/ public/docs/
   artifacts:
