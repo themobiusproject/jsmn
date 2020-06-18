@@ -56,7 +56,7 @@ coverage:
     - test
   before_script:
     - apk update
-#    - apk add gcovr lcov
+    - apk add gcovr
 #    - apk add gcovr lcov
   script:
 #    - mkdir coverage
