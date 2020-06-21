@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/mconway/Projects/AgilePQ/jsmn/jsmn_utils.c">
-   </FileRef>
-   <FileRef
-      location = "group:/Users/mconway/Projects/AgilePQ/jsmn/jsmn_utils.h">
-   </FileRef>
-   <FileRef
       location = "self:">
    </FileRef>
 </Workspace>

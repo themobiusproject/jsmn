@@ -22,6 +22,10 @@
 		95409CA224884551004D7E04 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
 		95409CA324884551004D7E04 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
 		95409CA424884552004D7E04 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
+		955DB80F249CA38D000D3780 /* jsmn_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 95EF322F2485ADDF00AEDB36 /* jsmn_test.c */; };
+		955DB810249CA3B6000D3780 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
+		955DB81C249CA8E8000D3780 /* jsmn_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 95EF322F2485ADDF00AEDB36 /* jsmn_test.c */; };
+		955DB81D249CA8ED000D3780 /* libcmocka.0.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95EF32322485AE3C00AEDB36 /* libcmocka.0.7.0.dylib */; };
 		95773D7E2492EFA800ED747F /* jsmn_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 95773D7D2492EFA800ED747F /* jsmn_utils.c */; };
 		957EB5312467080B0077E79A /* jsmn.h in Headers */ = {isa = PBXBuildFile; fileRef = 957EB5302467080B0077E79A /* jsmn.h */; };
 /* End PBXBuildFile section */
@@ -90,6 +94,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		955DB806249CA315000D3780 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		955DB813249CA8D9000D3780 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		95EF32362485EE2000AEDB36 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -114,6 +136,8 @@
 		95409C4D24880CB4004D7E04 /* jsmn_test_default_low_memory */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_default_low_memory; sourceTree = BUILT_PRODUCTS_DIR; };
 		95409C5824880CC9004D7E04 /* jsmn_test_permissive_low_memory */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_permissive_low_memory; sourceTree = BUILT_PRODUCTS_DIR; };
 		95409C9724881310004D7E04 /* jsmn_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn_defines.h; sourceTree = "<group>"; };
+		955DB808249CA315000D3780 /* jsmn_test_default_mult_json_fail */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_default_mult_json_fail; sourceTree = BUILT_PRODUCTS_DIR; };
+		955DB815249CA8D9000D3780 /* jsmn_test_permissive_mult_json_fail */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jsmn_test_permissive_mult_json_fail; sourceTree = BUILT_PRODUCTS_DIR; };
 		95773D7C2492EFA800ED747F /* jsmn_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = jsmn_utils.h; path = /Users/mconway/Projects/AgilePQ/jsmn/jsmn_utils.h; sourceTree = "<absolute>"; };
 		95773D7D2492EFA800ED747F /* jsmn_utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = jsmn_utils.c; path = /Users/mconway/Projects/AgilePQ/jsmn/jsmn_utils.c; sourceTree = "<absolute>"; };
 		957EB5302467080B0077E79A /* jsmn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsmn.h; sourceTree = "<group>"; };
@@ -182,6 +206,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		955DB805249CA315000D3780 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955DB810249CA3B6000D3780 /* libcmocka.0.7.0.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		955DB812249CA8D9000D3780 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955DB81D249CA8ED000D3780 /* libcmocka.0.7.0.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		95EF32352485EE2000AEDB36 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -229,6 +269,8 @@
 				952CC5372490723F0051FF5E /* test_default_low_memory */,
 				952CC542249072500051FF5E /* test_permissive */,
 				952CC54D2490726D0051FF5E /* test_permissive_low_memory */,
+				955DB808249CA315000D3780 /* jsmn_test_default_mult_json_fail */,
+				955DB815249CA8D9000D3780 /* jsmn_test_permissive_mult_json_fail */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -403,6 +445,40 @@
 			productReference = 95409C5824880CC9004D7E04 /* jsmn_test_permissive_low_memory */;
 			productType = "com.apple.product-type.tool";
 		};
+		955DB807249CA315000D3780 /* jsmn_test_default_mult_json_fail */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 955DB80E249CA315000D3780 /* Build configuration list for PBXNativeTarget "jsmn_test_default_mult_json_fail" */;
+			buildPhases = (
+				955DB804249CA315000D3780 /* Sources */,
+				955DB805249CA315000D3780 /* Frameworks */,
+				955DB806249CA315000D3780 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = jsmn_test_default_mult_json_fail;
+			productName = jsmn_test_default_mult_json_fail;
+			productReference = 955DB808249CA315000D3780 /* jsmn_test_default_mult_json_fail */;
+			productType = "com.apple.product-type.tool";
+		};
+		955DB814249CA8D9000D3780 /* jsmn_test_permissive_mult_json_fail */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 955DB819249CA8D9000D3780 /* Build configuration list for PBXNativeTarget "jsmn_test_permissive_mult_json_fail" */;
+			buildPhases = (
+				955DB811249CA8D9000D3780 /* Sources */,
+				955DB812249CA8D9000D3780 /* Frameworks */,
+				955DB813249CA8D9000D3780 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = jsmn_test_permissive_mult_json_fail;
+			productName = jsmn_test_permissive_mult_json_fail;
+			productReference = 955DB815249CA8D9000D3780 /* jsmn_test_permissive_mult_json_fail */;
+			productType = "com.apple.product-type.tool";
+		};
 		95EF32372485EE2000AEDB36 /* jsmn_test_default */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 95EF323E2485EE2000AEDB36 /* Build configuration list for PBXNativeTarget "jsmn_test_default" */;
@@ -461,6 +537,14 @@
 						CreatedOnToolsVersion = 11.5;
 						ProvisioningStyle = Automatic;
 					};
+					955DB807249CA315000D3780 = {
+						CreatedOnToolsVersion = 11.5;
+						ProvisioningStyle = Automatic;
+					};
+					955DB814249CA8D9000D3780 = {
+						CreatedOnToolsVersion = 11.5;
+						ProvisioningStyle = Automatic;
+					};
 					95EF32372485EE2000AEDB36 = {
 						CreatedOnToolsVersion = 11.5;
 						ProvisioningStyle = Automatic;
@@ -483,8 +567,10 @@
 				95346C04205C728B006A0917 /* jsmn */,
 				95EF32372485EE2000AEDB36 /* jsmn_test_default */,
 				95409C4C24880CB4004D7E04 /* jsmn_test_default_low_memory */,
+				955DB807249CA315000D3780 /* jsmn_test_default_mult_json_fail */,
 				95409C3F2487F7A9004D7E04 /* jsmn_test_permissive */,
 				95409C5724880CC9004D7E04 /* jsmn_test_permissive_low_memory */,
+				955DB814249CA8D9000D3780 /* jsmn_test_permissive_mult_json_fail */,
 				952CC52B249072230051FF5E /* test_default */,
 				952CC5362490723F0051FF5E /* test_default_low_memory */,
 				952CC541249072500051FF5E /* test_permissive */,
@@ -555,6 +641,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				95409C9C24884544004D7E04 /* jsmn_test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		955DB804249CA315000D3780 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955DB80F249CA38D000D3780 /* jsmn_test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		955DB811249CA8D9000D3780 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955DB81C249CA8E8000D3780 /* jsmn_test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -890,6 +992,66 @@
 			};
 			name = Release;
 		};
+		955DB80C249CA315000D3780 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					UNIT_TESTING,
+					JSMN_MULTIPLE_JSON_FAIL,
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		955DB80D249CA315000D3780 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					UNIT_TESTING,
+					JSMN_MULTIPLE_JSON_FAIL,
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		955DB81A249CA8D9000D3780 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					UNIT_TESTING,
+					JSMN_PERMISSIVE,
+					JSMN_MULTIPLE_JSON_FAIL,
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		955DB81B249CA8D9000D3780 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					UNIT_TESTING,
+					JSMN_PERMISSIVE,
+					JSMN_MULTIPLE_JSON_FAIL,
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		95EF323C2485EE2000AEDB36 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -997,6 +1159,24 @@
 			buildConfigurations = (
 				95409C5D24880CC9004D7E04 /* Debug */,
 				95409C5E24880CC9004D7E04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		955DB80E249CA315000D3780 /* Build configuration list for PBXNativeTarget "jsmn_test_default_mult_json_fail" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				955DB80C249CA315000D3780 /* Debug */,
+				955DB80D249CA315000D3780 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		955DB819249CA8D9000D3780 /* Build configuration list for PBXNativeTarget "jsmn_test_permissive_mult_json_fail" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				955DB81A249CA8D9000D3780 /* Debug */,
+				955DB81B249CA8D9000D3780 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
