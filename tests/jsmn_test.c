@@ -4833,14 +4833,22 @@ void test_object_key(void)
 //  return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 
-#if !defined(JSMN_PERMISSIVE) && !defined(JSMN_LOW_MEMORY)
-# define JSMN_TEST_GROUP "jsmn_test_default"
-#elif !defined(JSMN_PERMISSIVE)
-# define JSMN_TEST_GROUP "jsmn_test_default_low_memory"
-#elif !defined(JSMN_LOW_MEMORY)
-# define JSMN_TEST_GROUP "jsmn_test_permissive"
+#if !defined(JSMN_PERMISSIVE)
+# if defined(JSMN_LOW_MEMORY)
+#  define JSMN_TEST_GROUP "jsmn_test_default_low_memory"
+# elif defined(JSMN_MULTIPLE_JSON_FAIL)
+#  define JSMN_TEST_GROUP "jsmn_test_default_mult_json_fail"
+# else
+#  define JSMN_TEST_GROUP "jsmn_test_default"
+# endif
 #else
-# define JSMN_TEST_GROUP "jsmn_test_permissive_low_memory"
+# if defined(JSMN_LOW_MEMORY)
+#  define JSMN_TEST_GROUP "jsmn_test_permissive_low_memory"
+# elif defined(JSMN_MULTIPLE_JSON_FAIL)
+#  define JSMN_TEST_GROUP "jsmn_test_permissive_mult_json_fail"
+# else
+#  define JSMN_TEST_GROUP "jsmn_test_permissive"
+# endif
 #endif
 
 int main(void)

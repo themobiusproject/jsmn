@@ -55,6 +55,7 @@ test:
     - genhtml coverage/coverage.info --output-directory coverage
     - mkdir cobertura
     - gcovr -r . --xml-pretty -o cobertura/coverage.xml
+  coverage: /regular ^\s+lines\.+:\s(\d+\.\d\%)\s\(.*lines\)$/
   artifacts:
     paths:
       - coverage/
