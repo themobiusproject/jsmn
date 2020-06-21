@@ -62,11 +62,11 @@ typedef enum {
   /* Complex elements */
   JSMN_CONTAINER    = JSMN_OBJECT | JSMN_ARRAY,
 #ifndef JSMN_PERMISSIVE_KEY
-  JSMN_KEY_TYPE     = JSMN_STRING,
+  JSMN_KEY_TYPE     =                            JSMN_STRING,
 #else
-  JSMN_KEY_TYPE     = JSMN_STRING | JSMN_PRIMITIVE,
+  JSMN_KEY_TYPE     =                            JSMN_STRING | JSMN_PRIMITIVE,
 #endif
-  JSMN_ANY_TYPE     = JSMN_OBJECT | JSMN_ARRAY | JSMN_STRING | JSMN_PRIMITIVE,
+  JSMN_VAL_TYPE     = JSMN_OBJECT | JSMN_ARRAY | JSMN_STRING | JSMN_PRIMITIVE,
 
   JSMN_OBJ_VAL      = JSMN_OBJECT | JSMN_VALUE,
   JSMN_ARR_VAL      = JSMN_ARRAY  | JSMN_VALUE,
@@ -96,36 +96,44 @@ typedef enum {
   JSMN_INSD_OBJ     = 0x8000,   /*!< Inside an OBJECT */
 
   /* Parsing rules */
-  JSMN_ROOT_INIT    = JSMN_ANY_TYPE | JSMN_VALUE,
 #ifndef JSMN_PERMISSIVE_RULESET
-#ifndef JSMN_MULTIPLE_JSON
+  JSMN_ROOT_INIT    = JSMN_VAL_TYPE | JSMN_VALUE,
+# ifndef JSMN_MULTIPLE_JSON
   JSMN_ROOT         = JSMN_UNDEFINED,
-#else
-  JSMN_ROOT         = JSMN_ANY_TYPE | JSMN_VALUE,
-#endif
+# else
+  JSMN_ROOT         = JSMN_VAL_TYPE | JSMN_VALUE,
+# endif
   JSMN_OPEN_OBJECT  = JSMN_KEY_TYPE | JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ,
   JSMN_AFTR_OBJ_KEY =                 JSMN_VALUE |              JSMN_INSD_OBJ | JSMN_COLON,
   JSMN_AFTR_OBJ_VAL =                 JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
-  JSMN_OPEN_ARRAY   = JSMN_ANY_TYPE | JSMN_VALUE | JSMN_CLOSE,
+  JSMN_OPEN_ARRAY   = JSMN_VAL_TYPE | JSMN_VALUE | JSMN_CLOSE,
   JSMN_AFTR_ARR_VAL =                 JSMN_VALUE | JSMN_CLOSE |                              JSMN_COMMA,
   JSMN_AFTR_CLOSE   =                              JSMN_CLOSE |                              JSMN_COMMA,
-  JSMN_AFTR_COLON   = JSMN_ANY_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ,
+  JSMN_AFTR_COLON   = JSMN_VAL_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ,
   JSMN_AFTR_COMMA_O = JSMN_KEY_TYPE | JSMN_KEY   |              JSMN_INSD_OBJ,
-  JSMN_AFTR_COMMA_A = JSMN_ANY_TYPE | JSMN_VALUE,
+  JSMN_AFTR_COMMA_A = JSMN_VAL_TYPE | JSMN_VALUE,
+
 #else
-  JSMN_ROOT         = JSMN_ANY_TYPE |                                           JSMN_COLON | JSMN_COMMA,
-  JSMN_ROOT_AFTR_O  = JSMN_ANY_TYPE |                                                        JSMN_COMMA,
+
+  JSMN_ROOT_INIT    = JSMN_VAL_TYPE | JSMN_VALUE | JSMN_KEY,
+# ifndef JSMN_MULTIPLE_JSON_FAIL
+  JSMN_ROOT         = JSMN_VAL_TYPE |                                           JSMN_COLON | JSMN_COMMA,
+  JSMN_ROOT_AFTR_O  = JSMN_VAL_TYPE |                                                        JSMN_COMMA,
+# else
+  JSMN_ROOT         = JSMN_UNDEFINED,
+  JSMN_ROOT_AFTR_O  = JSMN_UNDEFINED,
+# endif
   JSMN_OPEN_OBJECT  = JSMN_KEY_TYPE | JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ,
   JSMN_AFTR_OBJ_KEY =                 JSMN_VALUE |              JSMN_INSD_OBJ | JSMN_COLON,
-  JSMN_AFTR_OBJ_VAL = JSMN_ANY_TYPE |              JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
-  JSMN_OPEN_ARRAY   = JSMN_ANY_TYPE | JSMN_VALUE | JSMN_CLOSE,
-  JSMN_AFTR_ARR_VAL = JSMN_ANY_TYPE |              JSMN_CLOSE |                              JSMN_COMMA,
-  JSMN_AFTR_CLOSE   = JSMN_ANY_TYPE |              JSMN_CLOSE |                              JSMN_COMMA,
-  JSMN_AFTR_COLON   = JSMN_ANY_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ,
-  JSMN_AFTR_COLON_R = JSMN_ANY_TYPE | JSMN_VALUE,
+  JSMN_AFTR_OBJ_VAL = JSMN_VAL_TYPE |              JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
+  JSMN_OPEN_ARRAY   = JSMN_VAL_TYPE | JSMN_VALUE | JSMN_CLOSE,
+  JSMN_AFTR_ARR_VAL = JSMN_VAL_TYPE |              JSMN_CLOSE |                              JSMN_COMMA,
+  JSMN_AFTR_CLOSE   = JSMN_VAL_TYPE |              JSMN_CLOSE |                              JSMN_COMMA,
+  JSMN_AFTR_COLON   = JSMN_VAL_TYPE | JSMN_VALUE |              JSMN_INSD_OBJ,
+  JSMN_AFTR_COLON_R = JSMN_VAL_TYPE | JSMN_VALUE,
   JSMN_AFTR_COMMA_O = JSMN_KEY_TYPE | JSMN_KEY   |              JSMN_INSD_OBJ,
-  JSMN_AFTR_COMMA_A = JSMN_ANY_TYPE | JSMN_VALUE,
-  JSMN_AFTR_COMMA_R = JSMN_ANY_TYPE,
+  JSMN_AFTR_COMMA_A = JSMN_VAL_TYPE | JSMN_VALUE,
+  JSMN_AFTR_COMMA_R = JSMN_VAL_TYPE,
 #endif
 } jsmntype_t;
 
@@ -148,7 +156,7 @@ typedef enum jsmnerr {
  */
 typedef enum jsmnbool {
   JSMN_FALSE        =  0,       /*!< false */
-  JSMN_TRUE         =  1,       /*!< true */
+  JSMN_TRUE         =  1,       /*!< true  */
 } jsmnbool;
 
 /**
@@ -496,11 +504,11 @@ found:
   expected = parser->expected;
   if (parser->toksuper != JSMN_NEG) {
     /* OBJECT KEY, strict query */
-    if ((parser->expected & (JSMN_KEY | JSMN_INSD_OBJ)) == (JSMN_KEY | JSMN_INSD_OBJ)) {
+    if ((expected & (JSMN_KEY | JSMN_INSD_OBJ)) == (JSMN_KEY | JSMN_INSD_OBJ)) {
       parser->expected = JSMN_AFTR_OBJ_KEY;
       type |= JSMN_KEY   | JSMN_INSD_OBJ;
     /* OBJECT VALUE, VALUE is implicit */
-    } else if (parser->expected & JSMN_INSD_OBJ) {
+    } else if (expected & JSMN_INSD_OBJ) {
       parser->expected = JSMN_AFTR_OBJ_VAL;
       type |= JSMN_VALUE | JSMN_INSD_OBJ;
 #ifdef JSMN_PERMISSIVE_RULESET
@@ -516,10 +524,14 @@ found:
     }
   } else {
     parser->expected = JSMN_ROOT;
+#ifdef JSMN_MULTIPLE_JSON_FAIL
+    if (expected & JSMN_KEY) {
+      parser->expected |= JSMN_COLON;
+    }
+#endif
     type |= JSMN_VALUE;
   }
-  if (pos == len ||
-      js[pos] == '\0') {
+  if (pos == len) {
     parser->expected |= JSMN_PRI_CONTINUE;
   }
 
@@ -600,16 +612,16 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
     c = js[pos];
 
     /* Quote: end of string */
-    if (c == '\"') {
+    if (c == '"') {
       jsmntype_t expected = parser->expected;
       jsmntype_t type;
       if (parser->toksuper != JSMN_NEG) {
         /* OBJECT KEY, strict query */
-        if ((parser->expected & (JSMN_INSD_OBJ | JSMN_KEY)) == (JSMN_INSD_OBJ | JSMN_KEY)) {
+        if ((expected & (JSMN_INSD_OBJ | JSMN_KEY)) == (JSMN_INSD_OBJ | JSMN_KEY)) {
           parser->expected = JSMN_AFTR_OBJ_KEY;
           type = JSMN_STRING | JSMN_KEY   | JSMN_INSD_OBJ;
         /* OBJECT VALUE, VALUE is implicit */
-        } else if (parser->expected & JSMN_INSD_OBJ) {
+        } else if (expected & JSMN_INSD_OBJ) {
           parser->expected = JSMN_AFTR_OBJ_VAL;
           type = JSMN_STRING | JSMN_VALUE | JSMN_INSD_OBJ;
 #ifdef JSMN_PERMISSIVE_RULESET
@@ -625,6 +637,11 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
         }
       } else {
         parser->expected = JSMN_ROOT;
+#ifdef JSMN_MULTIPLE_JSON_FAIL
+        if (expected & JSMN_KEY) {
+          parser->expected |= JSMN_COLON;
+        }
+#endif
         type = JSMN_STRING | JSMN_VALUE;
       }
 
@@ -678,7 +695,7 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
       pos++;
       switch (js[pos]) {
         /* Allowed escaped symbols */
-        case '\"':
+        case '"':
         case '\\':
         case '/':
         case 'b':
@@ -807,12 +824,9 @@ jsmnint_t jsmn_parse_container_close(jsmn_parser *parser, const char c,
     }
     token->end = parser->pos + 1;
 #ifdef JSMN_PARENT_LINKS
-    if (token->type & JSMN_INSD_OBJ) {
-      if (tokens[token->parent].type & JSMN_CONTAINER) {
-        parser->toksuper = token->parent;
-      } else {
-        parser->toksuper = tokens[token->parent].parent;
-      }
+    if (token->type & JSMN_INSD_OBJ &&
+        !(tokens[token->parent].type & JSMN_CONTAINER)) {
+      parser->toksuper = tokens[token->parent].parent;
     } else {
       parser->toksuper = token->parent;
     }
@@ -927,7 +941,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
   jsmnint_t r;
   jsmnint_t count = parser->toknext;
 
-  for (; parser->pos < len && js[parser->pos] != '\0'; parser->pos++) {
+  for (; parser->pos < len; parser->pos++) {
 #ifndef JSMN_MULTIPLE_JSON_FAIL
     if (parser->expected == JSMN_UNDEFINED) {
       break;
@@ -983,8 +997,8 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
 
 #ifndef JSMN_PERMISSIVE_PRIMITIVE
     /* rfc8259: PRIMITIVEs are numbers and booleans */
-    if (c == '-' || c == 't' || c == 'f' || c == 'n' ||
-        (c >= '0' && c <= '9')) {
+    if (c == '-' || (c >= '0' && c <= '9') ||
+        c == 'n' ||  c == 't' || c == 'f') {
 #else
     /* In permissive mode every unquoted value is a PRIMITIVE */
     if (isCharacter(c) || c == '\\') {

@@ -872,7 +872,7 @@ static void n_multidigit_number_then_00(void **state)
     (void)state; // unused
     const char *js = "123\0";
 #if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
-    assert_int_equal(jsmn_parse(&p, js, 4, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, 4, NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, 4, NULL, 0), 1);
 #endif
@@ -2145,7 +2145,7 @@ static void n_structure_null_byte_outside_string(void **state)
 {
     (void)state; // unused
     const char *js = "[\0]";
-    assert_int_equal(jsmn_parse(&p, js, 3, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    assert_int_equal(jsmn_parse(&p, js, 3, NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
 // n_structure_number_with_trailing_garbage.json
@@ -4058,12 +4058,18 @@ void test_object(void)
 //   return cmocka_run_group_tests_name("test for JSON objects", tests, NULL, NULL);
 }
 
-static void test_array_01(void **state)
+static void test_array_01a(void **state)
+{
+    (void)state; // unused
+    const char *js = "[10}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+}
+
+static void test_array_01b(void **state)
 {
     (void)state; // unused
     const char *js = "[10}";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 }
 
 static void test_array_02(void **state)
@@ -4083,12 +4089,18 @@ static void test_array_03(void **state)
           JSMN_PRIMITIVE, "10");
 }
 
-static void test_array_04(void **state)
+static void test_array_04a(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\": 1]";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+}
+
+static void test_array_04b(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": 1]";
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
 }
 
 static void test_array_05(void **state)
@@ -4101,11 +4113,13 @@ static void test_array_05(void **state)
 void test_array(void)
 {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(test_array_01, jsmn_setup),
-        cmocka_unit_test_setup(test_array_02, jsmn_setup),
-        cmocka_unit_test_setup(test_array_03, jsmn_setup),
-        cmocka_unit_test_setup(test_array_04, jsmn_setup),
-        cmocka_unit_test_setup(test_array_05, jsmn_setup),
+        cmocka_unit_test_setup(test_array_01a, jsmn_setup),
+        cmocka_unit_test_setup(test_array_01b, jsmn_setup),
+        cmocka_unit_test_setup(test_array_02,  jsmn_setup),
+        cmocka_unit_test_setup(test_array_03,  jsmn_setup),
+        cmocka_unit_test_setup(test_array_04a, jsmn_setup),
+        cmocka_unit_test_setup(test_array_04b, jsmn_setup),
+        cmocka_unit_test_setup(test_array_05,  jsmn_setup),
     };
 
     memcpy(cur_test, tests, sizeof(tests));
@@ -4409,12 +4423,16 @@ static void test_unquoted_keys_01(void **state)
 {
     (void)state; // unused
     const char *js = "key1: \"value\"\nkey2 : 123";
+#ifndef JSMN_MULTIPLE_JSON_FAIL
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), 4);
     tokeq(js, t, 4,
           JSMN_PRIMITIVE, "key1",
           JSMN_STRING, "value", 0,
           JSMN_PRIMITIVE, "key2",
           JSMN_PRIMITIVE, "123");
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 #endif
 
@@ -4452,7 +4470,11 @@ static void test_issue_27(void **state)
     (void)state; // unused
     const char *js =
         "{ \"name\" : \"Jack\", \"age\" : 27 } { \"name\" : \"Anna\", ";
-#ifndef JSMN_MULTIPLE_JSON
+#if defined(JSMN_MULTIPLE_JSON_FAIL)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), (jsmnint_t)JSMN_ERROR_INVAL);
+#elif defined(JSMN_MULTIPLE_JSON)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), (jsmnint_t)JSMN_ERROR_PART);
+#else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), 5);
     tokeq(js, t, 5,
           JSMN_OBJECT, -1, -1, 2,
@@ -4460,8 +4482,6 @@ static void test_issue_27(void **state)
           JSMN_STRING, "Jack", 0,
           JSMN_STRING, "age", 1,
           JSMN_PRIMITIVE, "27");
-#else
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 8), (jsmnint_t)JSMN_ERROR_PART);
 #endif
 }
 
@@ -4625,6 +4645,7 @@ static void test_nonstrict_02(void **state)
 {
     (void)state; // unused
     const char *js = "Day : 26\nMonth : Sep\n\nYear: 12";
+#ifndef JSMN_MULTIPLE_JSON_FAIL
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), 6);
     tokeq(js, t, 6,
           JSMN_PRIMITIVE, "Day",
@@ -4633,6 +4654,9 @@ static void test_nonstrict_02(void **state)
           JSMN_PRIMITIVE, "Sep",
           JSMN_PRIMITIVE, "Year",
           JSMN_PRIMITIVE, "12");
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
 }
 
 static void test_nonstrict_03(void **state)
@@ -4667,10 +4691,12 @@ static void test_unmatched_brackets_01(void **state)
 {
     (void)state; // unused
     const char *js = "\"key 1\": 1234}";
-#if defined(JSMN_MULTIPLE_JSON)
+#if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
+# if defined(JSMN_PERMISSIVE_RULESET)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
-#elif defined(JSMN_MULTIPLE_JSON_FAIL)
+# else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_INVAL);
+# endif
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 1);
     tokeq(js, t, 1,

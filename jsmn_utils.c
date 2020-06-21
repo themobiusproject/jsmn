@@ -236,7 +236,7 @@ void jsmn_explodeJSON(const char *json, const size_t len)
     for (i = 0, depth = 0; i < rv; i++) {
         token = &tokens[i];
         printf(   "%9d", i);
-        printf(" | %9s", jsmntype[token->type & JSMN_ANY_TYPE]);
+        printf(" | %9s", jsmntype[token->type & JSMN_VAL_TYPE]);
         printf(" | %8d", token->start);
         printf(" | %8d", token->end);
         printf(" | %8d", token->end - token->start);
