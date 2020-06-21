@@ -35,6 +35,13 @@ target_compile_definitions(jsmn_test_default_low_memory PRIVATE JSMN_LOW_MEMORY)
 target_link_libraries(jsmn_test_default_low_memory ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_default_low_memory COMMAND jsmn_test_default_low_memory)
 
+add_executable(jsmn_test_default_mult_json_fail
+  jsmn_test.c
+)
+target_compile_definitions(jsmn_test_default_mult_json_fail PRIVATE JSMN_MULTIPLE_JSON_FAIL)
+target_link_libraries(jsmn_test_default_mult_json_fail ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_default_mult_json_fail COMMAND jsmn_test_default_mult_json_fail)
+
 
 add_executable(jsmn_test_permissive
   jsmn_test.c
@@ -49,3 +56,10 @@ add_executable(jsmn_test_permissive_low_memory
 target_compile_definitions(jsmn_test_permissive_low_memory PRIVATE JSMN_PERMISSIVE JSMN_LOW_MEMORY)
 target_link_libraries(jsmn_test_permissive_low_memory ${CMOCKA_LIBRARY})
 add_test(NAME jsmn_test_permissive_low_memory COMMAND jsmn_test_permissive_low_memory)
+
+add_executable(jsmn_test_permissive_mult_json_fail
+  jsmn_test.c
+)
+target_compile_definitions(jsmn_test_permissive_mult_json_fail PRIVATE JSMN_PERMISSIVE JSMN_MULTIPLE_JSON_FAIL)
+target_link_libraries(jsmn_test_permissive_mult_json_fail ${CMOCKA_LIBRARY})
+add_test(NAME jsmn_test_permissive_mult_json_fail COMMAND jsmn_test_permissive_mult_json_fail)
