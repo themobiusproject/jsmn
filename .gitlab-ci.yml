@@ -24,9 +24,10 @@ doxygen:
   stage: build
   before_script:
     - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update && apt-get -y install doxygen
+    - apt-get update && apt-get -y install essential cmake doxygen
   script:
-    - doxygen Doxyfile
+    - cmake -DCMAKE_BUILD_TYPE=Debug ./
+    - make jsmn_doc
   artifacts:
     paths:
       - doxygen/
