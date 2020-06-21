@@ -24,7 +24,7 @@ doxygen:
   stage: build
   before_script:
     - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update && apt-get -y install essential cmake doxygen
+    - apt-get update && apt-get -y install build-essential cmake doxygen
   script:
     - cmake -DCMAKE_BUILD_TYPE=Debug ./
     - make jsmn_doc
