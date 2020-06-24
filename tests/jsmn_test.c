@@ -1191,7 +1191,7 @@ static void n_number_infinity(void **state)
 {
     (void)state; // unused
     const char *js = "[Infinity]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE) && !defined(JSMN_PERMISSIVE_LITERALS)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1331,7 +1331,7 @@ static void n_number_minusNaN(void **state)
 {
     (void)state; // unused
     const char *js = "[-NaN]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1343,7 +1343,7 @@ static void n_number_NaN(void **state)
 {
     (void)state; // unused
     const char *js = "[NaN]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE) && !defined(JSMN_PERMISSIVE_LITERALS)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1494,8 +1494,8 @@ static void n_number_zero_zero(void **state)
 #endif
 }
 
-// n_number_negzero_zero.json
-static void n_number_negzero_zero(void **state)
+// n_number_minuszero_zero.json
+static void n_number_minuszero_zero(void **state)
 {
     (void)state; // unused
     const char *js = "-00";
@@ -2520,7 +2520,8 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_number_U_FF11_fullwidth_digit_one, jsmn_setup),
         cmocka_unit_test_setup(n_number_with_alpha, jsmn_setup),
         cmocka_unit_test_setup(n_number_with_alpha_char, jsmn_setup),
-        cmocka_unit_test_setup(n_number_with_leading_zero, jsmn_setup),
+        cmocka_unit_test_setup(n_number_zero_zero, jsmn_setup),
+        cmocka_unit_test_setup(n_number_minuszero_zero, jsmn_setup),
         cmocka_unit_test_setup(n_object_bad_value, jsmn_setup),
         cmocka_unit_test_setup(n_object_bracket_key, jsmn_setup),
         cmocka_unit_test_setup(n_object_comma_instead_of_colon, jsmn_setup),

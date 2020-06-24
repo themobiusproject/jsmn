@@ -52,8 +52,7 @@ test:
   after_script:
     - mkdir coverage
     - lcov --capture --base-directory . --directory . --output-file coverage/coverage.info
-    - lcov --extract coverage/coverage.info 'jsmn.h' --output-file coverage/jsmn.info
-    - genhtml coverage/jsmn.info --output-directory coverage
+    - genhtml coverage/coverage.info --output-directory coverage
     - mkdir cobertura
     - gcovr -r . --xml-pretty -o cobertura/coverage.xml
   coverage: /^\s+lines\.+:\s(\d+\.\d\%)\s\(.*lines\)$/
