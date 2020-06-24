@@ -1494,6 +1494,18 @@ static void n_number_zero_zero(void **state)
 #endif
 }
 
+// n_number_negzero_zero.json
+static void n_number_negzero_zero(void **state)
+{
+    (void)state; // unused
+    const char *js = "-00";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#endif
+}
+
 // n_object_bad_value.json
 static void n_object_bad_value(void **state)
 {
@@ -2255,7 +2267,7 @@ static void n_structure_open_object_close_array(void **state)
 {
     (void)state; // unused
     const char *js = "{]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_BRACKETS);
 }
 
 // n_structure_open_object_comma.json
@@ -4074,14 +4086,14 @@ static void test_array_01a(void **state)
 {
     (void)state; // unused
     const char *js = "[10}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_BRACKETS);
 }
 
 static void test_array_01b(void **state)
 {
     (void)state; // unused
     const char *js = "[10}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_BRACKETS);
 }
 
 static void test_array_02(void **state)
@@ -4105,14 +4117,14 @@ static void test_array_04a(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": 1]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_BRACKETS);
 }
 
 static void test_array_04b(void **state)
 {
     (void)state; // unused
     const char *js = "{\"a\": 1]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_BRACKETS);
 }
 
 static void test_array_05(void **state)
@@ -4633,14 +4645,14 @@ static void test_count_11(void **state)
 {
     (void)state; // unused
     const char *js = "[}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_BRACKETS);
 }
 
 static void test_count_12(void **state)
 {
     (void)state; // unused
     const char *js = "{]";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_BRACKETS);
 }
 
 void test_count(void)
@@ -4711,7 +4723,7 @@ static void test_nonstrict_04(void **state)
 {
     (void)state; // unused
     const char *js = "{a: 0garbage}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 2);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
     tokeq(js, t, 3,
           JSMN_OBJECT, 0, 13, 1,
           JSMN_PRIMITIVE, "a",
@@ -4726,7 +4738,7 @@ void test_nonstrict(void)
         cmocka_unit_test_setup(test_nonstrict_01, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_02, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_03, jsmn_setup),
-/*      cmocka_unit_test_setup(test_nonstrict_04, jsmn_setup), */
+        cmocka_unit_test_setup(test_nonstrict_04, jsmn_setup),
 #endif
     };
 
@@ -4742,7 +4754,7 @@ static void test_unmatched_brackets_01(void **state)
     const char *js = "\"key 1\": 1234}";
 #if defined(JSMN_MULTIPLE_JSON) || defined(JSMN_MULTIPLE_JSON_FAIL)
 # if defined(JSMN_PERMISSIVE_RULESET)
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_UNMATCHED_BRACKETS);
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_BRACKETS);
 # else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), (jsmnint_t)JSMN_ERROR_INVAL);
 # endif
@@ -4882,6 +4894,31 @@ void test_object_key(void)
 //  return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
 }
 
+void test_length_01(void **state)
+{
+    (void)state; // unused
+    assert_int_equal(jsmn_parse(&p, "", ((jsmnint_t)JSMN_ERROR_MAX), NULL, 0), (jsmnint_t)JSMN_ERROR_LENGTH);
+}
+
+void test_length_02(void **state)
+{
+    (void)state; // unused
+    assert_int_equal(jsmn_parse(&p, "", ((size_t)((jsmnint_t)-1)) + 1, NULL, 0), (jsmnint_t)JSMN_ERROR_LENGTH);
+}
+
+void test_length(void)
+{
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test_setup(test_length_01, jsmn_setup),
+        cmocka_unit_test_setup(test_length_02, jsmn_setup),
+    };
+
+    memcpy(cur_test, tests, sizeof(tests));
+    cur_test += sizeof(tests);
+    total_tests += sizeof(tests) / sizeof(struct CMUnitTest);
+//  return cmocka_run_group_tests_name("test for non-strict mode", tests, NULL, NULL);
+}
+
 #if !defined(JSMN_PERMISSIVE)
 # if defined(JSMN_LOW_MEMORY)
 #  define JSMN_TEST_GROUP "jsmn_test_default_low_memory"
@@ -4919,6 +4956,7 @@ int main(void)
     test_nonstrict();      // test for non-strict mode
     test_unmatched_brackets(); // test for unmatched brackets
     test_object_key();     // test for key type
+    test_length();         // test for length
 
     test_jsontestsuite_i();
     test_jsontestsuite_n();

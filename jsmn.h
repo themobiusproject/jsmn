@@ -41,8 +41,10 @@
 
 #ifdef JSMN_SHORT_TOKENS
 typedef unsigned short jsmnint_t;
+# define JSMNINT_MAX USHRT_MAX
 #else
 typedef unsigned int jsmnint_t;
+# define JSMNINT_MAX UINT_MAX
 #endif
 #define JSMN_NEG ((jsmnint_t)-1)
 
@@ -141,22 +143,22 @@ typedef enum {
  * JSMN Error Codes
  */
 typedef enum jsmnerr {
-  JSMN_SUCCESS                  =  0,
-  JSMN_ERROR_NOMEM              = -1,   /*!< Not enough tokens were provided */
-  JSMN_ERROR_LEN                = -2,   /*!< Input data too long */
-  JSMN_ERROR_INVAL              = -3,   /*!< Invalid character inside JSON string */
-  JSMN_ERROR_PART               = -4,   /*!< The string is not a full JSON packet, more bytes expected */
-  JSMN_ERROR_UNMATCHED_BRACKETS = -5,   /*!< The JSON string has unmatched brackets */
+  JSMN_SUCCESS          =  0,
+  JSMN_ERROR_NOMEM      = -1,   /*!< Not enough tokens were provided */
+  JSMN_ERROR_LENGTH     = -2,   /*!< Input data too long */
+  JSMN_ERROR_INVAL      = -3,   /*!< Invalid character inside JSON string */
+  JSMN_ERROR_PART       = -4,   /*!< The string is not a full JSON packet, more bytes expected */
+  JSMN_ERROR_BRACKETS   = -5,   /*!< The JSON string has unmatched brackets */
 
-  JSMN_ERROR_MAX                = -5,   /*!< "MAX" value to be tested against when checking for errors */
+  JSMN_ERROR_MAX        = -5,   /*!< "MAX" value to be tested against when checking for errors */
 } jsmnerr;
 
 /*!
  * JSMN Boolean
  */
 typedef enum jsmnbool {
-  JSMN_FALSE        =  0,       /*!< false */
-  JSMN_TRUE         =  1,       /*!< true  */
+  JSMN_FALSE            =  0,   /*!< false */
+  JSMN_TRUE             =  1,   /*!< true  */
 } jsmnbool;
 
 /**
@@ -508,12 +510,15 @@ check_primitive_border:
 found:
   expected = parser->expected;
   if (parser->toksuper != JSMN_NEG) {
+#ifdef JSMN_PERMISSIVE_KEY
     /* OBJECT KEY, strict query */
     if ((expected & (JSMN_KEY | JSMN_INSD_OBJ)) == (JSMN_KEY | JSMN_INSD_OBJ)) {
       parser->expected = JSMN_AFTR_OBJ_KEY;
       type |= JSMN_KEY   | JSMN_INSD_OBJ;
+    } else
+#endif
     /* OBJECT VALUE, VALUE is implicit */
-    } else if (expected & JSMN_INSD_OBJ) {
+    if (expected & JSMN_INSD_OBJ) {
       parser->expected = JSMN_AFTR_OBJ_VAL;
       type |= JSMN_VALUE | JSMN_INSD_OBJ;
 #ifdef JSMN_PERMISSIVE_RULESET
@@ -821,7 +826,7 @@ jsmnint_t jsmn_parse_container_close(jsmn_parser *parser, const char c,
       jsmntype_t type = (c == '}' ? JSMN_OBJECT : JSMN_ARRAY);
       if ((((parser->toknext & (1 << parser->toksuper)) == 1) && !(type & JSMN_OBJECT)) ||
           (((parser->toknext & (1 << parser->toksuper)) == 0) && !(type & JSMN_ARRAY))) {
-        return JSMN_ERROR_UNMATCHED_BRACKETS;
+        return JSMN_ERROR_BRACKETS;
       }
       parser->toknext &= ~(1 << parser->toksuper);
     }
@@ -829,7 +834,7 @@ jsmnint_t jsmn_parse_container_close(jsmn_parser *parser, const char c,
   } else {
 #ifdef JSMN_PERMISSIVE_RULESET
     if (parser->toksuper == JSMN_NEG) {
-      return JSMN_ERROR_UNMATCHED_BRACKETS;
+      return JSMN_ERROR_BRACKETS;
     }
 #endif
     jsmntype_t type = (c == '}' ? JSMN_OBJECT : JSMN_ARRAY);
@@ -837,7 +842,7 @@ jsmnint_t jsmn_parse_container_close(jsmn_parser *parser, const char c,
 
     if (!(token->type & type) ||
         token->end != JSMN_NEG) {
-      return JSMN_ERROR_UNMATCHED_BRACKETS;
+      return JSMN_ERROR_BRACKETS;
     }
     token->end = parser->pos + 1;
 #ifdef JSMN_PARENT_LINKS
@@ -951,8 +956,9 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
                      const size_t len, jsmntok_t *tokens,
                      const size_t num_tokens)
 {
-  if (len >= (jsmnint_t)JSMN_ERROR_MAX) {
-    return JSMN_ERROR_LEN;
+  if (((jsmnint_t)-1 > 0 && len >= (jsmnint_t)JSMN_ERROR_MAX) ||
+      len > JSMNINT_MAX) {
+    return JSMN_ERROR_LENGTH;
   }
 
   jsmnint_t r;

@@ -19,13 +19,13 @@ const char *jsmn_strerror(jsmnerr errno)
             return "*** Success, should not be printing an error. ***";
         case JSMN_ERROR_NOMEM:
             return "Not enough tokens were provided.";
-        case JSMN_ERROR_LEN:
+        case JSMN_ERROR_LENGTH:
             return "Input data too long.";
         case JSMN_ERROR_INVAL:
             return "Invalid character inside JSON string.";
         case JSMN_ERROR_PART:
             return "The string is not a full JSON packet, more bytes expected.";
-        case JSMN_ERROR_UNMATCHED_BRACKETS:
+        case JSMN_ERROR_BRACKETS:
             return "The JSON string has unmatched brackets.";
     }
 
