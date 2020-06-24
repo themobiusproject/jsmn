@@ -1482,6 +1482,18 @@ static void n_number_with_leading_zero(void **state)
 #endif
 }
 
+// n_number_zero_zero.json
+static void n_number_zero_zero(void **state)
+{
+    (void)state; // unused
+    const char *js = "00";
+#ifndef JSMN_PERMISSIVE_PRIMITIVE
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#endif
+}
+
 // n_object_bad_value.json
 static void n_object_bad_value(void **state)
 {
@@ -4328,8 +4340,7 @@ static void test_partial_string_01(void **state)
     for (i = 1; i < strlen(js); i++) {
         assert_int_equal(jsmn_parse(&p, js, i, t, 5), (jsmnint_t)JSMN_ERROR_PART);
     }
-
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), 5);
+    assert_int_equal(jsmn_parse(&p, js, i, t, 5), 5);
     tokeq(js, t, 5,
           JSMN_OBJECT, -1, -1, 2,
           JSMN_STRING, "x", 1,
@@ -4338,10 +4349,23 @@ static void test_partial_string_01(void **state)
           JSMN_STRING, "value y", 0);
 }
 
+static void test_partial_string_02(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"x\": \"va\\\\ue\", \"y\": \"value y\"}";
+
+    int i;
+    for (i = 1; i < strlen(js); i++) {
+        assert_int_equal(jsmn_parse(&p, js, i, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    }
+    assert_int_equal(jsmn_parse(&p, js, i, NULL, 0), 5);
+}
+
 void test_partial_string(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_partial_string_01, jsmn_setup),
+        cmocka_unit_test_setup(test_partial_string_02, jsmn_setup),
     };
 
     memcpy(cur_test, tests, sizeof(tests));
@@ -4369,6 +4393,18 @@ static void test_partial_array_01(void **state)
           JSMN_PRIMITIVE, "123",
           JSMN_STRING, "hello", 0);
 }
+
+static void test_partial_array_02(void **state)
+{
+    (void)state; // unused
+    const char *js = "[ 1, true, [123, \"hello\"]]";
+
+    int i;
+    for (i = 1; i < strlen(js); i++) {
+        assert_int_equal(jsmn_parse(&p, js, i, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+    }
+    assert_int_equal(jsmn_parse(&p, js, i, NULL, 0), 6);
+}
 #endif
 
 void test_partial_array(void)
@@ -4376,6 +4412,7 @@ void test_partial_array(void)
     const struct CMUnitTest tests[] = {
 #ifndef JSMN_PERMISSIVE
         cmocka_unit_test_setup(test_partial_array_01, jsmn_setup),
+        cmocka_unit_test_setup(test_partial_array_02, jsmn_setup),
 #endif
     };
 
@@ -4669,6 +4706,17 @@ static void test_nonstrict_03(void **state)
           JSMN_STRING, "key {1", 1,
           JSMN_PRIMITIVE, "1234");
 }
+
+static void test_nonstrict_04(void **state)
+{
+    (void)state; // unused
+    const char *js = "{a: 0garbage}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 2);
+    tokeq(js, t, 3,
+          JSMN_OBJECT, 0, 13, 1,
+          JSMN_PRIMITIVE, "a",
+          JSMN_PRIMITIVE, "0garbage");
+}
 #endif
 
 void test_nonstrict(void)
@@ -4678,6 +4726,7 @@ void test_nonstrict(void)
         cmocka_unit_test_setup(test_nonstrict_01, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_02, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_03, jsmn_setup),
+/*      cmocka_unit_test_setup(test_nonstrict_04, jsmn_setup), */
 #endif
     };
 

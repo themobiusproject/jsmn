@@ -187,6 +187,7 @@ typedef struct jsmn_parser {
                             /*!< when tokens == NULL, keeps track of container types to a depth of (sizeof(jsmnint_t) * 8) */
   jsmnint_t toksuper;       /*!< superior token node, e.g. parent object or array */
                             /*!< when tokens == NULL, toksuper represents container depth */
+  jsmnint_t count;          /*!< useful to have in the parser when you are continuing a failed parse with NULL tokens */
   jsmntype_t expected;      /*!< Expected jsmn type(s) */
 } jsmn_parser;
 
@@ -364,7 +365,11 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
   type = JSMN_PRIMITIVE;
 
 #ifndef JSMN_PERMISSIVE_PRIMITIVE
+# ifndef JSMN_PERMISSIVE_LITERALS
   char literal[][6] = { "true", "false", "null" };
+# else
+  char literal[][9] = { "true", "false", "null", "NaN", "Infinity" };
+# endif
   jsmnint_t i;
   for (i = 0; i < sizeof(literal) / sizeof(literal[0]); i++) {
     if (js[pos] != literal[i][0]) {
@@ -395,14 +400,14 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
         return JSMN_ERROR_INVAL;
       }
       if (type & JSMN_PRI_EXPONENT) {
-        expected = JSMN_PRI_INTEGER | JSMN_CLOSE;
+        expected = JSMN_PRI_INTEGER |                                        JSMN_CLOSE;
       } else if (type & JSMN_PRI_DECIMAL) {
-        expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+        expected = JSMN_PRI_INTEGER |                    JSMN_PRI_EXPONENT | JSMN_CLOSE;
       } else if (parser->pos == pos ||
                  (parser->pos + 1 == pos && (type & JSMN_PRI_MINUS))) {
-        expected = JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+        expected =                    JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
       } else {
-        expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+        expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
       }
       continue;
     }
@@ -412,11 +417,11 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
         return JSMN_ERROR_INVAL;
       }
       if (type & JSMN_PRI_EXPONENT) {
-        expected = JSMN_PRI_INTEGER | JSMN_CLOSE;
+        expected = JSMN_PRI_INTEGER |                                        JSMN_CLOSE;
       } else if (type & JSMN_PRI_DECIMAL) {
-        expected = JSMN_PRI_INTEGER | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+        expected = JSMN_PRI_INTEGER |                    JSMN_PRI_EXPONENT | JSMN_CLOSE;
       } else {
-        expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL  | JSMN_PRI_EXPONENT | JSMN_CLOSE;
+        expected = JSMN_PRI_INTEGER | JSMN_PRI_DECIMAL | JSMN_PRI_EXPONENT | JSMN_CLOSE;
       }
       continue;
     }
@@ -425,10 +430,10 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
       if (!(expected & JSMN_PRI_MINUS)) {
         return JSMN_ERROR_INVAL;
       }
-      expected = JSMN_PRI_INTEGER;
       if (parser->pos == pos) {
         type |= JSMN_PRI_MINUS;
       }
+      expected = JSMN_PRI_INTEGER;
       continue;
     }
 
@@ -537,6 +542,9 @@ found:
 
   if (tokens == NULL) {
     parser->pos = pos - 1;
+    if (expected & JSMN_PRI_CONTINUE) {
+      parser->count--;
+    }
     return JSMN_SUCCESS;
   }
 
@@ -551,6 +559,7 @@ found:
   } else {
     token = &tokens[parser->toknext - 1];
     jsmn_fill_token(token, type, token->start, pos);
+    parser->count--;
   }
   parser->pos = pos;
 #ifdef JSMN_PARENT_LINKS
@@ -576,11 +585,11 @@ found:
           break;
         }
       }
-#  ifdef JSMN_PERMISSIVE_RULESET
+# ifdef JSMN_PERMISSIVE_RULESET
       if (i == JSMN_NEG) {
         parser->toksuper = i;
       }
-#  endif
+# endif
 #endif
     }
   }
@@ -706,9 +715,17 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
           break;
         /* Allows escaped symbol \uXXXX */
         case 'u':
+#ifdef JSMN_PERMISSIVE_UTF32
+        /* Allows escaped symbol \UXXXXXXXX */
+        case 'U':
+#endif
           pos++;
-          jsmnint_t i;
-          for (i = pos + 4; pos < i; pos++) {
+#ifndef JSMN_PERMISSIVE_UTF32
+          jsmnint_t i = pos + 4;
+#else
+          jsmnint_t i = pos + 8;
+#endif
+          for (; pos < i; pos++) {
             if (pos == len ||
                 js[pos] == '\0') {
               return JSMN_ERROR_PART;
@@ -939,7 +956,6 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
   }
 
   jsmnint_t r;
-  jsmnint_t count = parser->toknext;
 
   for (; parser->pos < len; parser->pos++) {
 #ifndef JSMN_MULTIPLE_JSON_FAIL
@@ -953,7 +969,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       if (r != JSMN_SUCCESS) {
         return r;
       }
-      count++;
+      parser->count++;
       continue;
     }
 
@@ -970,7 +986,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       if (r != JSMN_SUCCESS) {
         return r;
       }
-      count++;
+      parser->count++;
       continue;
     }
 
@@ -1007,7 +1023,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       if (r != JSMN_SUCCESS) {
         return r;
       }
-      count++;
+      parser->count++;
       continue;
     }
 
@@ -1019,7 +1035,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
     return JSMN_ERROR_PART;
   }
 
-  if (count == 0) {
+  if (parser->count == 0) {
     return JSMN_ERROR_INVAL;
   }
 
@@ -1027,7 +1043,7 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
     parser->pos++;
   }
 
-  return count;
+  return parser->count;
 }
 
 /**
@@ -1040,6 +1056,7 @@ void jsmn_init(jsmn_parser *parser)
   parser->pos = 0;
   parser->toknext = 0;
   parser->toksuper = JSMN_NEG;
+  parser->count = 0;
   parser->expected = JSMN_ROOT_INIT;
 }
 
