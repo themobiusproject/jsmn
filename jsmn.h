@@ -718,10 +718,10 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
         case 'r':
         case 't':
           break;
-        /* Allows escaped symbol \uXXXX */
+        /* Allows escaped symbol \uhhhh */
         case 'u':
 #ifdef JSMN_PERMISSIVE_UTF32
-        /* Allows escaped symbol \UXXXXXXXX */
+        /* Allows escaped symbol \Uhhhhhhhh */
         case 'U':
 #endif
           pos++;

@@ -1930,6 +1930,20 @@ static void n_string_invalid_utf8_in_escape(void **state)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 }
 
+static void n_string_invalid_utf8_null_byte(void **state)
+{
+    (void)state; // unused
+    const char *js = "[\"\\u\0\"]";
+    assert_int_equal(jsmn_parse(&p, js, 7, NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+}
+
+static void n_string_invalid_utf8_too_short(void **state)
+{
+    (void)state; // unused
+    const char *js = "\"\\u00";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_PART);
+}
+
 // n_string_leading_uescaped_thinspace.json
 static void n_string_leading_uescaped_thinspace(void **state)
 {
@@ -2520,6 +2534,7 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_number_U_FF11_fullwidth_digit_one, jsmn_setup),
         cmocka_unit_test_setup(n_number_with_alpha, jsmn_setup),
         cmocka_unit_test_setup(n_number_with_alpha_char, jsmn_setup),
+        cmocka_unit_test_setup(n_number_with_leading_zero, jsmn_setup),
         cmocka_unit_test_setup(n_number_zero_zero, jsmn_setup),
         cmocka_unit_test_setup(n_number_minuszero_zero, jsmn_setup),
         cmocka_unit_test_setup(n_object_bad_value, jsmn_setup),
@@ -2569,6 +2584,8 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_string_invalid_unicode_escape, jsmn_setup),
         cmocka_unit_test_setup(n_string_invalid_utf8_after_escape, jsmn_setup),
         cmocka_unit_test_setup(n_string_invalid_utf8_in_escape, jsmn_setup),
+        cmocka_unit_test_setup(n_string_invalid_utf8_null_byte, jsmn_setup),
+        cmocka_unit_test_setup(n_string_invalid_utf8_too_short, jsmn_setup),
         cmocka_unit_test_setup(n_string_leading_uescaped_thinspace, jsmn_setup),
         cmocka_unit_test_setup(n_string_no_quotes_with_bad_escape, jsmn_setup),
         cmocka_unit_test_setup(n_string_single_doublequote, jsmn_setup),
@@ -4730,6 +4747,24 @@ static void test_nonstrict_04(void **state)
           JSMN_PRIMITIVE, "a",
           JSMN_PRIMITIVE, "0garbage");
 }
+
+static void test_nonstrict_05(void **state)
+{
+    (void)state; // unused
+    const char *js = "Day : 26,\nMonth : Sep,\n\nYear: 12";
+#ifndef JSMN_MULTIPLE_JSON_FAIL
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), 6);
+    tokeq(js, t, 6,
+          JSMN_PRIMITIVE, "Day",
+          JSMN_PRIMITIVE, "26",
+          JSMN_PRIMITIVE, "Month",
+          JSMN_PRIMITIVE, "Sep",
+          JSMN_PRIMITIVE, "Year",
+          JSMN_PRIMITIVE, "12");
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), (jsmnint_t)JSMN_ERROR_INVAL);
+#endif
+}
 #endif
 
 void test_nonstrict(void)
@@ -4740,6 +4775,7 @@ void test_nonstrict(void)
         cmocka_unit_test_setup(test_nonstrict_02, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_03, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_04, jsmn_setup),
+        cmocka_unit_test_setup(test_nonstrict_05, jsmn_setup),
 #endif
     };
 
