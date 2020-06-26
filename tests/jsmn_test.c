@@ -4711,6 +4711,24 @@ static void test_nonstrict_01(void **state)
 static void test_nonstrict_02(void **state)
 {
     (void)state; // unused
+    const char *js = "{a: 0garbage}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
+    tokeq(js, t, 3,
+          JSMN_OBJECT, 0, 13, 1,
+          JSMN_PRIMITIVE, "a",
+          JSMN_PRIMITIVE, "0garbage");
+}
+
+static void test_nonstrict_03(void **state)
+{
+    (void)state; // unused
+    const char *js = "garb\vage";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 1), (jsmnint_t)JSMN_ERROR_INVAL);
+}
+
+static void test_nonstrict_04(void **state)
+{
+    (void)state; // unused
     const char *js = "Day : 26\nMonth : Sep\n\nYear: 12";
 #ifndef JSMN_MULTIPLE_JSON_FAIL
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), 6);
@@ -4724,28 +4742,6 @@ static void test_nonstrict_02(void **state)
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), (jsmnint_t)JSMN_ERROR_INVAL);
 #endif
-}
-
-static void test_nonstrict_03(void **state)
-{
-    (void)state; // unused
-    //nested {s don't cause a parse error.
-    const char *js = "\"key {1\": 1234";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 2);
-    tokeq(js, t, 2,
-          JSMN_STRING, "key {1", 1,
-          JSMN_PRIMITIVE, "1234");
-}
-
-static void test_nonstrict_04(void **state)
-{
-    (void)state; // unused
-    const char *js = "{a: 0garbage}";
-    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
-    tokeq(js, t, 3,
-          JSMN_OBJECT, 0, 13, 1,
-          JSMN_PRIMITIVE, "a",
-          JSMN_PRIMITIVE, "0garbage");
 }
 
 static void test_nonstrict_05(void **state)
@@ -4765,6 +4761,17 @@ static void test_nonstrict_05(void **state)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), (jsmnint_t)JSMN_ERROR_INVAL);
 #endif
 }
+
+static void test_nonstrict_06(void **state)
+{
+    (void)state; // unused
+    //nested {s don't cause a parse error.
+    const char *js = "\"key {1\": 1234";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 2), 2);
+    tokeq(js, t, 2,
+          JSMN_STRING, "key {1", 1,
+          JSMN_PRIMITIVE, "1234");
+}
 #endif
 
 void test_nonstrict(void)
@@ -4776,6 +4783,7 @@ void test_nonstrict(void)
         cmocka_unit_test_setup(test_nonstrict_03, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_04, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_05, jsmn_setup),
+        cmocka_unit_test_setup(test_nonstrict_06, jsmn_setup),
 #endif
     };
 

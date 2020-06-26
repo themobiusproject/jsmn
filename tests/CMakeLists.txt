@@ -4,6 +4,7 @@ add_executable(print_jsmn_test_functions
   print_jsmn_test_functions.c
 )
 
+include(CTest)
 enable_testing()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")

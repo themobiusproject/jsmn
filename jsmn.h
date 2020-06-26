@@ -388,15 +388,14 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
       }
     }
     type |= JSMN_PRI_LITERAL;
-    if (pos == len ||
-        js[pos] == '\0') {
+    if (pos == len) {
       goto found;
     }
     goto check_primitive_border;
   }
 
   expected = JSMN_PRI_MINUS | JSMN_PRI_INTEGER;
-  for (; pos < len && js[pos] != '\0'; pos++) {
+  for (; pos < len; pos++) {
     if (js[pos] == '0') {
       if (!(expected & JSMN_PRI_INTEGER)) {
         return JSMN_ERROR_INVAL;
@@ -484,14 +483,12 @@ check_primitive_border:
     case ',':
     case '}':
     case ']':
+    case '\0':
       goto found;
     case '"':
     case ':':
     case '{':
     case '[':
-      return JSMN_ERROR_INVAL;
-    case '\0':
-      goto found;
     default:
       return JSMN_ERROR_INVAL;
   }
