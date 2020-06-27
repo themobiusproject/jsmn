@@ -607,7 +607,7 @@ static void n_array_1_true_without_comma(void **state)
 {
     (void)state; // unused
     const char *js = "[1 true]";
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
@@ -743,7 +743,7 @@ static void n_array_just_minus(void **state)
 {
     (void)state; // unused
     const char *js = "[-]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -835,7 +835,7 @@ static void n_incomplete_false(void **state)
 {
     (void)state; // unused
     const char *js = "[fals]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -847,7 +847,7 @@ static void n_incomplete_null(void **state)
 {
     (void)state; // unused
     const char *js = "[nul]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -859,7 +859,7 @@ static void n_incomplete_true(void **state)
 {
     (void)state; // unused
     const char *js = "[tru]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -883,7 +883,7 @@ static void n_number_0dot1dot2(void **state)
 {
     (void)state; // unused
     const char *js = "[0.1.2]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -895,7 +895,7 @@ static void n_number_minus01(void **state)
 {
     (void)state; // unused
     const char *js = "[-01]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -907,7 +907,7 @@ static void n_number_0dot3_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[0.3e+]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -919,7 +919,7 @@ static void n_number_0dot3_e(void **state)
 {
     (void)state; // unused
     const char *js = "[0.3e]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -931,7 +931,7 @@ static void n_number_0_capital_Eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[0E+]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -943,7 +943,7 @@ static void n_number_0_capital_E(void **state)
 {
     (void)state; // unused
     const char *js = "[0E]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -955,7 +955,7 @@ static void n_number_0dot_e1(void **state)
 {
     (void)state; // unused
     const char *js = "[0.e1]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -967,7 +967,7 @@ static void n_number_0_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[0e+]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -979,7 +979,7 @@ static void n_number_0_e(void **state)
 {
     (void)state; // unused
     const char *js = "[0e]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -999,7 +999,7 @@ static void n_number_1dot0_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[1.0e+]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1011,7 +1011,7 @@ static void n_number_1dot0_eminus(void **state)
 {
     (void)state; // unused
     const char *js = "[1.0e-]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1023,7 +1023,7 @@ static void n_number_1dot0_e(void **state)
 {
     (void)state; // unused
     const char *js = "[1.0e]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1035,7 +1035,7 @@ static void n_number_minus1dot0dot(void **state)
 {
     (void)state; // unused
     const char *js = "[-1.0.]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1047,7 +1047,7 @@ static void n_number_1_eE2(void **state)
 {
     (void)state; // unused
     const char *js = "[1eE2]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1059,7 +1059,7 @@ static void n_number_plus1(void **state)
 {
     (void)state; // unused
     const char *js = "[+1]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1071,7 +1071,7 @@ static void n_number_dotminus1(void **state)
 {
     (void)state; // unused
     const char *js = "[.-1]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1083,7 +1083,7 @@ static void n_number_2dot_eplus3(void **state)
 {
     (void)state; // unused
     const char *js = "[2.e+3]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1095,7 +1095,7 @@ static void n_number_2dot_eminus3(void **state)
 {
     (void)state; // unused
     const char *js = "[2.e-3]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1107,7 +1107,7 @@ static void n_number_2dot_e3(void **state)
 {
     (void)state; // unused
     const char *js = "[2.e3]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1119,7 +1119,7 @@ static void n_number_dot2_eminus3(void **state)
 {
     (void)state; // unused
     const char *js = "[.2e-3]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1131,7 +1131,7 @@ static void n_number_minus2dot(void **state)
 {
     (void)state; // unused
     const char *js = "[-2.]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1143,7 +1143,7 @@ static void n_number_9dot_eplus(void **state)
 {
     (void)state; // unused
     const char *js = "[9.e+]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1155,7 +1155,7 @@ static void n_number_expression(void **state)
 {
     (void)state; // unused
     const char *js = "[1+2]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1167,7 +1167,7 @@ static void n_number_hex_1_digit(void **state)
 {
     (void)state; // unused
     const char *js = "[0x1]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1179,7 +1179,7 @@ static void n_number_hex_2_digits(void **state)
 {
     (void)state; // unused
     const char *js = "[0x42]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1203,7 +1203,7 @@ static void n_number_plusInf(void **state)
 {
     (void)state; // unused
     const char *js = "[+Inf]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1215,7 +1215,7 @@ static void n_number_Inf(void **state)
 {
     (void)state; // unused
     const char *js = "[Inf]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1227,7 +1227,7 @@ static void n_number_invalid_plusminus(void **state)
 {
     (void)state; // unused
     const char *js = "[0e+-1]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1239,7 +1239,7 @@ static void n_number_invalid_negative_real(void **state)
 {
     (void)state; // unused
     const char *js = "[-123.123foo]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1251,7 +1251,7 @@ static void n_number_invalid_utf8_in_bigger_int(void **state)
 {
     (void)state; // unused
     const char *js = "[123å]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1263,7 +1263,7 @@ static void n_number_invalid_utf8_in_exponent(void **state)
 {
     (void)state; // unused
     const char *js = "[1e1å]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1275,7 +1275,7 @@ static void n_number_invalid_utf8_in_int(void **state)
 {
     (void)state; // unused
     const char *js = "[0å]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1287,7 +1287,7 @@ static void n_number_plusplus(void **state)
 {
     (void)state; // unused
     const char *js = "[++1234]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1299,7 +1299,7 @@ static void n_number_minus_infinity(void **state)
 {
     (void)state; // unused
     const char *js = "[-Infinity]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1311,7 +1311,7 @@ static void n_number_minus_sign_with_trailing_garbage(void **state)
 {
     (void)state; // unused
     const char *js = "[-foo]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1355,7 +1355,7 @@ static void n_number_neg_int_starting_with_zero(void **state)
 {
     (void)state; // unused
     const char *js = "[-012]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1367,7 +1367,7 @@ static void n_number_neg_real_without_int_part(void **state)
 {
     (void)state; // unused
     const char *js = "[-.123]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1379,7 +1379,7 @@ static void n_number_neg_with_garbage_at_end(void **state)
 {
     (void)state; // unused
     const char *js = "[-1x]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1391,7 +1391,7 @@ static void n_number_real_garbage_after_e(void **state)
 {
     (void)state; // unused
     const char *js = "[1ea]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1403,7 +1403,7 @@ static void n_number_real_with_invalid_utf8_after_e(void **state)
 {
     (void)state; // unused
     const char *js = "[1eå]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1415,7 +1415,7 @@ static void n_number_real_without_fractional_part(void **state)
 {
     (void)state; // unused
     const char *js = "[1.]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1427,7 +1427,7 @@ static void n_number_starting_with_dot(void **state)
 {
     (void)state; // unused
     const char *js = "[.123]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1439,7 +1439,7 @@ static void n_number_U_FF11_fullwidth_digit_one(void **state)
 {
     (void)state; // unused
     const char *js = "[ï¼‘]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1451,7 +1451,7 @@ static void n_number_with_alpha_char(void **state)
 {
     (void)state; // unused
     const char *js = "[1.8011670033376514H-308]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1463,7 +1463,7 @@ static void n_number_with_alpha(void **state)
 {
     (void)state; // unused
     const char *js = "[1.2a-3]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1475,7 +1475,7 @@ static void n_number_with_leading_zero(void **state)
 {
     (void)state; // unused
     const char *js = "[012]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1487,7 +1487,7 @@ static void n_number_zero_zero(void **state)
 {
     (void)state; // unused
     const char *js = "00";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
@@ -1499,7 +1499,7 @@ static void n_number_minuszero_zero(void **state)
 {
     (void)state; // unused
     const char *js = "-00";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
@@ -1511,7 +1511,7 @@ static void n_object_bad_value(void **state)
 {
     (void)state; // unused
     const char *js = "[\"x\", truth]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
@@ -1547,7 +1547,7 @@ static void n_object_emoji(void **state)
 {
     (void)state; // unused
     const char *js = "{ðŸ‡¨ðŸ‡­}";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1623,7 +1623,7 @@ static void n_object_non_string_key_but_huge_number_instead(void **state)
 {
     (void)state; // unused
     const char *js = "{9999E9999:1}";
-#ifndef JSMN_PERMISSIVE_KEY
+#if !defined(JSMN_PERMISSIVE_KEY)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
@@ -1635,7 +1635,7 @@ static void n_object_non_string_key(void **state)
 {
     (void)state; // unused
     const char *js = "{1:1}";
-#ifndef JSMN_PERMISSIVE_KEY
+#if !defined(JSMN_PERMISSIVE_KEY)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 3);
@@ -1647,7 +1647,7 @@ static void n_object_repeated_null_null(void **state)
 {
     (void)state; // unused
     const char *js = "{null:null,null:null}";
-#ifndef JSMN_PERMISSIVE_KEY
+#if !defined(JSMN_PERMISSIVE_KEY)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 5);
@@ -1819,7 +1819,7 @@ static void n_string_accentuated_char_no_quotes(void **state)
 {
     (void)state; // unused
     const char *js = "[Ã©]";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE	
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE	)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 2);
@@ -1981,7 +1981,7 @@ static void n_string_single_string_no_double_quotes(void **state)
 {
     (void)state; // unused
     const char *js = "abc";
-#ifndef JSMN_PERMISSIVE_PRIMITIVE
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
 #else
     assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
@@ -2451,7 +2451,7 @@ static void n_structure_whitespace_U_2060_word_joiner(void **state)
 void test_jsontestsuite_n(void)
 {
     const struct CMUnitTest tests[] = {
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
         cmocka_unit_test_setup(n_array_1_true_without_comma, jsmn_setup),
         cmocka_unit_test_setup(n_array_a_invalid_utf8, jsmn_setup),
         cmocka_unit_test_setup(n_array_colon_instead_of_comma, jsmn_setup),
@@ -2597,7 +2597,7 @@ void test_jsontestsuite_n(void)
         cmocka_unit_test_setup(n_string_unescaped_tab, jsmn_setup),
         cmocka_unit_test_setup(n_string_unicode_CapitalU, jsmn_setup),
         cmocka_unit_test_setup(n_string_with_trailing_garbage, jsmn_setup),
-#ifndef JSMN_SHORT_TOKENS
+#if !defined(JSMN_SHORT_TOKENS)
 //      cmocka_unit_test_setup(n_structure_100000_opening_arrays, jsmn_setup),
 #endif
         cmocka_unit_test_setup(n_structure_angle_bracket_dot, jsmn_setup),
@@ -3926,7 +3926,7 @@ static void test_object_05(void **state)
           JSMN_STRING, "c", 0);
 }
 
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
 static void test_object_06(void **state)
 {
     (void)state; // unused
@@ -4070,7 +4070,7 @@ void test_object(void)
         cmocka_unit_test_setup(test_object_03, jsmn_setup),
         cmocka_unit_test_setup(test_object_04, jsmn_setup),
         cmocka_unit_test_setup(test_object_05, jsmn_setup),
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
         cmocka_unit_test_setup(test_object_06, jsmn_setup),
         cmocka_unit_test_setup(test_object_07, jsmn_setup),
         cmocka_unit_test_setup(test_object_08, jsmn_setup),
@@ -4404,7 +4404,7 @@ void test_partial_string(void)
 //  return cmocka_run_group_tests_name("test partial JSON string parsing", tests, NULL, NULL);
 }
 
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
 static void test_partial_array_01(void **state)
 {
     (void)state; // unused
@@ -4440,7 +4440,7 @@ static void test_partial_array_02(void **state)
 void test_partial_array(void)
 {
     const struct CMUnitTest tests[] = {
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
         cmocka_unit_test_setup(test_partial_array_01, jsmn_setup),
         cmocka_unit_test_setup(test_partial_array_02, jsmn_setup),
 #endif
@@ -4485,12 +4485,12 @@ void test_array_nomem(void)
 //  return cmocka_run_group_tests_name("test array reading with a smaller number of tokens", tests, NULL, NULL);
 }
 
-#ifdef JSMN_PERMISSIVE
+#if defined(JSMN_PERMISSIVE)
 static void test_unquoted_keys_01(void **state)
 {
     (void)state; // unused
     const char *js = "key1: \"value\"\nkey2 : 123";
-#ifndef JSMN_MULTIPLE_JSON_FAIL
+#if !defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 4), 4);
     tokeq(js, t, 4,
           JSMN_PRIMITIVE, "key1",
@@ -4506,7 +4506,7 @@ static void test_unquoted_keys_01(void **state)
 void test_unquoted_keys(void)
 {
     const struct CMUnitTest tests[] = {
-#ifdef JSMN_PERMISSIVE
+#if defined(JSMN_PERMISSIVE)
         cmocka_unit_test_setup(test_unquoted_keys_01, jsmn_setup),
 #endif
     };
@@ -4697,7 +4697,7 @@ void test_count(void)
 //  return cmocka_run_group_tests_name("test tokens count estimation", tests, NULL, NULL);
 }
 
-#ifdef JSMN_PERMISSIVE
+#if defined(JSMN_PERMISSIVE)
 static void test_nonstrict_01(void **state)
 {
     (void)state; // unused
@@ -4730,7 +4730,7 @@ static void test_nonstrict_04(void **state)
 {
     (void)state; // unused
     const char *js = "Day : 26\nMonth : Sep\n\nYear: 12";
-#ifndef JSMN_MULTIPLE_JSON_FAIL
+#if !defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), 6);
     tokeq(js, t, 6,
           JSMN_PRIMITIVE, "Day",
@@ -4748,7 +4748,7 @@ static void test_nonstrict_05(void **state)
 {
     (void)state; // unused
     const char *js = "Day : 26,\nMonth : Sep,\n\nYear: 12";
-#ifndef JSMN_MULTIPLE_JSON_FAIL
+#if !defined(JSMN_MULTIPLE_JSON_FAIL)
     assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 6), 6);
     tokeq(js, t, 6,
           JSMN_PRIMITIVE, "Day",
@@ -4777,7 +4777,7 @@ static void test_nonstrict_06(void **state)
 void test_nonstrict(void)
 {
     const struct CMUnitTest tests[] = {
-#ifdef JSMN_PERMISSIVE
+#if defined(JSMN_PERMISSIVE)
         cmocka_unit_test_setup(test_nonstrict_01, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_02, jsmn_setup),
         cmocka_unit_test_setup(test_nonstrict_03, jsmn_setup),
@@ -4891,7 +4891,7 @@ static void test_object_key_01(void **state)
         JSMN_PRIMITIVE, "1");
 }
 
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
 static void test_object_key_02(void **state)
 {
     (void)state; // unused
@@ -4925,7 +4925,7 @@ void test_object_key(void)
 {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_object_key_01, jsmn_setup),
-#ifndef JSMN_PERMISSIVE
+#if !defined(JSMN_PERMISSIVE)
         cmocka_unit_test_setup(test_object_key_02, jsmn_setup),
         cmocka_unit_test_setup(test_object_key_03, jsmn_setup),
         cmocka_unit_test_setup(test_object_key_04, jsmn_setup),
