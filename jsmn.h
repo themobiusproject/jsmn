@@ -22,18 +22,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef JSMN_JSMN_H_
-#define JSMN_JSMN_H_
+#ifndef JSMN_H_
+#define JSMN_H_
+
+#define JSMN_VERSION_MAJOR 2
+#define JSMN_VERSION_MINOR 0
+#define JSMN_VERSION_PATCH 0
 
 #if defined(UNIT_TESTING)
 #include <stdarg.h>
 #include <setjmp.h>
 #include <cmocka.h>
 #endif
-
-#define JSMN_VERSION_MAJOR 2
-#define JSMN_VERSION_MINOR 0
-#define JSMN_VERSION_PATCH 0
 
 #include <stddef.h>
 #include <limits.h>
@@ -1050,10 +1050,10 @@ void jsmn_init(jsmn_parser *parser)
   parser->expected = JSMN_ROOT_INIT;
 }
 
+#endif /* JSMN_HEADER */
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* JSMN_HEADER */
-
-#endif /* JSMN_JSMN_H_ */
+#endif /* JSMN_H_ */
