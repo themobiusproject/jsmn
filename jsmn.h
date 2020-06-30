@@ -244,6 +244,7 @@ jsmntok_t *jsmn_alloc_token(jsmn_parser *parser, jsmntok_t *tokens,
 #if defined(JSMN_NEXT_SIBLING)
   tok->next_sibling = JSMN_NEG;
 #endif
+  parser->count++;
   return tok;
 }
 
@@ -537,8 +538,8 @@ found:
 
   if (tokens == NULL) {
     parser->pos = pos - 1;
-    if (expected & JSMN_PRI_CONTINUE) {
-      parser->count--;
+    if (!(expected & JSMN_PRI_CONTINUE)) {
+      parser->count++;
     }
     return JSMN_SUCCESS;
   }
@@ -554,7 +555,6 @@ found:
   } else {
     token = &tokens[parser->toknext - 1];
     jsmn_fill_token(token, type, token->start, pos);
-    parser->count--;
   }
   parser->pos = pos;
 #if defined(JSMN_PARENT_LINKS)
@@ -645,6 +645,7 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
 
       if (tokens == NULL) {
         parser->pos = pos;
+        parser->count++;
         return JSMN_SUCCESS;
       }
 
@@ -768,6 +769,7 @@ jsmnint_t jsmn_parse_container_open(jsmn_parser *parser, const char c,
         parser->expected & JSMN_INSD_OBJ) {
       parser->toknext |= (1 << parser->toksuper);
     }
+    parser->count++;
     return JSMN_SUCCESS;
   }
 
@@ -959,7 +961,6 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       if (r != JSMN_SUCCESS) {
         return r;
       }
-      parser->count++;
       continue;
     }
 
@@ -976,7 +977,6 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       if (r != JSMN_SUCCESS) {
         return r;
       }
-      parser->count++;
       continue;
     }
 
@@ -1013,7 +1013,6 @@ jsmnint_t jsmn_parse(jsmn_parser *parser, const char *js,
       if (r != JSMN_SUCCESS) {
         return r;
       }
-      parser->count++;
       continue;
     }
 
