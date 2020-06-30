@@ -705,17 +705,9 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
           break;
         /* Allows escaped symbol \uhhhh */
         case 'u':
-#if defined(JSMN_PERMISSIVE_UTF32)
-        /* Allows escaped symbol \Uhhhhhhhh */
-        case 'U':
-#endif
           pos++;
-#if !defined(JSMN_PERMISSIVE_UTF32)
-          jsmnint_t i = pos + 4;
-#else
-          jsmnint_t i = pos + 8;
-#endif
-          for (; pos < i; pos++) {
+          jsmnint_t i;
+          for (i = pos + 4; pos < i; pos++) {
             if (pos == len ||
                 js[pos] == '\0') {
               return JSMN_ERROR_PART;
@@ -727,6 +719,23 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
           }
           pos--;
           break;
+#if defined(JSMN_PERMISSIVE_UTF32)
+        /* Allows escaped symbol \Uhhhhhhhh */
+        case 'U':
+          pos++;
+          for (i = pos + 8; pos < i; pos++) {
+            if (pos == len ||
+                js[pos] == '\0') {
+              return JSMN_ERROR_PART;
+            }
+            /* If it isn't a hex character we have an error */
+            if (!isHexadecimal(js[pos])) {
+              return JSMN_ERROR_INVAL;
+            }
+          }
+          pos--;
+          break;
+#endif
         /* Unexpected symbol */
         default:
           return JSMN_ERROR_INVAL;
