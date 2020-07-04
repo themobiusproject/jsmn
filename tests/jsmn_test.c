@@ -445,6 +445,18 @@ static void i_string_UTF8_surrogate_U_D800(void **state)
           JSMN_STRING, "í €", 0);
 }
 
+// i_string_invalid_escaped_utf32.json
+static void i_string_invalid_escaped_utf32(void **state)
+{
+    (void)state; // unused
+    const char *js = "\"\\U01234567\"";
+#if !defined(JSMN_PERMISSIVE_UTF32)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), NULL, 0), 1);
+#endif
+}
+
 // i_structure_500_nested_arrays.json
 static void i_structure_500_nested_arrays(void **state)
 {
@@ -575,6 +587,7 @@ void test_jsontestsuite_i(void)
         cmocka_unit_test_setup(i_string_incomplete_surrogate_and_escape_valid, jsmn_setup),
         cmocka_unit_test_setup(i_string_incomplete_surrogate_pair, jsmn_setup),
         cmocka_unit_test_setup(i_string_incomplete_surrogates_escape_valid, jsmn_setup),
+        cmocka_unit_test_setup(i_string_invalid_escaped_utf32, jsmn_setup),
         cmocka_unit_test_setup(i_string_invalid_lonely_surrogate, jsmn_setup),
         cmocka_unit_test_setup(i_string_invalid_surrogate, jsmn_setup),
         cmocka_unit_test_setup(i_string_invalid_utf8, jsmn_setup),
@@ -4223,6 +4236,21 @@ static void test_primitive_05(void **state)
           JSMN_OBJECT, -1, -1, 1,
           JSMN_STRING, "floatVar", 1,
           JSMN_PRIMITIVE, "12.345");
+}
+
+static void test_primitive_06(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"floatVar\" : 12.345e}";
+#if !defined(JSMN_PERMISSIVE_PRIMITIVE)
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), (jsmnint_t)JSMN_ERROR_INVAL);
+#else
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 3), 3);
+    tokeq(js, t, 3,
+          JSMN_OBJECT, -1, -1, 1,
+          JSMN_STRING, "floatVar", 1,
+          JSMN_PRIMITIVE, "12.345e");
+#endif
 }
 
 void test_primitive(void)
