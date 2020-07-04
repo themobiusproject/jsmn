@@ -106,7 +106,7 @@ typedef enum {
 # endif
   JSMN_OPEN_OBJECT  = JSMN_KEY_TYPE | JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ,
   JSMN_AFTR_OBJ_KEY =                 JSMN_VALUE |              JSMN_INSD_OBJ | JSMN_COLON,
-  JSMN_AFTR_OBJ_VAL =                 JSMN_KEY   | JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
+  JSMN_AFTR_OBJ_VAL =                              JSMN_CLOSE | JSMN_INSD_OBJ |              JSMN_COMMA,
   JSMN_OPEN_ARRAY   = JSMN_VAL_TYPE | JSMN_VALUE | JSMN_CLOSE,
   JSMN_AFTR_ARR_VAL =                 JSMN_VALUE | JSMN_CLOSE |                              JSMN_COMMA,
   JSMN_AFTR_CLOSE   =                              JSMN_CLOSE |                              JSMN_COMMA,
@@ -476,21 +476,21 @@ jsmnint_t jsmn_parse_primitive(jsmn_parser *parser, const char *js,
 
 check_primitive_border:
   switch (js[pos]) {
-    case ' ':
-    case '\t':
-    case '\n':
-    case '\r':
-    case ',':
-    case '}':
-    case ']':
-    case '\0':
-      goto found;
-    case '"':
-    case ':':
-    case '{':
-    case '[':
-    default:
-      return JSMN_ERROR_INVAL;
+  case ' ':
+  case '\t':
+  case '\n':
+  case '\r':
+  case ',':
+  case '}':
+  case ']':
+  case '\0':
+    goto found;
+  case '"':
+  case ':':
+  case '{':
+  case '[':
+  default:
+    return JSMN_ERROR_INVAL;
   }
 #else
   for (; pos < len && js[pos] != '\0'; pos++) {
@@ -693,52 +693,52 @@ jsmnint_t jsmn_parse_string(jsmn_parser *parser, const char *js,
     if (c == '\\' && pos + 1 < len) {
       pos++;
       switch (js[pos]) {
-        /* Allowed escaped symbols */
-        case '"':
-        case '\\':
-        case '/':
-        case 'b':
-        case 'f':
-        case 'n':
-        case 'r':
-        case 't':
-          break;
-        /* Allows escaped symbol \uhhhh */
-        case 'u':
-          pos++;
-          jsmnint_t i;
-          for (i = pos + 4; pos < i; pos++) {
-            if (pos == len ||
-                js[pos] == '\0') {
-              return JSMN_ERROR_PART;
-            }
-            /* If it isn't a hex character we have an error */
-            if (!isHexadecimal(js[pos])) {
-              return JSMN_ERROR_INVAL;
-            }
+      /* Allowed escaped symbols */
+      case '"':
+      case '\\':
+      case '/':
+      case 'b':
+      case 'f':
+      case 'n':
+      case 'r':
+      case 't':
+        break;
+      /* Allows escaped symbol \uhhhh */
+      case 'u':
+        pos++;
+        jsmnint_t i;
+        for (i = pos + 4; pos < i; pos++) {
+          if (pos == len ||
+              js[pos] == '\0') {
+            return JSMN_ERROR_PART;
           }
-          pos--;
-          break;
+          /* If it isn't a hex character we have an error */
+          if (!isHexadecimal(js[pos])) {
+            return JSMN_ERROR_INVAL;
+          }
+        }
+        pos--;
+        break;
 #if defined(JSMN_PERMISSIVE_UTF32)
-        /* Allows escaped symbol \Uhhhhhhhh */
-        case 'U':
-          pos++;
-          for (i = pos + 8; pos < i; pos++) {
-            if (pos == len ||
-                js[pos] == '\0') {
-              return JSMN_ERROR_PART;
-            }
-            /* If it isn't a hex character we have an error */
-            if (!isHexadecimal(js[pos])) {
-              return JSMN_ERROR_INVAL;
-            }
+      /* Allows escaped symbol \Uhhhhhhhh */
+      case 'U':
+        pos++;
+        for (i = pos + 8; pos < i; pos++) {
+          if (pos == len ||
+              js[pos] == '\0') {
+            return JSMN_ERROR_PART;
           }
-          pos--;
-          break;
+          /* If it isn't a hex character we have an error */
+          if (!isHexadecimal(js[pos])) {
+            return JSMN_ERROR_INVAL;
+          }
+        }
+        pos--;
+        break;
 #endif
-        /* Unexpected symbol */
-        default:
-          return JSMN_ERROR_INVAL;
+      /* Unexpected symbol */
+      default:
+        return JSMN_ERROR_INVAL;
       }
     }
 
