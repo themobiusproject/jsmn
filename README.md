@@ -113,10 +113,10 @@ Token types are described by `jsmntype_t`:
 ```c
 typedef enum {
 	JSMN_UNDEFINED    = 0x0000,
-  JSMN_OBJECT       = 0x0001,   /*!< Object */
-  JSMN_ARRAY        = 0x0002,   /*!< Array */
-  JSMN_STRING       = 0x0004,   /*!< String */
-  JSMN_PRIMITIVE    = 0x0008,   /*!< Other primitive: number, boolean (true/false) or null */
+	JSMN_OBJECT       = 0x0001,   /*!< Object */
+	JSMN_ARRAY        = 0x0002,   /*!< Array */
+	JSMN_STRING       = 0x0004,   /*!< String */
+	JSMN_PRIMITIVE    = 0x0008,   /*!< Other primitive: number, boolean (true/false) or null */
 	...
 } jsmntype_t;
 ```
