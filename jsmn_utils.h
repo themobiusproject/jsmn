@@ -6,6 +6,7 @@
 
 #include "jsmn_defines.h"
 
+#define JSMN_HEADER
 #include "jsmn.h"
 
 #ifdef __cplusplus

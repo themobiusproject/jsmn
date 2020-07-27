@@ -49,6 +49,7 @@ if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 add_library(jsmn_obj OBJECT
+	jsmn.h
 	jsmn_utils.c
 )
 set_target_properties(jsmn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -71,7 +72,7 @@ option(BUILD_DOC "Build documentation" ON)
 find_package(Doxygen)
 if (DOXYGEN_FOUND)
 	# set input and output files
-	set(DOXYGEN_${CMAKE_PROJECT_NAME}_DIR ${CMAKE_SOURCE_DIR}/.doxygen)
+	set(DOXYGEN_${CMAKE_PROJECT_NAME}_DIR ${PROJECT_SOURCE_DIR}/.doxygen)
 	set(DOXYGEN_${CMAKE_PROJECT_NAME}_IN ${DOXYGEN_${CMAKE_PROJECT_NAME}_DIR}/Doxyfile.in)
 	set(DOXYGEN_${CMAKE_PROJECT_NAME}_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
 
