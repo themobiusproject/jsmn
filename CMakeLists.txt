@@ -42,14 +42,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
-	add_subdirectory(example)
-#	add_subdirectory(test)
-	add_subdirectory(tests)
-endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
-
 add_library(jsmn_obj OBJECT
-	jsmn.h
+	jsmn.c
 	jsmn_utils.c
 )
 set_target_properties(jsmn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -67,6 +61,12 @@ set_target_properties(jsmn
                       SOVERSION ${${CMAKE_PROJECT_NAME}_PROJECT_VERSION}
 )
 
+if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+	add_subdirectory(example)
+#	add_subdirectory(test)
+	add_subdirectory(tests)
+endif(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+
 option(BUILD_DOC "Build documentation" ON)
 
 find_package(Doxygen)
@@ -83,7 +83,7 @@ if (DOXYGEN_FOUND)
 	add_custom_target(jsmn_doc
 		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
 		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-	  COMMENT "Generating API documentation with Doxygen"
+		COMMENT "Generating API documentation with Doxygen"
 		VERBATIM )
 	set_directory_properties(${CMAKE_CURRENT_BINARY_DIR}
 		PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
