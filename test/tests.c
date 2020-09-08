@@ -99,9 +99,9 @@ int test_jsmn_test_suite_i_(void) {
               JSMN_STRING, "\\ud800abc", 0));
 
   /* i_string_invalid_utf-8.json */
-  check(parse("[\"я\"]", 2, 2,
+  check(parse("[\"пїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 5, 1,
-              JSMN_STRING, "я", 0));
+              JSMN_STRING, "пїЅ", 0));
 
   /* i_string_inverted_surrogates_U+1D11E.json */
   check(parse("[\"\\uDd1e\\uD834\"]", 2, 2,
@@ -109,9 +109,9 @@ int test_jsmn_test_suite_i_(void) {
               JSMN_STRING, "\\uDd1e\\uD834", 0));
 
   /* i_string_iso_latin_1.json */
-  check(parse("[\"й\"]", 2, 2,
+  check(parse("[\"пїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 5, 1,
-              JSMN_STRING, "й", 0));
+              JSMN_STRING, "пїЅ", 0));
 
   /* i_string_lone_second_surrogate.json */
   check(parse("[\"\\uDFAA\"]", 2, 2,
@@ -119,34 +119,34 @@ int test_jsmn_test_suite_i_(void) {
               JSMN_STRING, "\\uDFAA", 0));
 
   /* i_string_lone_utf8_continuation_byte.json */
-  check(parse("[\"Ѓ\"]", 2, 2,
+  check(parse("[\"пїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 5, 1,
-              JSMN_STRING, "Ѓ", 0));
+              JSMN_STRING, "пїЅ", 0));
 
   /* i_string_not_in_unicode_range.json */
-  check(parse("[\"фїїї\"]", 2, 2,
+  check(parse("[\"пїЅпїЅпїЅпїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 8, 1,
-              JSMN_STRING, "фїїї", 0));
+              JSMN_STRING, "пїЅпїЅпїЅпїЅ", 0));
 
   /* i_string_overlong_sequence_2_bytes.json */
-  check(parse("[\"АЇ\"]", 2, 2,
+  check(parse("[\"пїЅпїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 6, 1,
-              JSMN_STRING, "АЇ", 0));
+              JSMN_STRING, "пїЅпїЅ", 0));
 
   /* i_string_overlong_sequence_6_bytes.json */
-  check(parse("[\"ьѓїїїї\"]", 2, 2,
+  check(parse("[\"пїЅпїЅпїЅпїЅпїЅпїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 10, 1,
-              JSMN_STRING, "ьѓїїїї", 0));
+              JSMN_STRING, "пїЅпїЅпїЅпїЅпїЅпїЅ", 0));
 
   /* i_string_overlong_sequence_6_bytes_null.json */
-  check(parse("[\"ьЂЂЂЂЂ\"]", 2, 2,
+  check(parse("[\"пїЅпїЅпїЅпїЅпїЅпїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 10, 1,
-              JSMN_STRING, "ьЂЂЂЂЂ", 0));
+              JSMN_STRING, "пїЅпїЅпїЅпїЅпїЅпїЅ", 0));
 
   /* i_string_truncated-utf-8.json */
-  check(parse("[\"ая\"]", 2, 2,
+  check(parse("[\"пїЅпїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 6, 1,
-              JSMN_STRING, "ая", 0));
+              JSMN_STRING, "пїЅпїЅ", 0));
 
   /* i_string_utf16BE_no_BOM.json failed to parse. */
 
@@ -155,14 +155,14 @@ int test_jsmn_test_suite_i_(void) {
   /* i_string_UTF-16LE_with_BOM.json failed to parse. */
 
   /* i_string_UTF-8_invalid_sequence.json */
-  check(parse("[\"ж—ҐС€ъ\"]", 2, 2,
+  check(parse("[\"ж—ҐС€пїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 10, 1,
-              JSMN_STRING, "ж—ҐС€ъ", 0));
+              JSMN_STRING, "ж—ҐС€пїЅ", 0));
 
   /* i_string_UTF8_surrogate_U+D800.json */
-  check(parse("[\"н Ђ\"]", 2, 2,
+  check(parse("[\"пїЅпїЅпїЅ\"]", 2, 2,
               JSMN_ARRAY,  0, 7, 1,
-              JSMN_STRING, "н Ђ", 0));
+              JSMN_STRING, "пїЅпїЅпїЅ", 0));
 
   /* i_structure_500_nested_arrays.json */
   check(parse("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]", 500, 500,
@@ -278,7 +278,7 @@ int test_jsmn_test_suite_n_(void) {
   check(query("[1 true]", JSMN_ERROR_INVAL));
 
   /* n_array_a_invalid_utf8.json */
-  check(query("[aе]", JSMN_ERROR_INVAL));
+  check(query("[aпїЅ]", JSMN_ERROR_INVAL));
 
   /* n_array_colon_instead_of_comma.json */
   check(query("[\"\": 1]", JSMN_ERROR_INVAL));
@@ -319,7 +319,7 @@ int test_jsmn_test_suite_n_(void) {
   check(query("[3[4]]", JSMN_ERROR_INVAL));
 
   /* n_array_invalid_utf8.json */
-  check(query("[я]", JSMN_ERROR_INVAL));
+  check(query("[пїЅ]", JSMN_ERROR_INVAL));
 
   /* n_array_items_separated_by_semicolon.json */
   check(query("[1:2]", JSMN_ERROR_INVAL));
@@ -465,13 +465,13 @@ int test_jsmn_test_suite_n_(void) {
   check(query("[-123.123foo]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid-utf-8-in-bigger-int.json */
-  check(query("[123е]", JSMN_ERROR_INVAL));
+  check(query("[123пїЅ]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid-utf-8-in-exponent.json */
-  check(query("[1e1е]", JSMN_ERROR_INVAL));
+  check(query("[1e1пїЅ]", JSMN_ERROR_INVAL));
 
   /* n_number_invalid-utf-8-in-int.json */
-  check(query("[0е]", JSMN_ERROR_INVAL));
+  check(query("[0пїЅ]", JSMN_ERROR_INVAL));
 
   /* n_number_++.json */
   check(query("[++1234]", JSMN_ERROR_INVAL));
@@ -504,7 +504,7 @@ int test_jsmn_test_suite_n_(void) {
   check(query("[1ea]", JSMN_ERROR_INVAL));
 
   /* n_number_real_with_invalid_utf8_after_e.json */
-  check(query("[1eе]", JSMN_ERROR_INVAL));
+  check(query("[1eпїЅ]", JSMN_ERROR_INVAL));
 
   /* n_number_real_without_fractional_part.json */
   check(query("[1.]", JSMN_ERROR_INVAL));
@@ -546,7 +546,7 @@ int test_jsmn_test_suite_n_(void) {
   check(query("{key: 'value'}", JSMN_ERROR_INVAL));
 
   /* n_object_lone_continuation_byte_in_key_and_trailing_comma.json */
-  check(query("{\"№\":\"0\",}", JSMN_ERROR_INVAL));
+  check(query("{\"пїЅ\":\"0\",}", JSMN_ERROR_INVAL));
 
   /* n_object_missing_colon.json */
   check(query("{\"a\" b}", JSMN_ERROR_INVAL));
@@ -678,10 +678,10 @@ int test_jsmn_test_suite_n_(void) {
   check(query("[\"\\uqqqq\"]", JSMN_ERROR_INVAL));
 
   /* n_string_invalid_utf8_after_escape.json */
-  check(query("[\"\\е\"]", JSMN_ERROR_INVAL));
+  check(query("[\"\\пїЅ\"]", JSMN_ERROR_INVAL));
 
   /* n_string_invalid-utf-8-in-escape.json */
-  check(query("[\"\\uе\"]", JSMN_ERROR_INVAL));
+  check(query("[\"\\uпїЅ\"]", JSMN_ERROR_INVAL));
 
   /* n_string_leading_uescaped_thinspace.json */
   check(query("[\\u0020\"asd\"]", JSMN_ERROR_INVAL));
@@ -771,10 +771,10 @@ int test_jsmn_test_suite_n_(void) {
   check(query("]", JSMN_ERROR_INVAL));
 
   /* n_structure_incomplete_UTF8_BOM.json */
-  check(query("п»{}", JSMN_ERROR_INVAL));
+  check(query("пїЅ{}", JSMN_ERROR_INVAL));
 
   /* n_structure_lone-invalid-utf-8.json */
-  check(query("е", JSMN_ERROR_INVAL));
+  check(query("пїЅ", JSMN_ERROR_INVAL));
 
   /* n_structure_lone-open-bracket.json */
   check(query("[", JSMN_ERROR_PART));
@@ -846,7 +846,7 @@ int test_jsmn_test_suite_n_(void) {
   check(query("[\"\\{[\"\\{[\"\\{[\"\\{", JSMN_ERROR_INVAL));
 
   /* n_structure_single_eacute.json */
-  check(query("й", JSMN_ERROR_INVAL));
+  check(query("пїЅ", JSMN_ERROR_INVAL));
 
   /* n_structure_single_star.json */
   check(query("*", JSMN_ERROR_INVAL));
@@ -1403,6 +1403,8 @@ int test_object(void) {
               JSMN_PRIMITIVE, "0"));
   check(parse("{\"a\":[]}", 3, 3, JSMN_OBJECT, 0, 8, 1, JSMN_STRING, "a", 1,
               JSMN_ARRAY, 5, 7, 0));
+  check(parse("{\"a\":[1,2]}", 5, 5, JSMN_OBJECT, 0, 11, 1, JSMN_STRING, "a", 1,
+              JSMN_ARRAY, 5, 10, 2, JSMN_PRIMITIVE, "1", JSMN_PRIMITIVE, "2"));
   check(parse("{\"a\":{},\"b\":{}}", 5, 5, JSMN_OBJECT, -1, -1, 2, JSMN_STRING,
               "a", 1, JSMN_OBJECT, -1, -1, 0, JSMN_STRING, "b", 1, JSMN_OBJECT,
               -1, -1, 0));

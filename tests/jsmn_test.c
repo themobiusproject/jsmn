@@ -3898,6 +3898,19 @@ static void test_object_02(void **state)
           JSMN_ARRAY, 5, 7, 0);
 }
 
+static void test_object_02b(void **state)
+{
+    (void)state; // unused
+    const char *js = "{\"a\":[1,2]}";
+    assert_int_equal(jsmn_parse(&p, js, strlen(js), t, 5), 5);
+    tokeq(js, t, 5,
+          JSMN_OBJECT, 0, 11, 1,
+          JSMN_STRING, "a", 1,
+          JSMN_ARRAY, 5, 10, 2,
+          JSMN_PRIMITIVE, "1",
+          JSMN_PRIMITIVE, "2");
+}
+
 static void test_object_03(void **state)
 {
     (void)state; // unused
@@ -4080,6 +4093,7 @@ void test_object(void)
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_object_01, jsmn_setup),
         cmocka_unit_test_setup(test_object_02, jsmn_setup),
+        cmocka_unit_test_setup(test_object_02b, jsmn_setup),
         cmocka_unit_test_setup(test_object_03, jsmn_setup),
         cmocka_unit_test_setup(test_object_04, jsmn_setup),
         cmocka_unit_test_setup(test_object_05, jsmn_setup),
